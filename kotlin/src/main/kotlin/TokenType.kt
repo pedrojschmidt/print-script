@@ -1,0 +1,14 @@
+enum class TokenType {
+    STRING_TYPE,
+    IDENTIFIER,
+    ASSIGNATION,
+    STRING,
+    SEMICOLON,
+
+    VAL_KEYWORD,
+    VAR_KEYWORD,
+    LET_KEYWORD,
+    CONST_KEYWORD,
+
+    PRINTLN_FUNCTION,
+}
