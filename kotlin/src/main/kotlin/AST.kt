@@ -1,0 +1,17 @@
+
+sealed class ASTNode
+
+
+sealed class StatementNode : ASTNode()
+sealed class ExpressionNode : ASTNode()
+
+data class RootNode(val statements: List<StatementNode>) : ASTNode()
+data class IdentifierNode(val value: String) : ASTNode()
+
+
+data class AssignmentNode(val identifier: IdentifierNode, val expression: ExpressionNode) : StatementNode()
+data class PrintlnNode(val expression: ExpressionNode) : StatementNode()
+
+
+data class StringNode(val value: String) : ExpressionNode()
+data class NumberNode(val value: Double) : ExpressionNode()

@@ -10,13 +10,10 @@ enum class TokenType {
     SEMICOLON,
 
     LET_KEYWORD,
-    VAR_KEYWORD,
-    CONST_KEYWORD,
 
     PRINTLN_FUNCTION,
     LPAREN,
     RPAREN,
     EQ,
     COLON,
-    NEWLINE,
 }

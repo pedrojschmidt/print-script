@@ -39,8 +39,10 @@ class Lexer (
                     position++
                     positionX++
                 }
-                currentChar == '\n' -> {
-                    tokenList += Token(TokenType.NEWLINE, "\n", Position(positionX, positionY), Position(positionX+1, positionY))
+                // Para interpretar un salto de linea estamos asumiendo que se hace con \n
+                // Pero puede ser que sea con ;
+                currentChar == ';' -> {
+                    tokenList += Token(TokenType.SEMICOLON, ";", Position(positionX, positionY), Position(positionX+1, positionY))
                     position++
                     positionX = 1
                     positionY ++
@@ -56,15 +58,15 @@ class Lexer (
 
     private fun makeIdentifier(): Token {
         var identifier = ""
+        // Mientras sea una letra o un digito, lo agregamos al identificador
         while (position < input.length && (input[position].isLetter() || input[position].isDigit())) {
             identifier += input[position]
             position++
             positionX++
         }
+        // Si el identificador es una palabra reservada, devolvemos el token correspondiente
         return when (identifier) {
             "let" -> Token(TokenType.LET_KEYWORD, "let", Position(positionX - 3, positionY), Position(positionX, positionY))
-            "var" -> Token(TokenType.VAR_KEYWORD, "var", Position(positionX - 3, positionY), Position(positionX, positionY))
-            "const" -> Token(TokenType.CONST_KEYWORD, "const", Position(positionX - 5, positionY), Position(positionX, positionY))
             "println" -> Token(TokenType.PRINTLN_FUNCTION, "println", Position(positionX - 7, positionY), Position(positionX, positionY))
             "number" -> Token(TokenType.NUMBER_TYPE, "number", Position(positionX - 6, positionY), Position(positionX, positionY))
             "string" -> Token(TokenType.STRING_TYPE, "string", Position(positionX - 6, positionY), Position(positionX, positionY))
@@ -73,6 +75,7 @@ class Lexer (
         // falta resolver como diferenciar entre STRING_TYPE y STRING (Debe ser manejando las comillas "")
     }
 
+    // Lo hacemos caracter por caracter porque no sabemos cuantos digitos tiene el numero
     private fun makeNumber(): Token {
         var number = ""
         while (position < input.length && input[position].isDigit()) {
