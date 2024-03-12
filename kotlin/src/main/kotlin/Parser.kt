@@ -53,13 +53,13 @@ class Parser(private val tokens: List<Token>) {
         consume(TokenType.PRINTLN_FUNCTION)
         consume(TokenType.LPAREN)
 
-        val expression = parseExpression()
+        val content = parseContent()
 
         consume(TokenType.RPAREN)
         consume(TokenType.SEMICOLON)
 
         // No se si debe tener una expresion o un identificador
-        return PrintlnNode(expression)
+        return PrintlnNode(content)
     }
 
     private fun parseExpression(): ExpressionNode {
@@ -69,7 +69,20 @@ class Parser(private val tokens: List<Token>) {
             is Token -> when (currentToken.getType()) {
                 TokenType.STRING -> StringNode(currentToken.getValue())
                 TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
-                TokenType.IDENTIFIER -> StringNode(currentToken.getValue())
+                else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
+            }
+            else -> throw RuntimeException("Fin inesperado del archivo.")
+        }
+    }
+
+    private fun parseContent(): ASTNode {
+        val currentToken = getCurrentToken()
+        currentTokenIndex++
+        return when (currentToken) {
+            is Token -> when (currentToken.getType()) {
+                TokenType.STRING -> StringNode(currentToken.getValue())
+                TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
+                TokenType.IDENTIFIER -> IdentifierNode(currentToken.getValue())
                 else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
             }
             else -> throw RuntimeException("Fin inesperado del archivo.")
