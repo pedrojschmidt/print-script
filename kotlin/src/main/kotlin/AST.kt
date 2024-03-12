@@ -10,6 +10,7 @@ data class IdentifierNode(val value: String) : ASTNode()
 
 
 data class AssignmentNode(val identifier: IdentifierNode, val expression: ExpressionNode) : StatementNode()
+// Puede ser que el PrintlnNode sea un ExpressionNode o un IdentifierNode
 data class PrintlnNode(val expression: ExpressionNode) : StatementNode()
 
 

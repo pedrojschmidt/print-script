@@ -69,8 +69,7 @@ class Parser(private val tokens: List<Token>) {
             is Token -> when (currentToken.getType()) {
                 TokenType.STRING -> StringNode(currentToken.getValue())
                 TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
-                // Agregar el caso de que sea un identificador. Quiero que se devuelva un StringNode o NumberNode dependiendo del valor del identificador
-
+                TokenType.IDENTIFIER -> StringNode(currentToken.getValue())
                 else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
             }
             else -> throw RuntimeException("Fin inesperado del archivo.")
