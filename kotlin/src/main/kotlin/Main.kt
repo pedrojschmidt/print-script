@@ -1,5 +1,5 @@
 
-fun main(args: Array<String>) {
+fun main() {
 
     val example = "let a: number = 5;" +
                   "println(a);"
@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     println(ast)
 
     // El INTERPRETE toma un AST y lo ejecuta
-//        val interpreter = Interpreter()
-//        val result = interpreter.execute(ast)
-//        println(result)
+    val interpreter = Interpreter()
+    val result = interpreter.execute(ast)
+    println(result)
 }

@@ -2,7 +2,7 @@ class Parser(private val tokens: List<Token>) {
 
     private var currentTokenIndex = 0
 
-    fun generateAST(): ASTNode {
+    fun generateAST(): RootNode {
         // Crear una lista mutable para almacenar los nodos de las declaraciones
         val statements = mutableListOf<StatementNode>()
         while (currentTokenIndex < tokens.size) {
@@ -65,27 +65,21 @@ class Parser(private val tokens: List<Token>) {
     private fun parseExpression(): ExpressionNode {
         val currentToken = getCurrentToken()
         currentTokenIndex++
-        return when (currentToken) {
-            is Token -> when (currentToken.getType()) {
-                TokenType.STRING -> StringNode(currentToken.getValue())
-                TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
-                else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
-            }
-            else -> throw RuntimeException("Fin inesperado del archivo.")
+        return when (currentToken.getType()) {
+            TokenType.STRING -> StringNode(currentToken.getValue())
+            TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
+            else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
         }
     }
 
     private fun parseContent(): ASTNode {
         val currentToken = getCurrentToken()
         currentTokenIndex++
-        return when (currentToken) {
-            is Token -> when (currentToken.getType()) {
-                TokenType.STRING -> StringNode(currentToken.getValue())
-                TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
-                TokenType.IDENTIFIER -> IdentifierNode(currentToken.getValue())
-                else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
-            }
-            else -> throw RuntimeException("Fin inesperado del archivo.")
+        return when (currentToken.getType()) {
+            TokenType.STRING -> StringNode(currentToken.getValue())
+            TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
+            TokenType.IDENTIFIER -> IdentifierNode(currentToken.getValue())
+            else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
         }
     }
 
