@@ -1,46 +1,62 @@
 class Interpreter {
     private val variables = mutableMapOf<String, String?>()
     private val stringBuffer = StringBuffer()
-    fun execute(ast: List<ASTNode>): String {
-        for (node in ast) consume(node)
+
+    fun consume(astList: List<ASTNode>): String {
+        for (ast in astList) {
+            when (ast) {
+                is Declaration -> {
+                    interpretDeclaration(ast)
+                }
+                is DeclarationAssignation -> {
+                    interpretDeclarationAssignation(ast)
+                }
+                is Assignation -> {
+                    interpretAssignation(ast)
+                }
+                is Method -> {
+                    interpretMethod(ast)
+                }
+                else -> throw Exception("Unexpected ASTNode type")
+            }
+        }
         return stringBuffer.toString()
     }
 
-    private fun consume(astNode: ASTNode) {
-        when (astNode) {
-            is Declaration -> {
-                variables[astNode.identifier.getValue()] = null
-            }
-            is DeclarationAssignation -> {
-                if (variables.containsKey(astNode.declaration.identifier.getValue())) {
-                    throw Exception("Variable ${astNode.declaration.identifier} already declared")
-                }
-                variables[astNode.declaration.identifier.getValue()] = astNode.assignation.value.getValue()
-            }
-            is Assignation -> {
-                if (!variables.containsKey(astNode.identifier.getValue())) {
-                    throw Exception("Variable ${astNode.identifier} not declared")
-                }
-                variables[astNode.identifier.getValue()] = astNode.assignation.value.getValue()
-            }
-            is Method -> {
-                 when (astNode.identifier.getType()) {
-                    TokenType.PRINTLN_FUNCTION -> {
-                        when (astNode.value.value.getType()) {
-                            TokenType.STRING_TYPE, TokenType.NUMBER_TYPE -> {
-                                stringBuffer.append(astNode.value.value.getValue())
-                            }
-                            TokenType.IDENTIFIER -> {
-                                val value = variables[astNode.value.value.getValue()] ?: throw Exception("Variable ${astNode.value.value} not declared")
-                                stringBuffer.append(value)
-                            }
-                            else -> throw Exception("Unexpected type")
-                        }
+    private fun interpretDeclaration(declaration: Declaration) {
+        variables[declaration.identifier.getValue()] = null
+    }
+
+    private fun interpretDeclarationAssignation(declarationAssignation: DeclarationAssignation) {
+        if (variables.containsKey(declarationAssignation.declaration.identifier.getValue())) {
+            throw Exception("Variable ${declarationAssignation.declaration.identifier} already declared")
+        }
+        variables[declarationAssignation.declaration.identifier.getValue()] = declarationAssignation.assignation.value.getValue()
+    }
+
+    private fun interpretAssignation(assignation: Assignation) {
+        if (!variables.containsKey(assignation.identifier.getValue())) {
+            throw Exception("Variable ${assignation.identifier} not declared")
+        }
+        variables[assignation.identifier.getValue()] = assignation.assignation.value.getValue()
+    }
+
+    private fun interpretMethod(method: Method) {
+        when (method.identifier.getType()) {
+            TokenType.PRINTLN_FUNCTION -> {
+                when (method.value.value.getType()) {
+                    TokenType.STRING_TYPE, TokenType.NUMBER_TYPE -> {
+                        stringBuffer.append(method.value.value.getValue())
                     }
-                    else -> throw Exception("Unexpected method")
+                    TokenType.IDENTIFIER -> {
+                        val value = variables[method.value.value.getValue()] ?: throw Exception("Variable ${method.value.value} not declared")
+                        stringBuffer.append(value)
+                    }
+                    else -> throw Exception("Unexpected type")
                 }
             }
-            else -> throw Exception("Unexpected ASTNode type")
+            else -> throw Exception("Unexpected method")
         }
     }
+
 }

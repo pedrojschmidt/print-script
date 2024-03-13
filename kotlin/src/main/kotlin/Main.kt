@@ -16,6 +16,6 @@ fun main() {
 
     // El INTERPRETE toma un AST y lo ejecuta
     val interpreter = Interpreter()
-    val result = interpreter.execute(ast)
+    val result = interpreter.consume(ast)
     println(result)
 }
