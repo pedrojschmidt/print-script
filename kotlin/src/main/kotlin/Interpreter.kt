@@ -1,27 +1,43 @@
 class Interpreter {
-    private val variables = mutableMapOf<String, String>()
-    fun execute(rootNode: RootNode): String {
-        val buffer = StringBuffer()
-        for (statement in rootNode.statements) {
-            buffer.append(consume(statement))
-        }
-        return buffer.toString()
+    private val variables = mutableMapOf<String, String?>()
+    private val stringBuffer = StringBuffer()
+    fun execute(ast: List<ASTNode>): String {
+        for (node in ast) consume(node)
+        return stringBuffer.toString()
     }
 
     private fun consume(astNode: ASTNode) {
         when (astNode) {
-            is AssignmentNode -> {
-                when(astNode.expression) {
-                    is StringNode -> variables[astNode.identifier.value] = astNode.expression.value
-                    is NumberNode -> variables[astNode.identifier.value] = astNode.expression.value.toString()
-                }
+            is Declaration -> {
+                variables[astNode.identifier.getValue()] = null
             }
-            is PrintlnNode -> {
-                when(astNode.content) {
-                    is StringNode -> println(astNode.content.value)
-                    is NumberNode -> println(astNode.content.value)
-                    is IdentifierNode -> println(variables[astNode.content.value])
-                    else -> throw Exception("Unexpected ASTNode type")
+            is DeclarationAssignation -> {
+                if (variables.containsKey(astNode.declaration.identifier.getValue())) {
+                    throw Exception("Variable ${astNode.declaration.identifier} already declared")
+                }
+                variables[astNode.declaration.identifier.getValue()] = astNode.assignation.value.getValue()
+            }
+            is Assignation -> {
+                if (!variables.containsKey(astNode.identifier.getValue())) {
+                    throw Exception("Variable ${astNode.identifier} not declared")
+                }
+                variables[astNode.identifier.getValue()] = astNode.assignation.value.getValue()
+            }
+            is Method -> {
+                 when (astNode.identifier.getType()) {
+                    TokenType.PRINTLN_FUNCTION -> {
+                        when (astNode.value.value.getType()) {
+                            TokenType.STRING_TYPE, TokenType.NUMBER_TYPE -> {
+                                stringBuffer.append(astNode.value.value.getValue())
+                            }
+                            TokenType.IDENTIFIER -> {
+                                val value = variables[astNode.value.value.getValue()] ?: throw Exception("Variable ${astNode.value.value} not declared")
+                                stringBuffer.append(value)
+                            }
+                            else -> throw Exception("Unexpected type")
+                        }
+                    }
+                    else -> throw Exception("Unexpected method")
                 }
             }
             else -> throw Exception("Unexpected ASTNode type")

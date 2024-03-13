@@ -2,18 +2,18 @@ class Parser(private val tokens: List<Token>) {
 
     private var currentTokenIndex = 0
 
-    fun generateAST(): RootNode {
+    fun generateAST(): List<ASTNode> {
         // Crear una lista mutable para almacenar los nodos de las declaraciones
-        val statements = mutableListOf<StatementNode>()
+        val astNodes = mutableListOf<ASTNode>()
         while (currentTokenIndex < tokens.size) {
             val currentToken = tokens[currentTokenIndex]
 
             when (currentToken.getType()) {
                 TokenType.LET_KEYWORD -> {
-                    statements.add(parseVariableDeclaration())
+                    astNodes.add(parseVariableDeclaration())
                 }
                 TokenType.PRINTLN_FUNCTION -> {
-                    statements.add(parsePrintlnStatement())
+                    astNodes.add(parsePrintlnStatement())
                 }
                 // Agregar más casos (como asignaciones, operaciones, etc.)
                 else -> {
@@ -22,20 +22,17 @@ class Parser(private val tokens: List<Token>) {
             }
 //            currentTokenIndex++
         }
-
-        // Retornar el nodo raíz del árbol
-        return RootNode(statements)
+        return astNodes
     }
 
-    private fun parseVariableDeclaration(): StatementNode {
+    private fun parseVariableDeclaration(): DeclarationAssignation {
         // Consumir el token de "let", devuelve el Token
         consume(TokenType.LET_KEYWORD)
         // Consumir el token del identificador, devuelve el Token
         val identifierToken = consume(TokenType.IDENTIFIER)
-        val identifier = IdentifierNode(identifierToken.getValue())
         consume(TokenType.COLON)
 
-        if (getCurrentToken().getType() == TokenType.NUMBER_TYPE) {
+        val type = if (getCurrentToken().getType() == TokenType.NUMBER_TYPE) {
             consume(TokenType.NUMBER_TYPE)
         } else {
             consume(TokenType.STRING_TYPE)
@@ -43,14 +40,14 @@ class Parser(private val tokens: List<Token>) {
 
         consume(TokenType.EQ)
         // Parsear la expresión a la derecha del signo de igual
-        val expression = parseExpression()
+        val expression = parseContent()
         consume(TokenType.SEMICOLON)
 
-        return AssignmentNode(identifier, expression)
+        return DeclarationAssignation(Declaration(identifierToken, type),  expression)
     }
 
-    private fun parsePrintlnStatement(): StatementNode {
-        consume(TokenType.PRINTLN_FUNCTION)
+    private fun parsePrintlnStatement(): Method {
+        val identifier = consume(TokenType.PRINTLN_FUNCTION)
         consume(TokenType.LPAREN)
 
         val content = parseContent()
@@ -59,28 +56,13 @@ class Parser(private val tokens: List<Token>) {
         consume(TokenType.SEMICOLON)
 
         // No se si debe tener una expresion o un identificador
-        return PrintlnNode(content)
+        return Method(identifier, content)
     }
 
-    private fun parseExpression(): ExpressionNode {
+    private fun parseContent(): Literal {
         val currentToken = getCurrentToken()
         currentTokenIndex++
-        return when (currentToken.getType()) {
-            TokenType.STRING -> StringNode(currentToken.getValue())
-            TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
-            else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
-        }
-    }
-
-    private fun parseContent(): ASTNode {
-        val currentToken = getCurrentToken()
-        currentTokenIndex++
-        return when (currentToken.getType()) {
-            TokenType.STRING -> StringNode(currentToken.getValue())
-            TokenType.NUMBER -> NumberNode(currentToken.getValue().toDouble())
-            TokenType.IDENTIFIER -> IdentifierNode(currentToken.getValue())
-            else -> throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
-        }
+        return Literal(currentToken)
     }
 
     private fun consume(type: TokenType): Token {
