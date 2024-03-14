@@ -35,7 +35,7 @@ class Lexer (
                     position++
                     positionX++
                 }
-                currentChar == '"' || currentChar == '\'' -> {
+                currentChar == '\"' || currentChar == '\'' -> {
                     tokenList += makeString()
                 }
                 currentChar == ' ' -> {
@@ -51,8 +51,7 @@ class Lexer (
                     positionY ++
                 }
                 else -> {
-                    println("Error: Caracter no reconocido")
-                    return listOf()
+                    throw Exception("Error: Caracter no reconocido")
                 }
             }
         }

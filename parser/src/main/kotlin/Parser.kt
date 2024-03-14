@@ -8,16 +8,16 @@ class Parser(private val tokens: List<Token>) {
         while (currentTokenIndex < tokens.size) {
             val currentToken = tokens[currentTokenIndex]
 
-            when (currentToken.getType()) {
+            when (currentToken.type) {
                 TokenType.LET_KEYWORD -> {
-                    astNodes.add(parseVariableDeclaration())
+                    astNodes.add(parseDeclarationAssignation())
                 }
                 TokenType.PRINTLN_FUNCTION -> {
                     astNodes.add(parsePrintlnStatement())
                 }
                 // Agregar más casos (como asignaciones, operaciones, etc.)
                 else -> {
-                    throw RuntimeException("Token de tipo ${currentToken.getType()} inesperado en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
+                    throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
                 }
             }
 //            currentTokenIndex++
@@ -25,14 +25,14 @@ class Parser(private val tokens: List<Token>) {
         return astNodes
     }
 
-    private fun parseVariableDeclaration(): DeclarationAssignation {
+    private fun parseDeclarationAssignation(): DeclarationAssignation {
         // Consumir el token de "let", devuelve el Token
         consume(TokenType.LET_KEYWORD)
         // Consumir el token del identificador, devuelve el Token
         val identifierToken = consume(TokenType.IDENTIFIER)
         consume(TokenType.COLON)
 
-        val type = if (getCurrentToken().getType() == TokenType.NUMBER_TYPE) {
+        val type = if (getCurrentToken().type == TokenType.NUMBER_TYPE) {
             consume(TokenType.NUMBER_TYPE)
         } else {
             consume(TokenType.STRING_TYPE)
@@ -43,7 +43,7 @@ class Parser(private val tokens: List<Token>) {
         val expression = parseContent()
         consume(TokenType.SEMICOLON)
 
-        return DeclarationAssignation(Declaration(identifierToken, type),  expression)
+        return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
     }
 
     private fun parsePrintlnStatement(): Method {
@@ -56,23 +56,37 @@ class Parser(private val tokens: List<Token>) {
         consume(TokenType.SEMICOLON)
 
         // No se si debe tener una expresion o un identificador
-        return Method(identifier, content)
+        return Method(identifier.value, content)
     }
 
-    private fun parseContent(): Literal {
+    // TODO: Falta agregar la opcion de que haya una "operacion", es decir una composicion de tokens
+    private fun parseContent(): BinaryNode {
         val currentToken = getCurrentToken()
         currentTokenIndex++
-        return Literal(currentToken)
+        return when (currentToken.type) {
+            TokenType.STRING -> {
+                StringOperator(currentToken.value)
+            }
+            TokenType.NUMBER -> {
+                NumberOperator(currentToken.value.toDouble())
+            }
+            TokenType.IDENTIFIER -> {
+                IdentifierOperator(currentToken.value)
+            }
+            else -> {
+                throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+            }
+        }
     }
 
     private fun consume(type: TokenType): Token {
         val currentToken = getCurrentToken()
-        val currentTokenType = currentToken.getType()
+        val currentTokenType = currentToken.type
         if (currentTokenType == type) {
             currentTokenIndex++
             return currentToken
         } else {
-            throw RuntimeException("Se esperaba un token de tipo $type pero fue de tipo $currentTokenType en la línea ${currentToken.getPositionStart().x}:${currentToken.getPositionStart().y}")
+            throw RuntimeException("Se esperaba un token de tipo $type pero fue de tipo $currentTokenType en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
         }
     }
 

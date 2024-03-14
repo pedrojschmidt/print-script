@@ -1,7 +1,7 @@
-class Token (
-    private val type: TokenType,
-    private val value: String,
-    private val positionStart: Position,
+data class Token (
+    val type: TokenType,
+    val value: String,
+    val positionStart: Position,
     val positionEnd: Position,
 ) {
 
@@ -11,17 +11,4 @@ class Token (
             return "${type.name}($value)"
         return type.name
     }
-
-    fun getType(): TokenType {
-        return type
-    }
-
-    fun getValue(): String {
-        return value
-    }
-
-    fun getPositionStart(): Position {
-        return positionStart
-    }
-
 }
