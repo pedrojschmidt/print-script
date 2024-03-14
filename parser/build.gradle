@@ -3,15 +3,14 @@ plugins {
 }
 
 group = 'org.example'
+version = 'unspecified'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation project(":lexer")
-    implementation project(":interpreter")
-    implementation project(":parser")
+    implementation project(":token")
     implementation project(":ast")
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
