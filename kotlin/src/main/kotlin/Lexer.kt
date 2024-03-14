@@ -35,6 +35,9 @@ class Lexer (
                     position++
                     positionX++
                 }
+                currentChar == '"' || currentChar == '\'' -> {
+                    tokenList += makeString()
+                }
                 currentChar == ' ' -> {
                     position++
                     positionX++
@@ -86,5 +89,22 @@ class Lexer (
         return Token(TokenType.NUMBER, number, Position(positionX - number.length, positionY), Position(positionX, positionY))
     }
 
+    private fun makeString(): Token {
+        var string = ""
+        // Identifica el tipo de comillas que está usando
+        val quoteType = input[position]
+        // Avanza la posición para no incluir las comillas en el string
+        position++
+        positionX++
+        while (position < input.length && input[position] != quoteType) {
+            string += input[position]
+            position++
+            positionX++
+        }
+        // Avanza la posición para no incluir las comillas en el string
+        position++
+        positionX++
+        return Token(TokenType.STRING, string, Position(positionX - string.length - 2, positionY), Position(positionX, positionY))
+    }
 
 }
