@@ -25,7 +25,7 @@ class Parser(private val tokens: List<Token>) {
         return astNodes
     }
 
-    private fun parseDeclarationAssignation(): DeclarationAssignation {
+    private fun parseDeclarationAssignation(): ASTNode {
         // Consumir el token de "let", devuelve el Token
         consume(TokenType.LET_KEYWORD)
         // Consumir el token del identificador, devuelve el Token
@@ -38,12 +38,17 @@ class Parser(private val tokens: List<Token>) {
             consume(TokenType.STRING_TYPE)
         }
 
-        consume(TokenType.EQ)
-        // Parsear la expresión a la derecha del signo de igual
-        val expression = parseContent()
-        consume(TokenType.SEMICOLON)
-
-        return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+        // Se fija si es de tipo DeclarationAssignation o Declaration
+        if (getCurrentToken().type == TokenType.EQ) {
+            consume(TokenType.EQ)
+            // Parsear la expresión a la derecha del signo de igual
+            val expression = parseContent()
+            consume(TokenType.SEMICOLON)
+            return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+        } else {
+            consume(TokenType.SEMICOLON)
+            return Declaration(identifierToken.value, type.value)
+        }
     }
 
     private fun parsePrintlnStatement(): Method {
