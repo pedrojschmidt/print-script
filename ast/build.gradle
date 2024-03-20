@@ -10,8 +10,10 @@ repositories {
 }
 
 dependencies {
-    implementation project(":token")
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
+
+    // Depende del Token
+    implementation project(":token")
 }
 
 test {
