@@ -77,6 +77,7 @@ class Interpreter {
                         return if (left.toDoubleOrNull() != null && right.toDoubleOrNull() != null) {
                             (left.toDouble() + right.toDouble()).toString()
                         } else {
+                            // Si al menos uno es String, los concatena
                             "$left$right"
                         }
                     }
@@ -91,9 +92,9 @@ class Interpreter {
 
                     "*" -> {
                         return if (left.toDoubleOrNull() != null && right.toDoubleOrNull() != null) {
-                            (left.toDouble() - right.toDouble()).toString()
+                            (left.toDouble() * right.toDouble()).toString()
                         } else {
-                            throw IllegalArgumentException("Unsupported operation: '-' with non-numeric operands.")
+                            throw IllegalArgumentException("Unsupported operation: '*' with non-numeric operands.")
                         }
                     }
 
