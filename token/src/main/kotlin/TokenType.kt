@@ -6,7 +6,6 @@ enum class TokenType {
     NUMBER,
 
     IDENTIFIER,
-    ASSIGNATION,
     SEMICOLON,
 
     LET_KEYWORD,
@@ -16,4 +15,9 @@ enum class TokenType {
     RPAREN,
     EQ,
     COLON,
+
+    PLUS,
+    MINUS,
+    TIMES,
+    DIV,
 }

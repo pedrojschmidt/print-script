@@ -66,22 +66,62 @@ class Parser(private val tokens: List<Token>) {
 
     // TODO: Falta agregar la opcion de que haya una "operacion", es decir una composicion de tokens
     private fun parseContent(): BinaryNode {
+        // let x: number = 5 + 5;
+        // println(5 + 5);
         val currentToken = getCurrentToken()
         currentTokenIndex++
-        return when (currentToken.type) {
-            TokenType.STRING -> {
-                StringOperator(currentToken.value)
+        val nextToken = getCurrentToken()
+        // En el caso de que se pueda usar parentesis en una operacion habria que cambiarlo. Ejemplo: let x: number = 5 + (2 + 5);
+        if (nextToken.type == TokenType.SEMICOLON || nextToken.type == TokenType.RPAREN) {
+            return when (currentToken.type) {
+                TokenType.STRING -> {
+                    StringOperator(currentToken.value)
+                }
+                TokenType.NUMBER -> {
+                    NumberOperator(currentToken.value.toDouble())
+                }
+                TokenType.IDENTIFIER -> {
+                    IdentifierOperator(currentToken.value)
+                }
+                else -> {
+                    throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+                }
             }
-            TokenType.NUMBER -> {
-                NumberOperator(currentToken.value.toDouble())
-            }
-            TokenType.IDENTIFIER -> {
-                IdentifierOperator(currentToken.value)
-            }
-            else -> {
-                throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+        } else {
+            // Posibles casos
+
+            // let x: number = 5 + 5;
+            // let x: number = 5 + a;
+            // let x: number = a + 5;
+            // let x: number = a + b;
+
+            // let x: string = "Hello" + " world";
+            // let x: string = "Hello" + 5;
+            // let x: string = "Hello" + a;
+            // let x: string = 5 + "Hello";
+            // let x: string = 5 + a;
+            // let x: string = a + 5;
+            // let x: string = a + "Hello";
+
+            // Sirve para saltear el operador (+ - * /) en la proxima iteracion
+            currentTokenIndex++
+
+            return when (currentToken.type) {
+                TokenType.STRING -> {
+                    BinaryOperation(StringOperator(currentToken.value), nextToken.value, parseContent())
+                }
+                TokenType.NUMBER -> {
+                    BinaryOperation(NumberOperator(currentToken.value.toDouble()), nextToken.value, parseContent())
+                }
+                TokenType.IDENTIFIER -> {
+                    BinaryOperation(IdentifierOperator(currentToken.value), nextToken.value, parseContent())
+                }
+                else -> {
+                    throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+                }
             }
         }
+
     }
 
     private fun consume(type: TokenType): Token {
