@@ -38,6 +38,26 @@ class Lexer (
                 currentChar == '\"' || currentChar == '\'' -> {
                     tokenList += makeString()
                 }
+                currentChar == '+' -> {
+                    tokenList += Token(TokenType.PLUS, "+", Position(positionX, positionY), Position(positionX+1, positionY))
+                    position++
+                    positionX++
+                }
+                currentChar == '-' -> {
+                    tokenList += Token(TokenType.MINUS, "-", Position(positionX, positionY), Position(positionX+1, positionY))
+                    position++
+                    positionX++
+                }
+                currentChar == '*' -> {
+                    tokenList += Token(TokenType.TIMES, "*", Position(positionX, positionY), Position(positionX+1, positionY))
+                    position++
+                    positionX++
+                }
+                currentChar == '/' -> {
+                    tokenList += Token(TokenType.DIV, "/", Position(positionX, positionY), Position(positionX+1, positionY))
+                    position++
+                    positionX++
+                }
                 currentChar == ' ' -> {
                     position++
                     positionX++
