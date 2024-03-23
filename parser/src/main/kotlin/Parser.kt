@@ -43,8 +43,14 @@ class Parser(private val tokens: List<Token>) {
             consume(TokenType.EQ)
             // Parsear la expresión a la derecha del signo de igual
             val expression = parseContent()
-            consume(TokenType.SEMICOLON)
-            return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+            if(getCurrentToken().type == TokenType.RPAREN){
+                consume(TokenType.RPAREN)
+                consume(TokenType.SEMICOLON)
+                return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+            }else{
+                consume(TokenType.SEMICOLON)
+                return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+            }
         } else {
             consume(TokenType.SEMICOLON)
             return Declaration(identifierToken.value, type.value)
@@ -68,6 +74,9 @@ class Parser(private val tokens: List<Token>) {
     private fun parseContent(): BinaryNode {
         // let x: number = 5 + 5;
         // println(5 + 5);
+        if(getCurrentToken().type == TokenType.LPAREN){
+            consume(TokenType.LPAREN)
+        }
         val currentToken = getCurrentToken()
         currentTokenIndex++
         val nextToken = getCurrentToken()
