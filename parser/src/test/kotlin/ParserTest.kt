@@ -58,4 +58,97 @@ internal class ParserTest {
         assertEquals(DeclarationAssignation(Declaration("x","string"),
             BinaryOperation(StringOperator("Hello"),"+",NumberOperator(1.0))), ASTList[0])
     }
+
+    @Test
+    fun `parser with declaring and assigning a sum of identifiers`() {
+        val lexer = Lexer("let x: string = y + z;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(DeclarationAssignation(Declaration("x","string"),
+            BinaryOperation(IdentifierOperator("y"),"+",IdentifierOperator("z"))), ASTList[0])
+    }
+
+    @Test
+    fun `parser with declaring a string`() {
+        val lexer = Lexer("let x: string;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Declaration("x","string"), ASTList[0])
+    }
+
+    @Test
+    fun `parser with declaring a number`() {
+        val lexer = Lexer("let x: number;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Declaration("x","number"), ASTList[0])
+    }
+
+    @Test
+    fun `parser with assigning a number`() {
+        val lexer = Lexer("x = 1;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", NumberOperator(1.0)), ASTList[0])
+    }
+    @Test
+    fun `parser with assigning a string`() {
+        val lexer = Lexer("x = 'Hello';");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", StringOperator("Hello")), ASTList[0])
+    }
+    @Test
+    fun `parser with assigning an identifier`() {
+        val lexer = Lexer("x = y;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", IdentifierOperator("y")), ASTList[0])
+    }
+    @Test
+    fun `parser with assigning a sum of numbers`() {
+        val lexer = Lexer("x = (1+3-1*2/2);");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", BinaryOperation(NumberOperator(1.0),"+",
+            BinaryOperation(NumberOperator(3.0),"-",
+                BinaryOperation(NumberOperator(1.0),"*",
+                    BinaryOperation(NumberOperator(2.0),"/",NumberOperator(2.0)))))), ASTList[0])
+    }
+    @Test
+    fun `parser with assigning a sum of strings`() {
+        val lexer = Lexer("x = 'Hello' + 'World';");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", BinaryOperation(StringOperator("Hello"),"+",StringOperator("World"))),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with assigning a sum of a string and a number`() {
+        val lexer = Lexer("x = 'Hello' + 1;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", BinaryOperation(StringOperator("Hello"),"+",NumberOperator(1.0))),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with assigning a sum of identifiers`() {
+        val lexer = Lexer("x = y + z;");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(SimpleAssignation("x", BinaryOperation(IdentifierOperator("y"),"+",IdentifierOperator("z"))),
+            ASTList[0])
+    }
+
+
 }

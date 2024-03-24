@@ -15,7 +15,10 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.PRINTLN_FUNCTION -> {
                     astNodes.add(parsePrintlnStatement())
                 }
-                // Agregar más casos (como asignaciones, operaciones, etc.)
+                TokenType.IDENTIFIER -> {
+                    astNodes.add(parseAssignation())
+                }
+                // Agregar más casos (como operaciones, etc.)
                 else -> {
                     throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
                 }
@@ -23,6 +26,23 @@ class Parser(private val tokens: List<Token>) {
 //            currentTokenIndex++
         }
         return astNodes
+    }
+
+    private fun parseAssignation(): ASTNode {
+        val identifierToken = consume(TokenType.IDENTIFIER)
+        consume(TokenType.EQ)
+        if(getCurrentToken().type == TokenType.LPAREN){
+            consume(TokenType.LPAREN)
+        }
+        val expression = parseContent()
+        if(getCurrentToken().type == TokenType.RPAREN){
+            consume(TokenType.RPAREN)
+            consume(TokenType.SEMICOLON)
+            return SimpleAssignation(identifierToken.value, expression)
+        }else{
+            consume(TokenType.SEMICOLON)
+            return SimpleAssignation(identifierToken.value, expression)
+        }
     }
 
     private fun parseDeclarationAssignation(): ASTNode {
@@ -42,6 +62,9 @@ class Parser(private val tokens: List<Token>) {
         if (getCurrentToken().type == TokenType.EQ) {
             consume(TokenType.EQ)
             // Parsear la expresión a la derecha del signo de igual
+            if(getCurrentToken().type == TokenType.LPAREN){
+                consume(TokenType.LPAREN)
+            }
             val expression = parseContent()
             if(getCurrentToken().type == TokenType.RPAREN){
                 consume(TokenType.RPAREN)
@@ -74,9 +97,6 @@ class Parser(private val tokens: List<Token>) {
     private fun parseContent(): BinaryNode {
         // let x: number = 5 + 5;
         // println(5 + 5);
-        if(getCurrentToken().type == TokenType.LPAREN){
-            consume(TokenType.LPAREN)
-        }
         val currentToken = getCurrentToken()
         currentTokenIndex++
         val nextToken = getCurrentToken()
