@@ -150,5 +150,68 @@ internal class ParserTest {
             ASTList[0])
     }
 
+    @Test
+    fun `parser with printing a string`() {
+        val lexer = Lexer("println('Hello');");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
 
+        assertEquals(Method("println", StringOperator("Hello")),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with printing a number`() {
+        val lexer = Lexer("println(1);");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Method("println", NumberOperator(1.0)),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with printing an identifier`() {
+        val lexer = Lexer("println(x);");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Method("println", IdentifierOperator("x")),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with printing a sum of identifiers`() {
+        val lexer = Lexer("println(x+y);");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Method("println", BinaryOperation(IdentifierOperator("x"),"+",IdentifierOperator("y"))),
+            ASTList[0])
+    }
+
+    @Test
+    fun `parser with printing a sum of strings`() {
+        val lexer = Lexer("println('Hello'+'World');");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Method("println", BinaryOperation(StringOperator("Hello"),"+",StringOperator("World"))),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with printing a sum of numbers`() {
+        val lexer = Lexer("println(1+2);");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Method("println", BinaryOperation(NumberOperator(1.0),"+",NumberOperator(2.0))),
+            ASTList[0])
+    }
+    @Test
+    fun `parser with printing a sum of a string and a number`() {
+        val lexer = Lexer("println('Hello'+1);");
+        val parser = Parser(lexer.makeTokens());
+        val ASTList: List<ASTNode> = parser.generateAST();
+
+        assertEquals(Method("println", BinaryOperation(StringOperator("Hello"),"+",NumberOperator(1.0))),
+            ASTList[0])
+    }
 }
