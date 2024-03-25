@@ -30,11 +30,14 @@ class Interpreter {
                 if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
-                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)]= interpretOperation(assignation.assignation)
+                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.assignation)
             }
             is SimpleAssignation -> {
                 if (checkSameType(assignation.identifier, assignation.assignation)) {
-                    val variable = variables.keys.find { it.identifier == assignation.identifier } ?: throw Exception("Variable ${assignation.identifier} not declared")
+                    val variable =
+                        variables.keys.find {
+                            it.identifier == assignation.identifier
+                        } ?: throw Exception("Variable ${assignation.identifier} not declared")
                     variables[variable] = interpretOperation(assignation.assignation)
                 } else {
                     throw Exception("Type mismatch in variable ${assignation.identifier} assignment")
@@ -43,7 +46,10 @@ class Interpreter {
         }
     }
 
-    private fun checkSameType(identifier: String, operation: BinaryNode): Boolean {
+    private fun checkSameType(
+        identifier: String,
+        operation: BinaryNode,
+    ): Boolean {
         val variable = variables.keys.find { it.identifier == identifier } ?: throw Exception("Variable $identifier not declared")
         return when (operation) {
             is StringOperator -> {
@@ -63,8 +69,9 @@ class Interpreter {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
             is IdentifierOperator -> {
-                val variable = variables.keys.find { it.identifier == operation.identifier }
-                    ?: throw Exception("Variable ${operation.identifier} not declared")
+                val variable =
+                    variables.keys.find { it.identifier == operation.identifier }
+                        ?: throw Exception("Variable ${operation.identifier} not declared")
                 return variables[variable] ?: throw Exception("Variable ${operation.identifier} not initialized")
             }
 
@@ -121,5 +128,4 @@ class Interpreter {
             else -> throw Exception("Unexpected method")
         }
     }
-
 }
