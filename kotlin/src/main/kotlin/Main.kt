@@ -1,7 +1,7 @@
 fun main() {
-
-    val example = "let a: string = 5 * 5;" +
-                  "println(a);"
+    val example =
+        "let a: string = 5 * 5;" +
+            "println(a);"
 
     // El LEXER toma un string y lo convierte en una lista de tokens
     val lexer = Lexer(example)
