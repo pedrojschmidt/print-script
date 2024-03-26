@@ -1,4 +1,5 @@
 fun main() {
+    // git hooks commit test
     val example =
         "let a: string = 5 * 5;" +
             "println(a);"
