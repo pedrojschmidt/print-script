@@ -21,23 +21,34 @@ class Interpreter {
     }
 
     private fun interpretDeclaration(declaration: Declaration) {
+        // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
         variables[Variable(declaration.identifier, declaration.type)] = null
     }
 
     private fun interpretAssignation(assignation: Assignation) {
         when (assignation) {
+            // Differentiate between declaration with assignation and a simple assignation
             is DeclarationAssignation -> {
+                // Check if the variable is already declared
                 if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
+                // Check if the type of the declaration is the same as the type of the assignation
+                if (!checkSameType(assignation.declaration.identifier, assignation.assignation)) {
+                    throw Exception("Type mismatch in variable ${assignation.declaration.identifier} assignment")
+                }
+                // Assign the value of the assignation to the variable
                 variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.assignation)
             }
             is SimpleAssignation -> {
+                // Check if the type of the declaration is the same as the type of the assignation
                 if (checkSameType(assignation.identifier, assignation.assignation)) {
                     val variable =
+                        // Check if the variable is declared
                         variables.keys.find {
                             it.identifier == assignation.identifier
                         } ?: throw Exception("Variable ${assignation.identifier} not declared")
+                    // Assign the value of the assignation to the variable
                     variables[variable] = interpretOperation(assignation.assignation)
                 } else {
                     throw Exception("Type mismatch in variable ${assignation.identifier} assignment")
