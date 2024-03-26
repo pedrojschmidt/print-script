@@ -2,8 +2,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.21'
     // Ktlint linter and formatter
     id 'org.jlleitschuh.gradle.ktlint' version '12.1.0'
-    // Jacoco test coverage
-    id 'jacoco'
 }
 
 group = 'org.example'
@@ -11,18 +9,6 @@ version = 'unspecified'
 
 repositories {
     mavenCentral()
-}
-
-jacoco {
-    toolVersion = "0.8.11"
-}
-
-jacocoTestReport {
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
 }
 
 subprojects {
