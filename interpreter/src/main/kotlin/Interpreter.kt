@@ -33,10 +33,6 @@ class Interpreter {
                 if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
-                // Check if the type of the declaration is the same as the type of the assignation
-                if (!checkSameType(assignation.declaration.identifier, assignation.assignation)) {
-                    throw Exception("Type mismatch in variable ${assignation.declaration.identifier} assignment")
-                }
                 // Assign the value of the assignation to the variable
                 variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.assignation)
             }
