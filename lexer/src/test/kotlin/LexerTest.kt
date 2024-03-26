@@ -10,7 +10,6 @@ class LexerTest{
         val tokens = lexer.makeTokens()
         assertEquals(9, tokens.size)
     }
-
     @Test
     //"println(a);"
     fun `test 002 - should make a list of tokens`(){
