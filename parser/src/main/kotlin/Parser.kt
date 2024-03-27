@@ -15,7 +15,10 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.PRINTLN_FUNCTION -> {
                     astNodes.add(parsePrintlnStatement())
                 }
-                // Agregar más casos (como asignaciones, operaciones, etc.)
+                TokenType.IDENTIFIER -> {
+                    astNodes.add(parseAssignation())
+                }
+                // Agregar más casos (como operaciones, etc.)
                 else -> {
                     throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
                 }
@@ -23,6 +26,23 @@ class Parser(private val tokens: List<Token>) {
 //            currentTokenIndex++
         }
         return astNodes
+    }
+
+    private fun parseAssignation(): ASTNode {
+        val identifierToken = consume(TokenType.IDENTIFIER)
+        consume(TokenType.EQ)
+        if(getCurrentToken().type == TokenType.LPAREN){
+            consume(TokenType.LPAREN)
+        }
+        val expression = parseContent()
+        if(getCurrentToken().type == TokenType.RPAREN){
+            consume(TokenType.RPAREN)
+            consume(TokenType.SEMICOLON)
+            return SimpleAssignation(identifierToken.value, expression)
+        }else{
+            consume(TokenType.SEMICOLON)
+            return SimpleAssignation(identifierToken.value, expression)
+        }
     }
 
     private fun parseDeclarationAssignation(): ASTNode {
@@ -42,9 +62,18 @@ class Parser(private val tokens: List<Token>) {
         if (getCurrentToken().type == TokenType.EQ) {
             consume(TokenType.EQ)
             // Parsear la expresión a la derecha del signo de igual
+            if(getCurrentToken().type == TokenType.LPAREN){
+                consume(TokenType.LPAREN)
+            }
             val expression = parseContent()
-            consume(TokenType.SEMICOLON)
-            return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+            if(getCurrentToken().type == TokenType.RPAREN){
+                consume(TokenType.RPAREN)
+                consume(TokenType.SEMICOLON)
+                return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+            }else{
+                consume(TokenType.SEMICOLON)
+                return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+            }
         } else {
             consume(TokenType.SEMICOLON)
             return Declaration(identifierToken.value, type.value)
