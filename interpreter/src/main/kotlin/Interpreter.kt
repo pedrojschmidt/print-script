@@ -122,4 +122,7 @@ class Interpreter {
         }
     }
 
+    public fun getMap(): MutableMap<Variable, String?> {
+        return variables;
+    }
 }
