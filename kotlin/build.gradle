@@ -1,0 +1,14 @@
+plugins {
+    id 'common-conventions'
+}
+
+dependencies {
+    implementation project(":token")
+    implementation project(":lexer")
+    implementation project(":interpreter")
+    implementation project(":parser")
+    implementation project(":formatter")
+    implementation project(":ast")
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
