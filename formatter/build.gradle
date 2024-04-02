@@ -3,10 +3,8 @@ plugins {
 }
 
 dependencies {
-    // Depende del Token y del AST
+    implementation project(":lexer")
     implementation project(":token")
-    implementation project(":ast")
-
+    implementation 'org.yaml:snakeyaml:2.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
-
