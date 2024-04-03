@@ -1,0 +1,9 @@
+plugins {
+    id 'common-conventions'
+}
+
+dependencies {
+    implementation project(":lexer")
+    implementation project(":token")
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}

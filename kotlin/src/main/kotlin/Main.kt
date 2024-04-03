@@ -3,7 +3,7 @@ import java.io.File
 fun main() {
     // git hooks commit test
     val example =
-        "let a: string = 5 * 5;" +
+        "let a: number = \"hello\";" +
             "println(a);"
     println("Codigo antes del formatter: \n$example\n")
 
@@ -14,6 +14,23 @@ fun main() {
 
     val formattedCode = formatter.format(example)
     println("Codigo despues del formatter: \n$formattedCode")
+
+    // Ejecutar el analizador de código estático en el código formateado
+
+    val sca = StaticCodeAnalyzer()
+    val scaIssues = sca.analyze(formattedCode)
+
+    // Imprimir problemas encontrados por el analizador de código estático
+    if (scaIssues.isNotEmpty()) {
+        println("Problemas encontrados por el analizador de código estático:")
+        scaIssues.forEachIndexed { index, issue ->
+            println("${index + 1}. ${issue.message} en la línea ${issue.position.x}, columna ${issue.position.y}")
+        }
+        println()
+    } else {
+        println("No se encontraron problemas de análisis estático.\n")
+    }
+
 
     // El LEXER toma un string y lo convierte en una lista de tokens
     val lexer = Lexer(formattedCode)

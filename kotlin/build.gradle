@@ -9,6 +9,7 @@ dependencies {
     implementation project(":parser")
     implementation project(":formatter")
     implementation project(":ast")
+    implementation project(":static_code_analyzer")
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
