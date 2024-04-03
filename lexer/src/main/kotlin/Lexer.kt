@@ -70,12 +70,6 @@ class Lexer(
                     positionX = 1
                     positionY++
                 }
-                currentChar == '\n' -> {
-                    // Incrementa la posiciónY y reinicia la posiciónX
-                    position++
-                    positionX = 1
-                    positionY++
-                }
                 else -> {
                     throw Exception("Error: Caracter no reconocido")
                 }
