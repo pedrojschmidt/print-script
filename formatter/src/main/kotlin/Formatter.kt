@@ -26,9 +26,7 @@ class Formatter(private val formatRules: FormatRules) {
         }
     }
 
-    fun format(code: String): String {
-        val lexer = Lexer(code)
-        val tokens = lexer.makeTokens()
+    fun format(tokens: List<Token>): String {
         val formattedCode = mutableListOf<Token>()
         for (token in tokens) {
             formattedCode +=
