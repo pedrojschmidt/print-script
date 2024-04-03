@@ -45,11 +45,12 @@ class Formatter(private val formatRules: FormatRules) {
 
     private fun applyStringFormatting(token: Token): Token {
         // Asegura que los strings se mantengan entre comillas
-        val value = if (token.value.startsWith("\"") && token.value.endsWith("\"")) {
-            token.value // El string ya está entre comillas, no es necesario hacer nada
-        } else {
-            "\"${token.value}\"" // Agrega comillas al inicio y al final del string si no están presentes
-        }
+        val value =
+            if (token.value.startsWith("\"") && token.value.endsWith("\"")) {
+                token.value // El string ya está entre comillas, no es necesario hacer nada
+            } else {
+                "\"${token.value}\"" // Agrega comillas al inicio y al final del string si no están presentes
+            }
         return Token(TokenType.STRING, value, token.positionStart, token.positionEnd)
     }
 
