@@ -127,4 +127,41 @@ internal class InterpreterTest{
 
         assertEquals("Hello1.0\n", result);
     }
+
+    @Test
+    fun `interpret with declaring a string`() {
+        val lexer = Lexer("let x: string;");
+        val parser = Parser(lexer.makeTokens());
+        val interpreter = Interpreter();
+
+        interpreter.consume(parser.generateAST())
+
+        assertEquals(null, interpreter.getMap()[Variable("x","string")]);
+    }
+
+    /*@Test
+    fun `interpret with assigning an already declared string`() {
+        val lexer = Lexer("let x: string;" +
+                "x = 'World';");
+        val parser = Parser(lexer.makeTokens());
+        val interpreter = Interpreter();
+
+        interpreter.consume(parser.generateAST())
+
+        assertEquals("World", interpreter.getMap()[Variable("x","string")]);
+    }
+
+    @Test
+    fun `interpret with overriding an already declared string`() {
+        val lexer = Lexer("let x: string = 'Hello';" +
+                "x = 'World';");
+        val parser = Parser(lexer.makeTokens());
+        val interpreter = Interpreter();
+
+        interpreter.consume(parser.generateAST())
+
+        assertEquals("World", interpreter.getMap()[Variable("x","string")]);
+    }
+
+     */
 }
