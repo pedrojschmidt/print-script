@@ -1,13 +1,24 @@
+import java.io.File
+
 fun main() {
     // git hooks commit test
     val example =
-        "let a: string = 5 * 5;" +
+        "let a: number = 5 * 5;" +
             "println(a);"
+    println("Codigo antes del formatter: \n$example\n")
 
     // El LEXER toma un string y lo convierte en una lista de tokens
     val lexer = Lexer(example)
     val tokens = lexer.makeTokens()
 //    println(tokens)
+
+    val yamlContent = File("/Users/maiacamarero/IdeaProjects/print-script/formatter/src/main/kotlin/format_rules.yaml").readText()
+    val formatter = Formatter.fromYaml(yamlContent)
+
+    // Usamos el formatter para formatear el código
+
+    val formattedCode = formatter.format(tokens)
+    println("Codigo despues del formatter: \n$formattedCode")
 
     // El PARSER toma una lista de tokens y la convierte en un AST
     val parser = Parser(tokens)

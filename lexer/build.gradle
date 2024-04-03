@@ -1,14 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.9.21'
-    // Jacoco test coverage
-    id 'jacoco'
-}
-
-group = 'org.example'
-version = 'unspecified'
-
-repositories {
-    mavenCentral()
+    id 'common-conventions'
 }
 
 dependencies {
@@ -19,23 +10,3 @@ dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
-jacoco {
-    toolVersion = "0.8.11"
-}
-
-jacocoTestReport {
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
-}
-
-test {
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-kotlin {
-    jvmToolchain(17)
-}
