@@ -20,8 +20,6 @@ fun main() {
     val formattedCode = formatter.format(tokens)
     println("Codigo despues del formatter: \n$formattedCode")
 
-    // Ejecutar el analizador de código estático
-
     // El PARSER toma una lista de tokens y la convierte en un AST
     val parser = Parser(tokens)
     val ast = parser.generateAST()
@@ -40,6 +38,7 @@ fun main() {
 //        Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(" world")))
 //    )
 
+    // Ejecutar el analizador de código estático
     val sca = StaticCodeAnalyzer()
     val scaIssues = sca.analyze(ast)
 
