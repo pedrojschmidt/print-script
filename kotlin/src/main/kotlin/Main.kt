@@ -22,19 +22,7 @@ fun main() {
 
     // Ejecutar el analizador de código estático
 
-    val sca = StaticCodeAnalyzer()
-    val scaIssues = sca.analyze(tokens)
 
-    // Imprimir problemas encontrados por el analizador de código estático
-    if (scaIssues.isNotEmpty()) {
-        println("Problemas encontrados por el linter:")
-        scaIssues.forEachIndexed { index, issue ->
-            println("${index + 1}. ${issue.message} en la línea ${issue.position.x}, columna ${issue.position.y}")
-        }
-        println()
-    } else {
-        println("No se encontraron problemas de análisis estático.\n")
-    }
 
     // El PARSER toma una lista de tokens y la convierte en un AST
     val parser = Parser(tokens)
@@ -53,6 +41,21 @@ fun main() {
 //        ),
 //        Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(" world")))
 //    )
+
+    val sca = StaticCodeAnalyzer()
+    val scaIssues = sca.analyze(ast)
+
+    // Imprimir problemas encontrados por el analizador de código estático
+    if (scaIssues.isNotEmpty()) {
+        println("Problemas encontrados por el linter:")
+        scaIssues.forEachIndexed { index, issue ->
+            println("${index + 1}. ${issue.message} Línea ${issue.position.x}, columna ${issue.position.y}")
+        }
+        println()
+    } else {
+        println("No se encontraron problemas de análisis estático.\n")
+    }
+
     val interpreter = Interpreter()
     val result = interpreter.consume(ast)
     println(result)

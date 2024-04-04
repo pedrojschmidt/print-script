@@ -1,74 +1,60 @@
 class StaticCodeAnalyzer {
-    fun analyze(tokens: List<Token>): List<StaticCodeIssue> {
+    fun analyze(astNodes: List<ASTNode>): List<StaticCodeIssue> {
         val issues = mutableListOf<StaticCodeIssue>()
         var lineIndex = 1
         var columnIndex = 1
-        for (token in tokens) {
-            if (token.type == TokenType.SEMICOLON) {
-                lineIndex++
-            }
-            if (token.type == TokenType.STRING_TYPE && tokens[5].type != TokenType.STRING) {
-                issues.add(StaticCodeIssue("La declaración de variable no coincide con el tipo del valor asignado", Position(lineIndex, columnIndex)))
-            } else if (token.type == TokenType.NUMBER_TYPE && tokens[5].type != TokenType.NUMBER) {
-                issues.add(StaticCodeIssue("La declaración de variable no coincide con el tipo del valor asignado", Position(lineIndex, columnIndex)))
-            }
-            if (token.type == TokenType.PRINTLN_FUNCTION) {
-                val argument = extractPrintlnArgument(tokens, lineIndex)
-                if (!isValidPrintlnArgument(argument)) {
-                    issues.add(StaticCodeIssue("La función println debe llamarse solo con un identificador o un literal: $argument", Position(lineIndex, columnIndex)))
+
+        for (node in astNodes) {
+            when (node) {
+                is DeclarationAssignation -> {
+                    if (!checkTypeMatching(node)) {
+                        issues.add(StaticCodeIssue("La declaración de variable no coincide con el tipo del valor asignado", Position(lineIndex, columnIndex)))
+                    }
+                }
+                is Method -> {
+                    if (node.identifier == "println") {
+                        val argument = extractPrintlnArgument(node.value)
+                        if (!isValidPrintlnArgument(argument)) {
+                            issues.add(StaticCodeIssue("La función println debe llamarse solo con un identificador o un literal, la expresión: $argument es inválida.", Position(lineIndex, columnIndex)))
+                        }
+                    }
                 }
             }
-            columnIndex += token.value.length
+
+            if (node is Method) {
+                lineIndex++ // Aumentar el índice de línea si el nodo es un método
+            }
+
+            columnIndex++
         }
+
         return issues
     }
 
-    private fun extractPrintlnArgument(
-        tokens: List<Token>,
-        startIndex: Int,
-    ): List<Token> {
-        var index = startIndex
-        val argumentTokens = mutableListOf<Token>()
-        // Buscar la llamada a la función println
-        while (index < tokens.size - 1) {
-            if (tokens[index].type == TokenType.LPAREN) {
-                // Encontrar el argumento dentro de los paréntesis
-                var parenthesesCount = 1
-                var currentIndex = index + 1
-                while (parenthesesCount > 0 && currentIndex < tokens.size) {
-                    val token = tokens[currentIndex]
-                    if (token.value == "(") {
-                        parenthesesCount++
-                    } else if (token.value == ")") {
-                        parenthesesCount--
-                    }
-                    argumentTokens.add(token)
-                    currentIndex++
-                }
-            }
-            index++
+    private fun checkTypeMatching(node: DeclarationAssignation): Boolean {
+        return when (node.declaration.type) {
+            "string" -> node.assignation is StringOperator
+            "number" -> node.assignation is NumberOperator || node.assignation is BinaryOperation
+            else -> false
         }
-        return argumentTokens
     }
 
-    private fun isValidPrintlnArgument(printlnTokens: List<Token>): Boolean {
-        // val expressionTokens = printlnTokens.subList(2, printlnTokens.size - 1)
-        val operators = setOf(TokenType.PLUS, TokenType.MINUS, TokenType.TIMES, TokenType.DIV)
-
-        // Verificar si la expresión contiene operadores
-        for (token in printlnTokens) {
-            if (token.type in operators) {
-                return false
+    private fun extractPrintlnArgument(value: BinaryNode): String {
+        return when (value) {
+            is IdentifierOperator -> value.identifier
+            is StringOperator -> value.value
+            is NumberOperator -> value.value.toString()
+            is BinaryOperation -> {
+                val left = extractPrintlnArgument(value.left)
+                val right = extractPrintlnArgument(value.right)
+                "$left ${value.symbol} $right"
             }
+            else -> ""
         }
+    }
 
-        // Verificar si la expresión contiene un identificador o un literal
-        for (token in printlnTokens) {
-            if (token.type == TokenType.IDENTIFIER || token.type == TokenType.STRING || token.type == TokenType.NUMBER) {
-                return true
-            }
-        }
-
-        return false
+    private fun isValidPrintlnArgument(argument: String): Boolean {
+        // Verificar si el argumento es un identificador o un literal
+        return argument.matches("""^[\w\d]+$""".toRegex()) // Asumiendo que un identificador puede contener letras y números
     }
 }
