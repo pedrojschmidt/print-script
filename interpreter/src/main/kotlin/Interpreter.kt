@@ -135,8 +135,4 @@ class Interpreter {
             else -> throw Exception("Unexpected method")
         }
     }
-
-    public fun getMap(): MutableMap<Variable, String?> {
-        return variables;
-    }
 }
