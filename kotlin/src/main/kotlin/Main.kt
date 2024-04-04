@@ -3,7 +3,7 @@ import java.io.File
 fun main() {
     // git hooks commit test
     val example =
-        "let a: number = 5 * 5;" +
+        "let a: string = \"hello\";" +
             "println(a);"
     println("Codigo antes del formatter: \n$example\n")
 
@@ -37,6 +37,22 @@ fun main() {
 //        ),
 //        Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(" world")))
 //    )
+
+    // Ejecutar el analizador de código estático
+    val sca = StaticCodeAnalyzer()
+    val scaIssues = sca.analyze(ast)
+
+    // Imprimir problemas encontrados por el analizador de código estático
+    if (scaIssues.isNotEmpty()) {
+        println("Problemas encontrados por el linter:")
+        scaIssues.forEachIndexed { index, issue ->
+            println("${index + 1}. ${issue.message} Línea ${issue.position.x}, columna ${issue.position.y}")
+        }
+        println()
+    } else {
+        println("No se encontraron problemas de análisis estático.\n")
+    }
+
     val interpreter = Interpreter()
     val result = interpreter.consume(ast)
     println(result)
