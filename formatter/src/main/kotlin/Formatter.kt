@@ -24,7 +24,7 @@ class Formatter(private val formatRules: FormatRules) {
         }
     }
 
-    fun formatString(ast: List<ASTNode>): String {
+    fun format(ast: List<ASTNode>): String {
         val formattedCode = mutableListOf<String>()
         for (astNode in ast) {
             formattedCode +=

@@ -22,7 +22,7 @@ fun main() {
 
     // Usamos el formatter para formatear el código
 
-    val formattedAst = formatter.formatString(ast)
+    val formattedAst = formatter.format(ast)
     println("Codigo despues del formatter: \n$formattedAst")
 
     // El INTERPRETE toma un AST y lo ejecuta
