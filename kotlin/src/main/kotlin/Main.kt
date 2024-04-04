@@ -22,8 +22,6 @@ fun main() {
 
     // Ejecutar el analizador de código estático
 
-
-
     // El PARSER toma una lista de tokens y la convierte en un AST
     val parser = Parser(tokens)
     val ast = parser.generateAST()
