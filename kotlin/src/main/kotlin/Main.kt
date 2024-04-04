@@ -12,18 +12,18 @@ fun main() {
     val tokens = lexer.makeTokens()
 //    println(tokens)
 
+    // El PARSER toma una lista de tokens y la convierte en un AST
+    val parser = Parser(tokens)
+    val ast = parser.generateAST()
+//    println(ast)
+
     val yamlContent = File("/Users/maiacamarero/IdeaProjects/print-script/formatter/src/main/kotlin/format_rules.yaml").readText()
     val formatter = Formatter.fromYaml(yamlContent)
 
     // Usamos el formatter para formatear el código
 
-    val formattedCode = formatter.format(tokens)
-    println("Codigo despues del formatter: \n$formattedCode")
-
-    // El PARSER toma una lista de tokens y la convierte en un AST
-    val parser = Parser(tokens)
-    val ast = parser.generateAST()
-//    println(ast)
+    val formattedAst = formatter.formatString(ast)
+    println("Codigo despues del formatter: \n$formattedAst")
 
     // El INTERPRETE toma un AST y lo ejecuta
 //    val ast = listOf(
