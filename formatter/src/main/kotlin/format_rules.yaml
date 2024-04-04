@@ -1,0 +1,7 @@
+rules:
+    spaceBeforeColon: true
+    spaceAfterColon: true
+    spaceAroundAssignment: true
+    newlineBeforePrintln: 1
+    spaceAfterLet: true
+    stringFormat: true

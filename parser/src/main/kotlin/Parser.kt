@@ -1,5 +1,4 @@
 class Parser(private val tokens: List<Token>) {
-
     private var currentTokenIndex = 0
 
     fun generateAST(): List<ASTNode> {
@@ -20,7 +19,9 @@ class Parser(private val tokens: List<Token>) {
                 }
                 // Agregar más casos (como operaciones, etc.)
                 else -> {
-                    throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+                    throw RuntimeException(
+                        "Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}",
+                    )
                 }
             }
 //            currentTokenIndex++
@@ -52,11 +53,12 @@ class Parser(private val tokens: List<Token>) {
         val identifierToken = consume(TokenType.IDENTIFIER)
         consume(TokenType.COLON)
 
-        val type = if (getCurrentToken().type == TokenType.NUMBER_TYPE) {
-            consume(TokenType.NUMBER_TYPE)
-        } else {
-            consume(TokenType.STRING_TYPE)
-        }
+        val type =
+            if (getCurrentToken().type == TokenType.NUMBER_TYPE) {
+                consume(TokenType.NUMBER_TYPE)
+            } else {
+                consume(TokenType.STRING_TYPE)
+            }
 
         // Se fija si es de tipo DeclarationAssignation o Declaration
         if (getCurrentToken().type == TokenType.EQ) {
@@ -69,7 +71,7 @@ class Parser(private val tokens: List<Token>) {
             if(getCurrentToken().type == TokenType.RPAREN){
                 consume(TokenType.RPAREN)
                 consume(TokenType.SEMICOLON)
-                return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
+                return DeclarationAssignation(Declaration(identifierToken.value, type.value), expression)
             }else{
                 consume(TokenType.SEMICOLON)
                 return DeclarationAssignation(Declaration(identifierToken.value, type.value),  expression)
@@ -113,7 +115,9 @@ class Parser(private val tokens: List<Token>) {
                     IdentifierOperator(currentToken.value)
                 }
                 else -> {
-                    throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+                    throw RuntimeException(
+                        "Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}",
+                    )
                 }
             }
         } else {
@@ -146,11 +150,12 @@ class Parser(private val tokens: List<Token>) {
                     BinaryOperation(IdentifierOperator(currentToken.value), nextToken.value, parseContent())
                 }
                 else -> {
-                    throw RuntimeException("Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+                    throw RuntimeException(
+                        "Token de tipo ${currentToken.type} inesperado en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}",
+                    )
                 }
             }
         }
-
     }
 
     private fun consume(type: TokenType): Token {
@@ -160,12 +165,13 @@ class Parser(private val tokens: List<Token>) {
             currentTokenIndex++
             return currentToken
         } else {
-            throw RuntimeException("Se esperaba un token de tipo $type pero fue de tipo $currentTokenType en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}")
+            throw RuntimeException(
+                "Se esperaba un token de tipo $type pero fue de tipo $currentTokenType en la línea ${currentToken.positionStart.x}:${currentToken.positionStart.y}",
+            )
         }
     }
 
     private fun getCurrentToken(): Token {
         return tokens[currentTokenIndex]
     }
-
 }
