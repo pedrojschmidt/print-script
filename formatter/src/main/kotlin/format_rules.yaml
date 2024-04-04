@@ -4,3 +4,4 @@ rules:
     spaceAroundAssignment: true
     newlineBeforePrintln: 1
     spaceAfterLet: true
+    stringFormat: true

@@ -11,6 +11,7 @@ class Formatter(private val formatRules: FormatRules) {
             val spaceAroundAssignment = rulesMap["spaceAroundAssignment"] as Boolean
             val newlineBeforePrintln = (rulesMap["newlineBeforePrintln"] as Int?) ?: 0
             val spaceAfterLet = rulesMap["spaceAfterLet"] as Boolean
+            val stringFormat = rulesMap["stringFormat"] as Boolean
 
             val formatRules =
                 FormatRules(
@@ -19,6 +20,7 @@ class Formatter(private val formatRules: FormatRules) {
                     spaceAroundAssignment,
                     newlineBeforePrintln,
                     spaceAfterLet,
+                    stringFormat,
                 )
             return Formatter(formatRules)
         }
@@ -34,10 +36,22 @@ class Formatter(private val formatRules: FormatRules) {
                     TokenType.PRINTLN_FUNCTION -> applyPrintlnFormatting(token)
                     TokenType.SEMICOLON -> applySemicolonFormatting(token)
                     TokenType.LET_KEYWORD -> applyLetFormatting(token)
+                    TokenType.STRING -> applyStringFormatting(token)
                     else -> token
                 }
         }
         return formattedCode.joinToString(separator = "") { it.value }
+    }
+
+    private fun applyStringFormatting(token: Token): Token {
+        // Asegura que los strings se mantengan entre comillas
+        val value =
+            if (token.value.startsWith("\"") && token.value.endsWith("\"")) {
+                token.value // El string ya está entre comillas, no es necesario hacer nada
+            } else {
+                "\"${token.value}\"" // Agrega comillas al inicio y al final del string si no están presentes
+            }
+        return Token(TokenType.STRING, value, token.positionStart, token.positionEnd)
     }
 
     private fun applyLetFormatting(token: Token): Token {
