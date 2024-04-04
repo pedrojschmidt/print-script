@@ -1,167 +1,202 @@
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
-internal class InterpreterTest{
+class InterpreterTest {
     @Test
-    fun `interpret with declaring and assigning a string`() {
-        val lexer = Lexer("let x: string = 'Hello';");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("Hello", interpreter.getMap()[Variable("x","string")]);
+    fun `test 001 - should interpret an AST and execute it`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "string"),
+                    BinaryOperation(
+                        StringOperator("Hello"),
+                        "+",
+                        NumberOperator(5.0),
+                    ),
+                ),
+                Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("Hello5.0\n", result)
     }
 
+    // let a: number = 1.0;
+    // let x: string = a + "Hello";
+    // println(x);
     @Test
-    fun `interpret with declaring and assigning a number`() {
-        val lexer = Lexer("let x: number = 20;");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("20.0", interpreter.getMap()[Variable("x","number")]);
+    fun `test 002 - should interpret an AST and execute it`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    NumberOperator(1.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("x", "string"),
+                    BinaryOperation(
+                        IdentifierOperator("a"),
+                        "+",
+                        StringOperator("Hello"),
+                    ),
+                ),
+                Method("println", IdentifierOperator("x")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("1.0Hello\n", result)
     }
+
+    // "let a: string = 5 * 5;"
+    // "println(a);"
     @Test
-    fun `interpret with declaring and assigning an identifier`() {
-        val lexer = Lexer("let y: string = 'Hello'; " +
-                "let x: string = y;");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("Hello", interpreter.getMap()[Variable("x","string")]);
-    }
-    @Test
-    fun `interpret with declaring and assigning a sum of strings`() {
-        val lexer = Lexer("let x: string = 'Hello' + 'World';");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("HelloWorld", interpreter.getMap()[Variable("x","string")]);
-    }
-    @Test
-    fun `interpret with declaring and assigning a sum`() {
-        val lexer = Lexer("let x: number = 2+3-1*2/2;");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("4.0", interpreter.getMap()[Variable("x","number")]);
-    }
-    @Test
-    fun `interpret with declaring and assigning a sum of number & string`() {
-        val lexer = Lexer("let x: string = 'Hello' + 1;");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("Hello1.0", interpreter.getMap()[Variable("x","string")]);
-    }
-    @Test
-    fun `interpret with printing a string`() {
-        val lexer = Lexer("println('Hello');");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        val result = interpreter.consume(parser.generateAST());
-
-        assertEquals("Hello\n", result);
+    fun `test 003 - should multiply two numbers`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "string"),
+                    BinaryOperation(
+                        NumberOperator(5.0),
+                        "*",
+                        NumberOperator(5.0),
+                    ),
+                ),
+                Method("println", IdentifierOperator("a")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("25.0\n", result)
     }
 
     @Test
-    fun `interpret with printing a number`() {
-        val lexer = Lexer("println(20);");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        val result = interpreter.consume(parser.generateAST());
-
-        assertEquals("20.0\n", result);
-    }
-    @Test
-    fun `interpret with printing an identifier`() {
-        val lexer = Lexer("let x: string = 'Hello'; " +
-                "println(x);");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        val result = interpreter.consume(parser.generateAST());
-
-        assertEquals("Hello\n", result);
-    }
-    @Test
-    fun `interpret with printing a sum of strings`() {
-        val lexer = Lexer("println('Hello' + 'World');");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        val result = interpreter.consume(parser.generateAST());
-
-        assertEquals("HelloWorld\n", result);
-    }
-    @Test
-    fun `interpret with printing a sum`() {
-        val lexer = Lexer("println(2+3-1*2/2);");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        val result = interpreter.consume(parser.generateAST());
-
-        assertEquals("4.0\n", result);
+    fun `test 004 - should add two numbers`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    NumberOperator(5.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("b", "number"),
+                    NumberOperator(5.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("c", "number"),
+                    BinaryOperation(
+                        IdentifierOperator("a"),
+                        "+",
+                        IdentifierOperator("b"),
+                    ),
+                ),
+                Method("println", IdentifierOperator("c")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("10.0\n", result)
     }
 
     @Test
-    fun `interpret with printing a sum of number & string`() {
-        val lexer = Lexer("println('Hello' + 1);");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        val result = interpreter.consume(parser.generateAST());
-
-        assertEquals("Hello1.0\n", result);
+    fun `test 005 - should subtract two numbers`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    NumberOperator(10.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("b", "number"),
+                    NumberOperator(5.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("c", "number"),
+                    BinaryOperation(
+                        IdentifierOperator("a"),
+                        "-",
+                        IdentifierOperator("b"),
+                    ),
+                ),
+                Method("println", IdentifierOperator("c")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("5.0\n", result)
     }
 
     @Test
-    fun `interpret with declaring a string`() {
-        val lexer = Lexer("let x: string;");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals(null, interpreter.getMap()[Variable("x","string")]);
-    }
-
-    /*@Test
-    fun `interpret with assigning an already declared string`() {
-        val lexer = Lexer("let x: string;" +
-                "x = 'World';");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("World", interpreter.getMap()[Variable("x","string")]);
+    fun `test 006 - should divide two numbers`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    NumberOperator(10.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("b", "number"),
+                    NumberOperator(5.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("c", "number"),
+                    BinaryOperation(
+                        IdentifierOperator("a"),
+                        "/",
+                        IdentifierOperator("b"),
+                    ),
+                ),
+                Method("println", IdentifierOperator("c")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("2.0\n", result)
     }
 
     @Test
-    fun `interpret with overriding an already declared string`() {
-        val lexer = Lexer("let x: string = 'Hello';" +
-                "x = 'World';");
-        val parser = Parser(lexer.makeTokens());
-        val interpreter = Interpreter();
-
-        interpreter.consume(parser.generateAST())
-
-        assertEquals("World", interpreter.getMap()[Variable("x","string")]);
+    fun `test 007 - should concatenate two strings`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "string"),
+                    StringOperator("Hello"),
+                ),
+                DeclarationAssignation(
+                    Declaration("b", "string"),
+                    StringOperator(" World"),
+                ),
+                DeclarationAssignation(
+                    Declaration("c", "string"),
+                    BinaryOperation(
+                        IdentifierOperator("a"),
+                        "+",
+                        IdentifierOperator("b"),
+                    ),
+                ),
+                Method("println", IdentifierOperator("c")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("Hello World\n", result)
     }
 
-     */
+    @Test
+    fun `test 008 - should interpret a declaration node`() {
+        val ast =
+            listOf(
+                Declaration("a", "string"),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        assertEquals("", result)
+    }
+
+    @Test
+    fun `test 009 - should interpret a simple assignation node`() {
+        val ast =
+            listOf(
+                Declaration("a", "string"),
+                SimpleAssignation("a", StringOperator("Hello")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.consume(ast)
+        println(result)
+        assertEquals("", result)
+    }
 }

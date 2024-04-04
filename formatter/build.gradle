@@ -1,13 +1,9 @@
 plugins {
     id 'common-conventions'
-
 }
-dependencies {
-    // Depende del Token y del AST
-    implementation project(":token")
-    implementation project(":lexer")
-    implementation project(":ast")
 
+dependencies {
+    implementation project(":token")
+    implementation 'org.yaml:snakeyaml:2.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
-

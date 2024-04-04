@@ -1,4 +1,4 @@
-class Lexer (
+class Lexer(
     private val input: String,
     private var position: Int = 0,
     private var positionX: Int = 1,
@@ -16,22 +16,22 @@ class Lexer (
                     tokenList += makeIdentifier()
                 }
                 currentChar == '(' -> {
-                    tokenList += Token(TokenType.LPAREN, "(", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.LPAREN, "(", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
                 currentChar == ')' -> {
-                    tokenList += Token(TokenType.RPAREN, ")", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.RPAREN, ")", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
                 currentChar == '=' -> {
-                    tokenList += Token(TokenType.EQ, "=", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.EQ, "=", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
                 currentChar == ':' -> {
-                    tokenList += Token(TokenType.COLON, ":", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.COLON, ":", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
@@ -39,22 +39,22 @@ class Lexer (
                     tokenList += makeString()
                 }
                 currentChar == '+' -> {
-                    tokenList += Token(TokenType.PLUS, "+", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.PLUS, "+", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
                 currentChar == '-' -> {
-                    tokenList += Token(TokenType.MINUS, "-", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.MINUS, "-", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
                 currentChar == '*' -> {
-                    tokenList += Token(TokenType.TIMES, "*", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.TIMES, "*", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
                 currentChar == '/' -> {
-                    tokenList += Token(TokenType.DIV, "/", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.DIV, "/", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX++
                 }
@@ -65,10 +65,10 @@ class Lexer (
                 // Para interpretar un salto de linea estamos asumiendo que se hace con \n
                 // Pero puede ser que sea con ;
                 currentChar == ';' -> {
-                    tokenList += Token(TokenType.SEMICOLON, ";", Position(positionX, positionY), Position(positionX+1, positionY))
+                    tokenList += Token(TokenType.SEMICOLON, ";", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX = 1
-                    positionY ++
+                    positionY++
                 }
                 else -> {
                     throw Exception("Error: Caracter no reconocido")
@@ -92,7 +92,13 @@ class Lexer (
             "println" -> Token(TokenType.PRINTLN_FUNCTION, "println", Position(positionX - 7, positionY), Position(positionX, positionY))
             "number" -> Token(TokenType.NUMBER_TYPE, "number", Position(positionX - 6, positionY), Position(positionX, positionY))
             "string" -> Token(TokenType.STRING_TYPE, "string", Position(positionX - 6, positionY), Position(positionX, positionY))
-            else -> Token(TokenType.IDENTIFIER, identifier, Position(positionX - identifier.length, positionY), Position(positionX, positionY))
+            else ->
+                Token(
+                    TokenType.IDENTIFIER,
+                    identifier,
+                    Position(positionX - identifier.length, positionY),
+                    Position(positionX, positionY),
+                )
         }
         // falta resolver como diferenciar entre STRING_TYPE y STRING (Debe ser manejando las comillas "")
     }
@@ -125,5 +131,4 @@ class Lexer (
         positionX++
         return Token(TokenType.STRING, string, Position(positionX - string.length - 2, positionY), Position(positionX, positionY))
     }
-
 }

@@ -1,0 +1,27 @@
+configurations {
+    ktlint
+}
+
+dependencies {
+    ktlint 'com.pinterest.ktlint:ktlint-cli:1.2.1'
+}
+
+tasks.register('ktlintCheck', JavaExec) {
+    description = "Check Kotlin code style deviations"
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+}
+// Hooking task to check (runs the ktlintCheck int gradle's check task)
+check.dependsOn ktlintCheck
+
+tasks.register('ktlintFormatter', JavaExec) {
+    description = "Fix Kotlin code style deviations"
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "-F", "src/**/*.kt"
+}
+
+// Esto asegura que Ktlint se ejecute automáticamente durante la construcción del proyecto.
+build.dependsOn(ktlintCheck)
+build.dependsOn(ktlintFormatter)

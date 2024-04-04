@@ -21,20 +21,30 @@ class Interpreter {
     }
 
     private fun interpretDeclaration(declaration: Declaration) {
+        // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
         variables[Variable(declaration.identifier, declaration.type)] = null
     }
 
     private fun interpretAssignation(assignation: Assignation) {
         when (assignation) {
+            // Differentiate between declaration with assignation and a simple assignation
             is DeclarationAssignation -> {
+                // Check if the variable is already declared
                 if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
-                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)]= interpretOperation(assignation.assignation)
+                // Assign the value of the assignation to the variable
+                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.assignation)
             }
             is SimpleAssignation -> {
+                // Check if the type of the declaration is the same as the type of the assignation
                 if (checkSameType(assignation.identifier, assignation.assignation)) {
-                    val variable = variables.keys.find { it.identifier == assignation.identifier } ?: throw Exception("Variable ${assignation.identifier} not declared")
+                    val variable =
+                        // Check if the variable is declared
+                        variables.keys.find {
+                            it.identifier == assignation.identifier
+                        } ?: throw Exception("Variable ${assignation.identifier} not declared")
+                    // Assign the value of the assignation to the variable
                     variables[variable] = interpretOperation(assignation.assignation)
                 } else {
                     throw Exception("Type mismatch in variable ${assignation.identifier} assignment")
@@ -43,7 +53,10 @@ class Interpreter {
         }
     }
 
-    private fun checkSameType(identifier: String, operation: BinaryNode): Boolean {
+    private fun checkSameType(
+        identifier: String,
+        operation: BinaryNode,
+    ): Boolean {
         val variable = variables.keys.find { it.identifier == identifier } ?: throw Exception("Variable $identifier not declared")
         return when (operation) {
             is StringOperator -> {
@@ -63,8 +76,9 @@ class Interpreter {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
             is IdentifierOperator -> {
-                val variable = variables.keys.find { it.identifier == operation.identifier }
-                    ?: throw Exception("Variable ${operation.identifier} not declared")
+                val variable =
+                    variables.keys.find { it.identifier == operation.identifier }
+                        ?: throw Exception("Variable ${operation.identifier} not declared")
                 return variables[variable] ?: throw Exception("Variable ${operation.identifier} not initialized")
             }
 
