@@ -10,6 +10,9 @@ class StaticCodeAnalyzer {
                     if (!checkTypeMatching(node)) {
                         issues.add(StaticCodeIssue("La declaración de variable no coincide con el tipo del valor asignado", Position(lineIndex, columnIndex)))
                     }
+                    if (!checkIdentifierFormat(node.declaration.identifier)) {
+                        issues.add(StaticCodeIssue("El identificador '${node.declaration.identifier}' debe estar en lower camel case.", Position(lineIndex, columnIndex)))
+                    }
                 }
                 is Method -> {
                     if (node.identifier == "println") {
@@ -19,6 +22,8 @@ class StaticCodeAnalyzer {
                         }
                     }
                 }
+
+                else -> {}
             }
 
             if (node is Method) {
@@ -56,5 +61,10 @@ class StaticCodeAnalyzer {
     private fun isValidPrintlnArgument(argument: String): Boolean {
         // Verificar si el argumento es un identificador o un literal
         return argument.matches("""^[\w\d]+$""".toRegex()) // Asumiendo que un identificador puede contener letras y números
+    }
+
+    private fun checkIdentifierFormat(identifier: String): Boolean {
+        // Verificar si el identificador está en lower camel case
+        return identifier.matches("""^[a-z]+(?:[A-Z][a-z\d]*)*$""".toRegex())
     }
 }
