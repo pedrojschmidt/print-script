@@ -4,5 +4,4 @@ data class FormatRules(
     val spaceAroundAssignment: Boolean,
     val newlineBeforePrintln: Int,
     val spaceAfterLet: Boolean,
-    val stringFormat: Boolean,
 )
