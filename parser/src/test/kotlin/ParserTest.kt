@@ -14,30 +14,21 @@ class ParserTest {
                 Token(TokenType.NUMBER, "5", Position(17, 1), Position(17, 1)),
                 Token(TokenType.TIMES, "*", Position(19, 1), Position(19, 1)),
                 Token(TokenType.NUMBER, "5", Position(21, 1), Position(21, 1)),
-                Token(TokenType.SEMICOLON, ";", Position(22, 1), Position(22, 1)),
-                Token(TokenType.PRINTLN_FUNCTION, "println", Position(24, 1), Position(30, 1)),
-                Token(TokenType.LPAREN, "(", Position(31, 1), Position(31, 1)),
-                Token(TokenType.IDENTIFIER, "a", Position(32, 1), Position(32, 1)),
-                Token(TokenType.RPAREN, ")", Position(33, 1), Position(33, 1)),
-                Token(TokenType.SEMICOLON, ";", Position(34, 1), Position(34, 1)),
+                Token(TokenType.SEMICOLON, ";", Position(22, 1), Position(22, 1))
             )
 
-        val parser = Parser(tokens)
-        val actualAst = parser.generateAST()
+        val parser = Parser.createDefault()
+        val actualAst = parser.generateAST(tokens)
 
         val expectedAst =
-            listOf(
-                DeclarationAssignation(
+            DeclarationAssignation(
                     Declaration("a", "string"),
                     BinaryOperation(
                         NumberOperator(5.0),
                         "*",
                         NumberOperator(5.0),
-                    ),
-                ),
-                Method("println", IdentifierOperator("a")),
+                        )
             )
-
         assertEquals(expectedAst, actualAst)
     }
 }

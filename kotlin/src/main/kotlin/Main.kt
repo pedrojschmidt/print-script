@@ -13,11 +13,11 @@ fun main() {
 //    println(tokens)
 
     // El PARSER toma una lista de tokens y la convierte en un AST
-    val parser = Parser(tokens)
-    val ast = parser.generateAST()
+    val parser = Parser.createDefault()
+    val ast = listOf(parser.generateAST(tokens))
 //    println(ast)
 
-    val yamlContent = File("/Users/maiacamarero/IdeaProjects/print-script/formatter/src/main/kotlin/format_rules.yaml").readText()
+    val yamlContent = File("formatter/src/main/kotlin/format_rules.yaml").readText()
     val formatter = Formatter.fromYaml(yamlContent)
 
     // Usamos el formatter para formatear el código
