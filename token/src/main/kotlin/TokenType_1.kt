@@ -1,0 +1,34 @@
+enum class TokenType_1 {
+    STRING_TYPE,
+    NUMBER_TYPE,
+    BOOLEAN_TYPE,
+
+    STRING,
+    NUMBER,
+    BOOLEAN,
+
+    IDENTIFIER,
+    SEMICOLON,
+
+    LET_KEYWORD,
+    CONST_KEYWORD,
+
+    PRINTLN_FUNCTION,
+    IF_FUNCTION,
+    ELSE,
+    READINPUT_FUNCTION,
+    READENV_FUNCTION,
+
+    LPAREN,
+    RPAREN,
+    LKEY,
+    RKEY,
+
+    EQ,
+    COLON,
+
+    PLUS,
+    MINUS,
+    TIMES,
+    DIV,
+}
