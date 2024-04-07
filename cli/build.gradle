@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    // kotlinx-cli para la CLI
-    implementation("net.sf.jopt-simple:jopt-simple:5.0.4")
+    // clikt para la CLI
+    implementation("com.github.ajalt.clikt:clikt:3.4.0")
 
     // Depende del Token y del AST
     implementation project(":token")
