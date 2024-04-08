@@ -8,9 +8,9 @@ import java.io.File
 
 class CLI : CliktCommand() {
     private val option: Int by option().int().prompt("Option").help("Number of the operation to perform")
-    private val file by option().file(mustExist = true, canBeDir = false).prompt("\nPlease enter the file path")
+    private val file by option().file(mustExist = true, canBeDir = false).prompt("\nFile path")
 
-//    private val version by option().prompt("Version").help("Version of the PrintScript")
+//    private val version by option().prompt("\nVersion").help("Version of the PrintScript")
     private val version = "1.0"
 
     private val validVersions = listOf("1.0")
@@ -23,7 +23,16 @@ class CLI : CliktCommand() {
         when (option) {
             1 -> validateFile(file, version)
             2 -> executeFile(file, version)
-            3 -> formatFile(file, version)
+            3 -> {
+                echo("\nConfiguration file:")
+                val configFilePath = readlnOrNull()
+                val configFile = File(configFilePath.toString())
+                if (!configFile.exists()) {
+                    echo("Configuration file does not exist")
+                    return
+                }
+                formatFile(file, version, configFile)
+            }
             4 -> analyzeFile(file, version)
             else -> echo("Invalid option")
         }
@@ -58,8 +67,25 @@ class CLI : CliktCommand() {
     private fun formatFile(
         file: File,
         version: String,
+        configFile: File,
     ) {
         echo("\nFormatting...")
+        val code = file.readText()
+//        echo(code)
+
+        val lexer = Lexer(code)
+        val tokens = lexer.makeTokens()
+
+        val parser = Parser(tokens)
+        val ast = parser.generateAST()
+
+        val yamlContent = configFile.readText()
+        val formatter = Formatter.fromYaml(yamlContent)
+        val formattedAst = formatter.formatString(ast)
+        echo(formattedAst)
+
+        file.writeText(formattedAst)
+        echo("File formatted successfully")
     }
 
     private fun analyzeFile(
