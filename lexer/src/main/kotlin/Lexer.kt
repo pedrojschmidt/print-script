@@ -71,7 +71,7 @@ class Lexer(
                     positionY++
                 }
                 else -> {
-                    throw Exception("Error: Caracter no reconocido")
+                    throw Exception("Error: Caracter $currentChar no reconocido")
                 }
             }
         }

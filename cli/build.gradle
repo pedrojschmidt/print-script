@@ -9,6 +9,9 @@ dependencies {
     // Depende del Token y del AST
     implementation project(":token")
     implementation project(":ast")
+    implementation project(":lexer")
+    implementation project(":parser")
+    implementation project(":interpreter")
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
