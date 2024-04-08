@@ -11,12 +11,28 @@ class CLI : CliktCommand() {
 
     override fun run() {
         when (option) {
-            1 -> echo("You chose Validation for file: ${file.absolutePath}")
-            2 -> echo("You chose Execution for file: ${file.absolutePath}")
-            3 -> echo("You chose Formatting for file: ${file.absolutePath}")
-            4 -> echo("You chose Analyzing for file: ${file.absolutePath}")
+            1 -> validateFile(file)
+            2 -> executeFile(file)
+            3 -> formatFile(file)
+            4 -> analyzeFile(file)
             else -> echo("Invalid option")
         }
+    }
+
+    private fun validateFile(file: java.io.File) {
+        echo("Validating: ${file.absolutePath}")
+    }
+
+    private fun executeFile(file: java.io.File) {
+        echo("Executing: ${file.absolutePath}")
+    }
+
+    private fun formatFile(file: java.io.File) {
+        echo("Formatting: ${file.absolutePath}")
+    }
+
+    private fun analyzeFile(file: java.io.File) {
+        echo("Analyzing: ${file.absolutePath}")
     }
 }
 
