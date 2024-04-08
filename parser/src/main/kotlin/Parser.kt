@@ -83,7 +83,13 @@ class Parser(private val tokens: List<Token>) {
                     StringOperator(currentToken.value)
                 }
                 TokenType.NUMBER -> {
-                    NumberOperator(currentToken.value.toDouble())
+                    val numberValue = currentToken.value.toDouble()
+                    // Diferenciar entre un numero entero y un numero decimal
+                    if (numberValue % 1 == 0.0) {
+                        NumberOperator(numberValue.toInt())
+                    } else {
+                        NumberOperator(numberValue)
+                    }
                 }
                 TokenType.IDENTIFIER -> {
                     IdentifierOperator(currentToken.value)
@@ -118,7 +124,14 @@ class Parser(private val tokens: List<Token>) {
                     BinaryOperation(StringOperator(currentToken.value), nextToken.value, parseContent())
                 }
                 TokenType.NUMBER -> {
-                    BinaryOperation(NumberOperator(currentToken.value.toDouble()), nextToken.value, parseContent())
+                    val numberValue = currentToken.value.toDouble()
+                    val numberOperator =
+                        if (numberValue % 1 == 0.0) {
+                            NumberOperator(numberValue.toInt())
+                        } else {
+                            NumberOperator(numberValue)
+                        }
+                    BinaryOperation(numberOperator, nextToken.value, parseContent())
                 }
                 TokenType.IDENTIFIER -> {
                     BinaryOperation(IdentifierOperator(currentToken.value), nextToken.value, parseContent())

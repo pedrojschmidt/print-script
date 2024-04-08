@@ -30,9 +30,9 @@ class ParserTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     BinaryOperation(
-                        NumberOperator(5.0),
+                        NumberOperator(5),
                         "*",
-                        NumberOperator(5.0),
+                        NumberOperator(5),
                     ),
                 ),
                 Method("println", IdentifierOperator("a")),
