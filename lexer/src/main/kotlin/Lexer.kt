@@ -1,11 +1,13 @@
 class Lexer(
-    private val input: String,
+    private var input: String,
     private var position: Int = 0,
     private var positionX: Int = 1,
     private var positionY: Int = 1,
     private var tokenList: List<Token> = listOf(),
 ) {
     fun makeTokens(): List<Token> {
+        // Reemplaza los saltos de linea por '\n' para que se puedan manejar
+        input = input.replace("\r\n", "\n").replace("\r", "\n")
         while (position < input.length) {
             val currentChar = input[position]
             when {
@@ -62,10 +64,16 @@ class Lexer(
                     position++
                     positionX++
                 }
-                // Para interpretar un salto de linea estamos asumiendo que se hace con \n
-                // Pero puede ser que sea con ;
+                // Interpreta la finalizacion de un statement
                 currentChar == ';' -> {
                     tokenList += Token(TokenType.SEMICOLON, ";", Position(positionX, positionY), Position(positionX + 1, positionY))
+                    position++
+                    positionX = 1
+                    positionY++
+                }
+                // Interpreta un salto de linea
+                currentChar == '\n' -> {
+                    tokenList += Token(TokenType.NEWLINE, "\n", Position(positionX, positionY), Position(positionX + 1, positionY))
                     position++
                     positionX = 1
                     positionY++

@@ -9,7 +9,9 @@ import java.io.File
 class CLI : CliktCommand() {
     private val option: Int by option().int().prompt("Option").help("Number of the operation to perform")
     private val file by option().file(mustExist = true, canBeDir = false).prompt("\nPlease enter the file path")
-    private val version by option().prompt("Version").help("Version of the PrintScript")
+
+//    private val version by option().prompt("Version").help("Version of the PrintScript")
+    private val version = "1.0"
 
     private val validVersions = listOf("1.0")
 

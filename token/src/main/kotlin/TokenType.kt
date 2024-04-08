@@ -7,6 +7,7 @@ enum class TokenType {
 
     IDENTIFIER,
     SEMICOLON,
+    NEWLINE,
 
     LET_KEYWORD,
 

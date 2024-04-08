@@ -14,6 +14,9 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.PRINTLN_FUNCTION -> {
                     astNodes.add(parsePrintlnStatement())
                 }
+                TokenType.NEWLINE -> {
+                    consume(TokenType.NEWLINE)
+                }
                 // Agregar más casos (como asignaciones, operaciones, etc.)
                 else -> {
                     throw RuntimeException(
