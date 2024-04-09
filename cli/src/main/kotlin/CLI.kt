@@ -93,6 +93,26 @@ class CLI : CliktCommand() {
         version: String,
     ) {
         echo("\nAnalyzing...")
+        val code = file.readText()
+
+        val lexer = Lexer(code)
+        val tokens = lexer.makeTokens()
+
+        val parser = Parser(tokens)
+        val ast = parser.generateAST()
+
+        val sca = StaticCodeAnalyzer()
+        val scaIssues = sca.analyze(ast)
+
+        if (scaIssues.isNotEmpty()) {
+            echo("Problems found by the linter:")
+            scaIssues.forEachIndexed { index, issue ->
+                echo("${index + 1}. ${issue.message} Line ${issue.position.x}, column ${issue.position.y}")
+            }
+            echo()
+        } else {
+            echo("No static analysis problems found.\n")
+        }
     }
 }
 
