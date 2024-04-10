@@ -16,15 +16,14 @@ class ContentASTBuilder : ASTBuilder<BinaryNode> {
     override fun build(tokens: List<Token>): BinaryNode {
         val (node, remainingTokens) = buildTerm(tokens)
         if (remainingTokens.isNotEmpty()) {
-            throw RuntimeException("Unexpected tokens remaining after building expression")
+            throw RuntimeException("Unexpected tokens remaining after building expression: " + remainingTokens.joinToString(", ") { it.toString() })
         }
         return node
     }
 
     private fun buildTerm(tokens: List<Token>): Pair<BinaryNode, List<Token>> {
         var (node, remainingTokens) = buildFactor(tokens)
-        while (remainingTokens.isNotEmpty() && (remainingTokens[0].type == TokenType.TIMES || remainingTokens[0].type == TokenType.DIV
-             || remainingTokens[0].type == TokenType.PLUS || remainingTokens[0].type == TokenType.MINUS)) {
+        while (verifyRemainingTokens(remainingTokens)) {
             val operatorToken = remainingTokens[0]
             val (rightNode, newRemainingTokens) = buildFactor(remainingTokens.subList(1, remainingTokens.size))
             node = BinaryOperation(node, operatorToken.value, rightNode)
@@ -51,7 +50,7 @@ class ContentASTBuilder : ASTBuilder<BinaryNode> {
                 }
             }
             TokenType.IDENTIFIER -> Pair(IdentifierOperator(firstToken.value), tokens.subList(1, tokens.size))
-            else -> throw RuntimeException("Unexpected token type in factor: ${firstToken.type}")
+            else -> throw RuntimeException("Unexpected token type: ${firstToken.type} at ${firstToken.positionStart.y}:${firstToken.positionStart.x}")
         }
     }
 
@@ -69,5 +68,16 @@ class ContentASTBuilder : ASTBuilder<BinaryNode> {
             }
         }
         throw RuntimeException("Mismatched parentheses in expression")
+    }
+
+    private fun verifyRemainingTokens(remainingTokens: List<Token>): Boolean {
+        return if (remainingTokens.size > 1) {
+            remainingTokens[0].type in listOf(TokenType.PLUS, TokenType.MINUS, TokenType.TIMES, TokenType.DIV)
+        } else {
+            if (remainingTokens.isNotEmpty()) {
+                remainingTokens[0].type in listOf(TokenType.NUMBER, TokenType.STRING, TokenType.IDENTIFIER)
+            }
+            false
+        }
     }
 }
