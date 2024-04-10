@@ -1,25 +1,31 @@
-class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
+import builder.ASTBuilder
+import builder.AssignationASTBuilder
+import builder.DeclarationASTBuilder
+import builder.MethodASTBuilder
 
-    /**
-     *  TODO: Falta agregar que el parser puede recibir un statement a la vez. Habria que hacer un Token Provider que le un statement a la vez
-     */
-    fun generateAST(tokenList: List<Token>): ASTNode {
+class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
+    fun generateAST(tokens: List<Token>): ASTNode {
         for (astBuilder in astBuilders) {
-            if (astBuilder.canBuild(tokenList)) {
-                return astBuilder.build(tokenList)
+            if (astBuilder.verify(tokens)) {
+                return astBuilder.build(removeEmptyLines(tokens))
             }
         }
         throw RuntimeException("No se pudo construir el AST")
     }
 
+    private fun removeEmptyLines(tokens: List<Token>): List<Token> {
+        return tokens.filter { it.type != TokenType.NEW_LINE }
+    }
+
     companion object {
-        fun createDefault(): Parser {
-            val astBuilders = listOf(
-                DeclarationASTBuilder(),
-                AssignationASTBuilder(),
-                MethodASTBuilder()
+        fun getDefaultParser(): Parser {
+            return Parser(
+                listOf(
+                    DeclarationASTBuilder(),
+                    AssignationASTBuilder(),
+                    MethodASTBuilder(),
+                ),
             )
-            return Parser(astBuilders)
         }
     }
 }

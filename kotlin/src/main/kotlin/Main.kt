@@ -13,7 +13,7 @@ fun main() {
 //    println(tokens)
 
     // El PARSER toma una lista de tokens y la convierte en un AST
-    val parser = Parser.createDefault()
+    val parser = Parser.getDefaultParser()
     val ast = listOf(parser.generateAST(tokens))
 //    println(ast)
 
