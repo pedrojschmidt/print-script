@@ -14,27 +14,17 @@ class ContentASTBuilder : ASTBuilder<BinaryNode> {
     }
 
     override fun build(tokens: List<Token>): BinaryNode {
-        val (node, remainingTokens) = buildExpression(tokens)
+        val (node, remainingTokens) = buildTerm(tokens)
         if (remainingTokens.isNotEmpty()) {
             throw RuntimeException("Unexpected tokens remaining after building expression")
         }
         return node
     }
 
-    private fun buildExpression(tokens: List<Token>): Pair<BinaryNode, List<Token>> {
-        var (node, remainingTokens) = buildTerm(tokens)
-        while (remainingTokens.isNotEmpty() && (remainingTokens[0].type == TokenType.PLUS || remainingTokens[0].type == TokenType.MINUS)) {
-            val operatorToken = remainingTokens[0]
-            val (rightNode, newRemainingTokens) = buildTerm(remainingTokens.subList(1, remainingTokens.size))
-            node = BinaryOperation(node, operatorToken.value, rightNode)
-            remainingTokens = newRemainingTokens
-        }
-        return Pair(node, remainingTokens)
-    }
-
     private fun buildTerm(tokens: List<Token>): Pair<BinaryNode, List<Token>> {
         var (node, remainingTokens) = buildFactor(tokens)
-        while (remainingTokens.isNotEmpty() && (remainingTokens[0].type == TokenType.TIMES || remainingTokens[0].type == TokenType.DIV)) {
+        while (remainingTokens.isNotEmpty() && (remainingTokens[0].type == TokenType.TIMES || remainingTokens[0].type == TokenType.DIV
+             || remainingTokens[0].type == TokenType.PLUS || remainingTokens[0].type == TokenType.MINUS)) {
             val operatorToken = remainingTokens[0]
             val (rightNode, newRemainingTokens) = buildFactor(remainingTokens.subList(1, remainingTokens.size))
             node = BinaryOperation(node, operatorToken.value, rightNode)
