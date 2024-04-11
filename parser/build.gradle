@@ -7,6 +7,7 @@ dependencies {
     implementation project(":token")
     implementation project(":ast")
 
+    testImplementation project(":lexer")
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 

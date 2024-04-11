@@ -3,7 +3,7 @@ sealed interface ASTNode
 // Esta interfaz sirve para que se pueda hacer pattern matching con los dos tipos de asignaciones
 sealed interface Assignation : ASTNode
 
-sealed interface BinaryNode
+sealed interface BinaryNode : ASTNode
 
 // let x: number;
 data class Declaration(val identifier: String, val type: String) : ASTNode
