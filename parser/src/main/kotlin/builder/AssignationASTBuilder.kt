@@ -10,21 +10,21 @@ class AssignationASTBuilder : ASTBuilder<Assignation> {
     private val declarationASTBuilder = DeclarationASTBuilder()
     private val contentASTBuilder = ContentASTBuilder()
 
-    override fun verify(tokens: List<Token>): Boolean {
-        return if (isDeclarationAssignation(tokens)) {
-            contentASTBuilder.verify(tokens.subList(5, tokens.size))
-        } else if (isSimpleAssignation(tokens)) {
-            contentASTBuilder.verify(tokens.subList(2, tokens.size))
+    override fun verify(statement: List<Token>): Boolean {
+        return if (isDeclarationAssignation(statement)) {
+            contentASTBuilder.verify(statement.subList(5, statement.size))
+        } else if (isSimpleAssignation(statement)) {
+            contentASTBuilder.verify(statement.subList(2, statement.size))
         } else {
             false
         }
     }
 
-    override fun build(tokens: List<Token>): Assignation {
-        return if (declarationASTBuilder.verify(tokens.subList(0, 4))) {
-            DeclarationAssignation(declarationASTBuilder.build(tokens.subList(0, 4)), contentASTBuilder.build(tokens.subList(5, tokens.size - 1)))
+    override fun build(statement: List<Token>): Assignation {
+        return if (declarationASTBuilder.verify(statement.subList(0, 4))) {
+            DeclarationAssignation(declarationASTBuilder.build(statement.subList(0, 4)), contentASTBuilder.build(statement.subList(5, statement.size - 1)))
         } else {
-            SimpleAssignation(tokens[0].value, contentASTBuilder.build(tokens.subList(2, tokens.size)))
+            SimpleAssignation(statement[0].value, contentASTBuilder.build(statement.subList(2, statement.size)))
         }
     }
 

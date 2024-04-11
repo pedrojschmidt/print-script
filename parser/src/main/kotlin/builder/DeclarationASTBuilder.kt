@@ -4,16 +4,23 @@ import Declaration
 import Token
 
 class DeclarationASTBuilder : ASTBuilder<Declaration> {
-    override fun verify(tokens: List<Token>): Boolean {
-        if (tokens[0].type != TokenType.LET_KEYWORD) return false
-        else if (tokens[1].type != TokenType.IDENTIFIER) return false
-        else if (tokens[2].type != TokenType.COLON) return false
-        else if (tokens[3].type != TokenType.STRING_TYPE && tokens[3].type != TokenType.NUMBER_TYPE) return false
-        else if (tokens.size > 4 && tokens[4].type == TokenType.EQ) return false
+    override fun verify(statement: List<Token>): Boolean {
+        if (statement[0].type != TokenType.LET_KEYWORD) {
+            return false
+        } else if (statement[1].type != TokenType.IDENTIFIER) {
+            return false
+        } else if (statement[2].type != TokenType.COLON) {
+            return false
+        } else if (statement[3].type != TokenType.STRING_TYPE && statement[3].type != TokenType.NUMBER_TYPE) {
+            return false
+        } else if (statement.size > 4 && statement[4].type == TokenType.EQ) {
+            // Check if the declaration is a simple declaration by checking the 5 token is not a = (if it is, it is an assignation, not a declaration
+            return false
+        }
         return true
     }
 
-    override fun build(tokens: List<Token>): Declaration {
-        return Declaration(tokens[1].value, tokens[3].value)
+    override fun build(statement: List<Token>): Declaration {
+        return Declaration(statement[1].value, statement[3].value)
     }
 }

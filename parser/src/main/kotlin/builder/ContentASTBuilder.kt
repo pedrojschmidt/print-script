@@ -9,12 +9,12 @@ import Token
 import TokenType
 
 class ContentASTBuilder : ASTBuilder<BinaryNode> {
-    override fun verify(tokens: List<Token>): Boolean {
-        return tokens.isNotEmpty()
+    override fun verify(statement: List<Token>): Boolean {
+        return statement.isNotEmpty()
     }
 
-    override fun build(tokens: List<Token>): BinaryNode {
-        val (node, remainingTokens) = buildTerm(tokens)
+    override fun build(statement: List<Token>): BinaryNode {
+        val (node, remainingTokens) = buildTerm(statement)
         if (remainingTokens.isNotEmpty()) {
             throw RuntimeException("Unexpected tokens remaining after building expression: " + remainingTokens.joinToString(", ") { it.toString() })
         }
