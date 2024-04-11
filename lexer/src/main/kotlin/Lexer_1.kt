@@ -106,8 +106,8 @@ class Lexer_1 (
                 "number" -> Token_1(TokenType_1.NUMBER_TYPE, "number", Position(positionX - 6, positionY), Position(positionX, positionY))
                 "string" -> Token_1(TokenType_1.STRING_TYPE, "string", Position(positionX - 6, positionY), Position(positionX, positionY))
                 "boolean" -> Token_1(TokenType_1.BOOLEAN_TYPE, "boolean", Position(positionX - 7, positionY), Position(positionX, positionY))
-                "true" -> Token_1(TokenType_1.BOOLEAN, "true", Position(positionX - 4, positionY), Position(positionX, positionY))
-                "false" -> Token_1(TokenType_1.BOOLEAN, "false", Position(positionX - 5, positionY), Position(positionX, positionY))
+                "true" -> Token_1(TokenType_1.BOOLEAN_TRUE, "true", Position(positionX - 4, positionY), Position(positionX, positionY))
+                "false" -> Token_1(TokenType_1.BOOLEAN_FALSE, "false", Position(positionX - 5, positionY), Position(positionX, positionY))
                 "readInput" -> Token_1(TokenType_1.READINPUT_FUNCTION, "readInput", Position(positionX - 9, positionY), Position(positionX, positionY))
                 "readEnv" -> Token_1(TokenType_1.READENV_FUNCTION, "readEnv", Position(positionX - 7, positionY), Position(positionX, positionY))
                 else ->
