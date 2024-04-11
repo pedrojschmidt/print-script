@@ -13,8 +13,8 @@ class DeclarationASTBuilder : ASTBuilder<Declaration> {
             return false
         } else if (statement[3].type != TokenType.STRING_TYPE && statement[3].type != TokenType.NUMBER_TYPE) {
             return false
-        } // Check if the declaration is a simple declaration by checking the 5 token is not a = (if it is, it is an assignation, not a declaration
-        else if (statement.size > 4 && statement[4].type == TokenType.EQ) {
+        } else if (statement.size > 4 && statement[4].type == TokenType.EQ) {
+            // Check if the declaration is a simple declaration by checking the 5 token is not a = (if it is, it is an assignation, not a declaration
             return false
         }
         return true
