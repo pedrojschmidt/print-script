@@ -5,8 +5,7 @@ enum class TokenType_1 {
 
     STRING,
     NUMBER,
-    BOOLEAN_TRUE,
-    BOOLEAN_FALSE,
+    BOOLEAN,
 
     IDENTIFIER,
     SEMICOLON,
