@@ -20,7 +20,7 @@ class TokenProvider(private val input: InputStream) {
         }
 
         // Create a Lexer and generate tokens from the statement
-        val lexer = Lexer(statement.toString())
-        return lexer.makeTokens()
+        val lexer = Lexer()
+        return lexer.makeTokens(statement.toString())
     }
 }
