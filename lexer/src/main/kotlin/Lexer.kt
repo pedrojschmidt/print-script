@@ -45,12 +45,13 @@ class Lexer {
                     if (token.type == TokenType.NEW_LINE) {
                         positionY++
                         positionX = 1
-                    } else {
-                        positionX += token.value.length
-                        if (token.type == TokenType.STRING) {
-                            position += 2
-                            positionX += 2
-                        }
+                        continue
+                    }
+                    positionX += token.value.length
+                    // Skip the quotes of strings
+                    if (token.type == TokenType.STRING) {
+                        position += 2
+                        positionX += 2
                     }
                 }
             } else {
