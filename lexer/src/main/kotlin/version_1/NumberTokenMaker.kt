@@ -1,3 +1,7 @@
+package version_1
+
+import Position
+
 class NumberTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,
@@ -11,6 +15,11 @@ class NumberTokenMaker : TokenMaker {
             number += input[pos]
             pos++
         }
-        return if (number.isNotEmpty()) Token(TokenType.NUMBER, number, Position(positionX, positionY), Position(positionX + number.length, positionY)) else null
+        return if (number.isNotEmpty()) Token(
+            TokenType.NUMBER,
+            number,
+            Position(positionX, positionY),
+            Position(positionX + number.length, positionY)
+        ) else null
     }
 }

@@ -1,3 +1,5 @@
+package version_0
+
 enum class TokenType {
     STRING_TYPE,
     NUMBER_TYPE,

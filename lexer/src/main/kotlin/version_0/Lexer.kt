@@ -1,3 +1,5 @@
+package version_0
+
 class Lexer {
     private val tokenMakers: Map<Char, TokenMaker> =
         ('0'..'9').associateWith { NumberTokenMaker() } +

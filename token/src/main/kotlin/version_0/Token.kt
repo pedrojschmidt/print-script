@@ -1,3 +1,7 @@
+package version_0
+
+import Position
+
 data class Token(
     val type: TokenType,
     val value: String,

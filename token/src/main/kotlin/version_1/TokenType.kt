@@ -1,4 +1,6 @@
-enum class TokenType_1 {
+package version_1
+
+enum class TokenType {
     STRING_TYPE,
     NUMBER_TYPE,
     BOOLEAN_TYPE,
@@ -9,6 +11,7 @@ enum class TokenType_1 {
 
     IDENTIFIER,
     SEMICOLON,
+    NEW_LINE,
 
     LET_KEYWORD,
     CONST_KEYWORD,

@@ -1,3 +1,7 @@
+package version_1
+
+import Position
+
 class StringTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,
@@ -18,6 +22,11 @@ class StringTokenMaker : TokenMaker {
             pos++
         }
 
-        return if (str.isNotEmpty()) Token(TokenType.STRING, str, Position(positionX, positionY), Position(positionX + str.length + 2, positionY)) else null
+        return if (str.isNotEmpty()) Token(
+            TokenType.STRING,
+            str,
+            Position(positionX, positionY),
+            Position(positionX + str.length + 2, positionY)
+        ) else null
     }
 }

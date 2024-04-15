@@ -2,6 +2,8 @@ import builder.ASTBuilder
 import builder.AssignationASTBuilder
 import builder.DeclarationASTBuilder
 import builder.MethodASTBuilder
+import version_0.Token
+import version_0.TokenType
 
 class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
     fun generateAST(tokens: List<Token>): ASTNode {

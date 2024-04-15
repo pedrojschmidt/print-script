@@ -1,7 +1,8 @@
 package builder
 
 import Declaration
-import Token
+import version_0.Token
+import version_0.TokenType
 
 class DeclarationASTBuilder : ASTBuilder<Declaration> {
     override fun verify(statement: List<Token>): Boolean {

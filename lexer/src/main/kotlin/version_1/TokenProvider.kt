@@ -1,3 +1,5 @@
+package version_1
+
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -19,8 +21,8 @@ class TokenProvider(private val input: InputStream) {
             statement.append(';')
         }
 
-        // Create a Lexer and generate tokens from the statement
-        val lexer = Lexer()
+        // Create a Version_1.Lexer and generate tokens from the statement
+        val lexer = Lexer_1()
         return lexer.makeTokens(statement.toString())
     }
 }

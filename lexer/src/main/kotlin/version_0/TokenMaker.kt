@@ -1,3 +1,5 @@
+package version_0
+
 interface TokenMaker {
     fun makeToken(
         input: String,
