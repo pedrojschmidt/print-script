@@ -11,14 +11,14 @@ class InterpreterTest {
                     BinaryOperation(
                         StringOperator("Hello"),
                         "+",
-                        NumberOperator(5.0),
+                        NumberOperator(5),
                     ),
                 ),
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
         val interpreter = Interpreter()
         val result = interpreter.consume(ast)
-        assertEquals("Hello5.0\n", result)
+        assertEquals("Hello5\n", result)
     }
 
     // let a: number = 1.0;
@@ -30,7 +30,7 @@ class InterpreterTest {
             listOf(
                 DeclarationAssignation(
                     Declaration("a", "number"),
-                    NumberOperator(1.0),
+                    NumberOperator(1),
                 ),
                 DeclarationAssignation(
                     Declaration("x", "string"),
@@ -44,7 +44,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         val result = interpreter.consume(ast)
-        assertEquals("1.0Hello\n", result)
+        assertEquals("1Hello\n", result)
     }
 
     // "let a: string = 5 * 5;"
@@ -56,16 +56,16 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     BinaryOperation(
-                        NumberOperator(5.0),
+                        NumberOperator(5),
                         "*",
-                        NumberOperator(5.0),
+                        NumberOperator(5),
                     ),
                 ),
                 Method("println", IdentifierOperator("a")),
             )
         val interpreter = Interpreter()
         val result = interpreter.consume(ast)
-        assertEquals("25.0\n", result)
+        assertEquals("25\n", result)
     }
 
     @Test
@@ -74,11 +74,11 @@ class InterpreterTest {
             listOf(
                 DeclarationAssignation(
                     Declaration("a", "number"),
-                    NumberOperator(5.0),
+                    NumberOperator(5),
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
-                    NumberOperator(5.0),
+                    NumberOperator(5),
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -92,7 +92,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         val result = interpreter.consume(ast)
-        assertEquals("10.0\n", result)
+        assertEquals("10\n", result)
     }
 
     @Test
@@ -101,11 +101,11 @@ class InterpreterTest {
             listOf(
                 DeclarationAssignation(
                     Declaration("a", "number"),
-                    NumberOperator(10.0),
+                    NumberOperator(10),
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
-                    NumberOperator(5.0),
+                    NumberOperator(5),
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -119,7 +119,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         val result = interpreter.consume(ast)
-        assertEquals("5.0\n", result)
+        assertEquals("5\n", result)
     }
 
     @Test
@@ -128,11 +128,11 @@ class InterpreterTest {
             listOf(
                 DeclarationAssignation(
                     Declaration("a", "number"),
-                    NumberOperator(10.0),
+                    NumberOperator(10),
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
-                    NumberOperator(5.0),
+                    NumberOperator(5),
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -146,7 +146,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         val result = interpreter.consume(ast)
-        assertEquals("2.0\n", result)
+        assertEquals("2\n", result)
     }
 
     @Test
