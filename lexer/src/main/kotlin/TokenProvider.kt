@@ -3,8 +3,11 @@ import java.io.InputStream
 import java.io.InputStreamReader
 
 class TokenProvider(private val input: InputStream) {
+    private val lexer = Lexer()
+    private val reader = BufferedReader(InputStreamReader(input))
+    private var hasNextStatement = true
+
     fun readStatement(): List<Token> {
-        val reader = BufferedReader(InputStreamReader(input))
         val statement = StringBuilder()
         var char = reader.read()
 
@@ -17,10 +20,14 @@ class TokenProvider(private val input: InputStream) {
         // If a semicolon is found, append it to the statement
         if (char != -1) {
             statement.append(';')
+        } else {
+            hasNextStatement = false
         }
 
-        // Create a Lexer and generate tokens from the statement
-        val lexer = Lexer()
         return lexer.makeTokens(statement.toString())
+    }
+
+    fun hasNextStatement(): Boolean {
+        return hasNextStatement
     }
 }
