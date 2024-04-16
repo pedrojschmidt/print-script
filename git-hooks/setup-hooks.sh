@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Directorio del repositorio
+REPO_DIR=$(git rev-parse --show-toplevel)
+
+# Directorio de los git hooks
+HOOKS_DIR="$REPO_DIR/git-hooks"
+
+# Crear enlaces simbólicos a los git hooks
+ln -s -f "$HOOKS_DIR/pre-commit" "$REPO_DIR/.git/hooks/pre-commit"
+
