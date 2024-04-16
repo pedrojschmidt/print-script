@@ -4,9 +4,12 @@ import builder.DeclarationASTBuilder
 import builder.MethodASTBuilder
 
 class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
-    fun generateAST(tokens: List<Token>): ASTNode {
+    fun generateAST(tokens: List<Token>): ASTNode? {
         for (astBuilder in astBuilders) {
-            if (astBuilder.verify(tokens)) {
+            if (removeEmptyLines(tokens).isEmpty()) {
+                return null
+            }
+            if (astBuilder.verify(removeEmptyLines(tokens))) {
                 return astBuilder.build(removeEmptyLines(tokens))
             }
         }

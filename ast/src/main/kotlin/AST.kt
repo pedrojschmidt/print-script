@@ -24,7 +24,7 @@ data class BinaryOperation(val left: BinaryNode, val symbol: String, val right: 
 data class StringOperator(val value: String) : BinaryNode
 
 // Representa cualquier número, como 5
-data class NumberOperator(val value: Double) : BinaryNode
+data class NumberOperator(val value: Number) : BinaryNode
 
 // Representa cualquier identificador, como x
 data class IdentifierOperator(val identifier: String) : BinaryNode
