@@ -17,7 +17,7 @@ class Formatter(private val formatRules: FormatRules) {
                     spaceBeforeColon,
                     spaceAfterColon,
                     spaceAroundAssignment,
-                    newlineBeforePrintln,
+                    newlineBeforePrintln, // asegurarme de usarla
                     spaceAfterLet,
                 )
             return Formatter(formatRules)

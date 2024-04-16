@@ -34,7 +34,16 @@ class CLI : CliktCommand() {
                 }
                 formatFile(file, version, configFile)
             }
-            4 -> analyzeFile(file, version)
+            4 -> {
+                echo("\nConfiguration file:")
+                val configFilePath = readlnOrNull()
+                val configFile = File(configFilePath.toString())
+                if (!configFile.exists()) {
+                    echo("Configuration file does not exist")
+                    return
+                }
+                analyzeFile(file, version, configFile)
+            }
             else -> echo("Invalid option")
         }
     }
@@ -111,6 +120,7 @@ class CLI : CliktCommand() {
     private fun analyzeFile(
         file: File,
         version: String,
+        configFile: File,
     ) {
         echo("\nAnalyzing...")
         val tokenProvider = TokenProvider(FileInputStream(file))
@@ -123,8 +133,8 @@ class CLI : CliktCommand() {
             // Add the AST to the list if it is not null
             ast?.let { astList.add(it) }
         }
-
-        val sca = StaticCodeAnalyzer()
+        val yamlContent = configFile.readText()
+        val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
         val scaIssues = sca.analyze(astList)
 
         if (scaIssues.isNotEmpty()) {

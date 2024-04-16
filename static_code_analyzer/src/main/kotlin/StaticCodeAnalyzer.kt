@@ -1,4 +1,25 @@
-class StaticCodeAnalyzer {
+import org.yaml.snakeyaml.Yaml
+
+class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
+    companion object {
+        fun fromYaml(yamlContent: String): StaticCodeAnalyzer {
+            val yaml = Yaml()
+            val yamlMap = yaml.load(yamlContent) as Map<String, Map<String, Any>>
+            val rulesMap = yamlMap["rules"] ?: throw IllegalArgumentException("Invalid YAML content")
+            val printlnArgumentCheck = rulesMap["printlnArgumentCheck"] as Boolean
+            val typeMatchingCheck = rulesMap["typeMatchingCheck"] as Boolean
+            val identifierNamingCheck = rulesMap["identifierNamingCheck"] as Boolean
+
+            val formatRules =
+                StaticCodeAnalyzerRules(
+                    printlnArgumentCheck,
+                    typeMatchingCheck,
+                    identifierNamingCheck,
+                )
+            return StaticCodeAnalyzer(formatRules)
+        }
+    }
+
     fun analyze(astNodes: List<ASTNode>): List<StaticCodeIssue> {
         val issues = mutableListOf<StaticCodeIssue>()
         var lineIndex = 1
@@ -8,9 +29,11 @@ class StaticCodeAnalyzer {
             when (node) {
                 is DeclarationAssignation -> {
                     if (!checkTypeMatching(node)) {
+                        columnIndex += 3
                         issues.add(StaticCodeIssue("La declaración de variable no coincide con el tipo del valor asignado", Position(lineIndex, columnIndex)))
                     }
                     if (!checkIdentifierFormat(node.declaration.identifier)) {
+                        columnIndex += 1
                         issues.add(StaticCodeIssue("El identificador '${node.declaration.identifier}' debe estar en lower camel case.", Position(lineIndex, columnIndex)))
                     }
                 }
@@ -18,6 +41,7 @@ class StaticCodeAnalyzer {
                     if (node.identifier == "println") {
                         val argument = extractPrintlnArgument(node.value)
                         if (!isValidPrintlnArgument(argument)) {
+                            columnIndex++
                             issues.add(StaticCodeIssue("La función println debe llamarse solo con un identificador o un literal, la expresión: $argument es inválida.", Position(lineIndex, columnIndex)))
                         }
                     }
@@ -25,18 +49,16 @@ class StaticCodeAnalyzer {
 
                 else -> {}
             }
-
-            if (node is Method) {
-                lineIndex++ // Aumentar el índice de línea si el nodo es un método
-            }
-
-            columnIndex++
+            lineIndex++
         }
 
         return issues
     }
 
     private fun checkTypeMatching(node: DeclarationAssignation): Boolean {
+        // Verificar si el tipo de la declaración coincide con el tipo del valor asignado
+        if (!scaRules.typeMatchingCheck) return true // Si las reglas están desactivadas, siempre retorna true
+
         return when (node.declaration.type) {
             "string" -> node.assignation is StringOperator
             "number" -> node.assignation is NumberOperator || node.assignation is BinaryOperation
@@ -59,12 +81,15 @@ class StaticCodeAnalyzer {
     }
 
     private fun isValidPrintlnArgument(argument: String): Boolean {
-        // Verificar si el argumento es un identificador o un literal
-        return argument.matches("""^[\w\d]+$""".toRegex()) // Asumiendo que un identificador puede contener letras y números
+        // Verificar si el argumento es un identificador o un literal (número o string)
+        if (!scaRules.printlnArgumentCheck) return true // Si las reglas están desactivadas, siempre retorna true
+
+        return argument.matches("""^[\w\d]+$""".toRegex())
     }
 
     private fun checkIdentifierFormat(identifier: String): Boolean {
-        // Verificar si el identificador está en lower camel case
+        // Verificar si el identificador está en lower camel case (e.g. nombreVariable)
+        if (!scaRules.identifierNamingCheck) return true
         return identifier.matches("""^[a-z]+(?:[A-Z][a-z\d]*)*$""".toRegex())
     }
 }
