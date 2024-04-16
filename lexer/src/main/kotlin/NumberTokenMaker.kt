@@ -7,7 +7,16 @@ class NumberTokenMaker : TokenMaker {
     ): Token? {
         var number = ""
         var pos = position
-        while (pos < input.length && input[pos].isDigit()) {
+        var decimalPointEncountered = false
+        while (pos < input.length && input[pos].isDigit() || input[pos] == '.') {
+            if (input[pos] == '.') {
+                if (decimalPointEncountered) {
+                    // Ya se encontró un punto decimal en este número, por lo que no se puede agregar otro
+                    throw RuntimeException("Invalid number format at position $positionX:$positionY")
+                } else {
+                    decimalPointEncountered = true
+                }
+            }
             number += input[pos]
             pos++
         }

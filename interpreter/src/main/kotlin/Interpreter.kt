@@ -89,7 +89,12 @@ class Interpreter {
                 when (operation.symbol) {
                     "+" -> {
                         return if (left.toDoubleOrNull() != null && right.toDoubleOrNull() != null) {
-                            (left.toDouble() + right.toDouble()).toString()
+                            val numberValue = left.toDouble() + right.toDouble()
+                            if (numberValue % 1 == 0.0) {
+                                numberValue.toInt().toString()
+                            } else {
+                                numberValue.toString()
+                            }
                         } else {
                             // Si al menos uno es String, los concatena
                             "$left$right"
@@ -98,7 +103,12 @@ class Interpreter {
 
                     "-" -> {
                         return if (left.toDoubleOrNull() != null && right.toDoubleOrNull() != null) {
-                            (left.toDouble() - right.toDouble()).toString()
+                            val numberValue = left.toDouble() - right.toDouble()
+                            if (numberValue % 1 == 0.0) {
+                                numberValue.toInt().toString()
+                            } else {
+                                numberValue.toString()
+                            }
                         } else {
                             throw IllegalArgumentException("Unsupported operation: '-' with non-numeric operands.")
                         }
@@ -106,7 +116,12 @@ class Interpreter {
 
                     "*" -> {
                         return if (left.toDoubleOrNull() != null && right.toDoubleOrNull() != null) {
-                            (left.toDouble() * right.toDouble()).toString()
+                            val numberValue = left.toDouble() * right.toDouble()
+                            if (numberValue % 1 == 0.0) {
+                                numberValue.toInt().toString()
+                            } else {
+                                numberValue.toString()
+                            }
                         } else {
                             throw IllegalArgumentException("Unsupported operation: '*' with non-numeric operands.")
                         }
@@ -114,7 +129,12 @@ class Interpreter {
 
                     "/" -> {
                         if (left.toDoubleOrNull() != null && right.toDoubleOrNull() != null) {
-                            (left.toDouble() / right.toDouble()).toString()
+                            val numberValue = left.toDouble() / right.toDouble()
+                            if (numberValue % 1 == 0.0) {
+                                numberValue.toInt().toString()
+                            } else {
+                                numberValue.toString()
+                            }
                         } else {
                             throw IllegalArgumentException("Unsupported operation: '/' with non-numeric operands.")
                         }
