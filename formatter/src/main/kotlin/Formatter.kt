@@ -68,17 +68,18 @@ class Formatter(private val formatRules: FormatRules) {
     private fun applyDeclarationAssignationFormatting(astNode: DeclarationAssignation): String {
         val spaceAroundAssignment = if (formatRules.spaceAroundAssignment) " " else ""
         val spaceAfterLet = applyLetFormatting()
-        val assignationValue = when (val assignation = astNode.assignation) {
-            is StringOperator -> "\"${assignation.value}\""
-            is NumberOperator -> "${assignation.value}"
-            is BinaryOperation -> {
-                val leftOperator = (assignation.left as NumberOperator).value
-                val symbol = assignation.symbol
-                val rightOperator = (assignation.right as NumberOperator).value
-                "$leftOperator$symbol$rightOperator"
+        val assignationValue =
+            when (val assignation = astNode.assignation) {
+                is StringOperator -> "\"${assignation.value}\""
+                is NumberOperator -> "${assignation.value}"
+                is BinaryOperation -> {
+                    val leftOperator = (assignation.left as NumberOperator).value
+                    val symbol = assignation.symbol
+                    val rightOperator = (assignation.right as NumberOperator).value
+                    "$leftOperator$symbol$rightOperator"
+                }
+                else -> throw IllegalArgumentException("Unsupported assignation type: ${assignation.javaClass.simpleName}")
             }
-            else -> throw IllegalArgumentException("Unsupported assignation type: ${assignation.javaClass.simpleName}")
-        }
 
         return "let$spaceAfterLet${astNode.declaration.identifier}${applyColonFormatting()}${astNode.declaration.type}$spaceAroundAssignment=$spaceAroundAssignment$assignationValue;${applySemicolonFormatting()}"
     }
@@ -95,5 +96,8 @@ class Formatter(private val formatRules: FormatRules) {
 
     private fun applyColonFormatting() = formatWithSpaces(formatRules.spaceBeforeColon, formatRules.spaceAfterColon)
 
-    private fun formatWithSpaces(before: Boolean = false, after: Boolean = false) = "${if (before) " " else ""}:${if (after) " " else ""}"
+    private fun formatWithSpaces(
+        before: Boolean = false,
+        after: Boolean = false,
+    ) = "${if (before) " " else ""}:${if (after) " " else ""}"
 }
