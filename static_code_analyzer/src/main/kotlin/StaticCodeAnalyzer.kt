@@ -1,4 +1,22 @@
-class StaticCodeAnalyzer {
+import org.yaml.snakeyaml.Yaml
+
+class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
+
+    companion object {
+        fun fromYaml(yamlContent: String): StaticCodeAnalyzer {
+            val yaml = Yaml()
+            val yamlMap = yaml.load(yamlContent) as Map<String, Map<String, Any>>
+            val rulesMap = yamlMap["rules"] ?: throw IllegalArgumentException("Invalid YAML content")
+            val printlnArgumentCheck = rulesMap["printlnArgumentCheck"] as Boolean
+
+            val formatRules =
+                StaticCodeAnalyzerRules(
+                    printlnArgumentCheck,
+                )
+            return StaticCodeAnalyzer(formatRules)
+        }
+    }
+
     fun analyze(astNodes: List<ASTNode>): List<StaticCodeIssue> {
         val issues = mutableListOf<StaticCodeIssue>()
         var lineIndex = 1
