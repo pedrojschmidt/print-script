@@ -1,4 +1,8 @@
+import builder.ContentASTBuilder
+import builder.MethodASTBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ParserTest {
@@ -374,6 +378,140 @@ class ParserTest {
 //        )
 //        assertEquals(expectedAst, actualAst)
 //    }
+
+    @Test
+    fun `test 022 - should convert a list of tokens in ast for let a number = 5 + (5 times 5)`() {
+        val code = "let a: number = 5 + (5 * 5);"
+        val actualAst = getAstList(code)
+
+        val expectedAst =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    BinaryOperation(
+                        NumberOperator(5),
+                        "+",
+                        BinaryOperation(
+                            NumberOperator(5),
+                            "*",
+                            NumberOperator(5),
+                        ),
+                    ),
+                ),
+            )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 023 - should return false for invalid statement`() {
+        val tokens =
+            listOf(
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(0, 0), Position(0, 6)),
+                Token(TokenType.LPAREN, "(", Position(0, 7), Position(0, 8)),
+                // Falta el token RPAREN
+            )
+        val builder = MethodASTBuilder()
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 024 - should return false for first token not PRINTLN_FUNCTION`() {
+        val tokens =
+            listOf(
+                Token(TokenType.IDENTIFIER, "println", Position(0, 0), Position(0, 6)), // Cambiado a IDENTIFIER
+                Token(TokenType.LPAREN, "(", Position(0, 7), Position(0, 8)),
+                Token(TokenType.RPAREN, ")", Position(0, 9), Position(0, 10)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 11), Position(0, 12)),
+            )
+        val builder = MethodASTBuilder()
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 025 - should return false for second token not LPAREN`() {
+        val tokens =
+            listOf(
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(0, 0), Position(0, 6)),
+                Token(TokenType.IDENTIFIER, "(", Position(0, 7), Position(0, 8)), // Cambiado a IDENTIFIER
+                Token(TokenType.RPAREN, ")", Position(0, 9), Position(0, 10)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 11), Position(0, 12)),
+            )
+        val builder = MethodASTBuilder()
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 026 - should return false for second last token not RPAREN`() {
+        val tokens =
+            listOf(
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(0, 0), Position(0, 6)),
+                Token(TokenType.LPAREN, "(", Position(0, 7), Position(0, 8)),
+                Token(TokenType.IDENTIFIER, ")", Position(0, 9), Position(0, 10)), // Cambiado a IDENTIFIER
+                Token(TokenType.SEMICOLON, ";", Position(0, 11), Position(0, 12)),
+            )
+        val builder = MethodASTBuilder()
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 027 - should throw exception for unverifiable tokens`() {
+        val tokens =
+            listOf(
+                Token(TokenType.IDENTIFIER, "invalid", Position(0, 0), Position(0, 6)),
+                // Esta lista de tokens no puede ser verificada por ninguno de los astBuilders
+            )
+        val parser = Parser.getDefaultParser()
+        assertThrows(RuntimeException::class.java) {
+            parser.generateAST(tokens)
+        }
+    }
+
+    @Test
+    fun `test 028 - should throw exception when tokens remain after building expression`() {
+        val tokens =
+            listOf(
+                Token(TokenType.NUMBER, "1", Position(0, 0), Position(0, 1)),
+                Token(TokenType.PLUS, "+", Position(0, 2), Position(0, 3)),
+                Token(TokenType.NUMBER, "2", Position(0, 4), Position(0, 5)),
+                Token(TokenType.NUMBER, "3", Position(0, 6), Position(0, 7)), // Token extra
+            )
+        val builder = ContentASTBuilder()
+        assertThrows(RuntimeException::class.java) {
+            builder.build(tokens)
+        }
+    }
+
+    @Test
+    fun `test 029 - should throw exception for unexpected token type`() {
+        val tokens =
+            listOf(
+                Token(TokenType.UNKNOWN, "???", Position(0, 0), Position(0, 3)), // Tipo de token inesperado
+            )
+        val builder = ContentASTBuilder()
+        assertThrows(RuntimeException::class.java) {
+            builder.build(tokens)
+        }
+    }
+
+    @Test
+    fun `test 030 - should throw exception for mismatched parentheses in expression`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LPAREN, "(", Position(0, 0), Position(0, 1)),
+                Token(TokenType.NUMBER, "1", Position(0, 2), Position(0, 3)),
+                Token(TokenType.PLUS, "+", Position(0, 4), Position(0, 5)),
+                Token(TokenType.NUMBER, "2", Position(0, 6), Position(0, 7)),
+                // Falta un token RPAREN para cerrar el paréntesis
+            )
+        val builder = ContentASTBuilder()
+        assertThrows(RuntimeException::class.java) {
+            builder.build(tokens)
+        }
+    }
 
     private fun getAstList(input: String): MutableList<ASTNode> {
         val tokenProvider = TokenProvider(input.byteInputStream())
