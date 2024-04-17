@@ -4,11 +4,11 @@ import kotlin.test.Test
 class LexerTest {
     @Test
     fun `test 001 - should make a list of tokens`() {
-        val example = "let a: string = 5 * 5;"
+        val example = "let a: number = 5 * 5;"
         val lexer = Lexer.getDefaultLexer()
         val actualTokens = lexer.makeTokens(example)
 
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON]"
+        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON]"
         val actualTokensString = listToString(actualTokens)
 
         assertEquals(expectedTokensString, actualTokensString)
