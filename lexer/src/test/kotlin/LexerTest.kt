@@ -8,7 +8,7 @@ class LexerTest {
     @Test
     fun `test 001 - should make a list of tokens`() {
         val example = "let a: string = 5 * 5;"
-        val lexer = Lexer()
+        val lexer = Lexer.getDefaultLexer()
         val tokens = lexer.makeTokens(example)
         assertEquals(9, tokens.size)
     }
@@ -17,7 +17,7 @@ class LexerTest {
     @Test
     fun `test 002 - should make a list of tokens`() {
         val example = "println(a);"
-        val lexer = Lexer()
+        val lexer = Lexer.getDefaultLexer()
         val tokens = lexer.makeTokens(example)
         assertEquals(5, tokens.size)
     }

@@ -41,7 +41,15 @@ class ContentASTBuilder : ASTBuilder<BinaryNode> {
                 val innerNode = build(innerExpression)
                 Pair(innerNode, tokens.subList(correspondingRParenIndex + 1, tokens.size))
             }
-            TokenType.NUMBER -> Pair(NumberOperator(firstToken.value.toDouble()), tokens.subList(1, tokens.size))
+            TokenType.NUMBER -> {
+                val numberValue = firstToken.value.toDouble()
+                // Diferenciar entre enteros y decimales
+                if (numberValue % 1 == 0.0) {
+                    Pair(NumberOperator(numberValue.toInt()), tokens.subList(1, tokens.size))
+                } else {
+                    Pair(NumberOperator(numberValue), tokens.subList(1, tokens.size))
+                }
+            }
             TokenType.STRING -> {
                 if (tokens.size > 2 && tokens[1].type == TokenType.PLUS && tokens[2].type == TokenType.NUMBER) {
                     Pair(BinaryOperation(StringOperator(firstToken.value), tokens[1].value, StringOperator(tokens[2].value)), tokens.subList(3, tokens.size))

@@ -1,4 +1,5 @@
 data class StaticCodeAnalyzerRules(
-    val identifierFormat: IdentifierFormat,
     val printlnArgumentCheck: Boolean,
+    val typeMatchingCheck: Boolean,
+    val identifierNamingCheck: Boolean,
 )

@@ -1,0 +1,18 @@
+plugins {
+    id 'common-conventions'
+}
+
+dependencies {
+    // clikt para la CLI
+    implementation("com.github.ajalt.clikt:clikt:3.4.0")
+
+    implementation project(":token")
+    implementation project(":ast")
+    implementation project(":lexer")
+    implementation project(":parser")
+    implementation project(":interpreter")
+    implementation project(":formatter")
+    implementation project(":static_code_analyzer")
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
