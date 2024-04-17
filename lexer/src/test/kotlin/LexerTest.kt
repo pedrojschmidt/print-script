@@ -1,4 +1,9 @@
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import java.io.ByteArrayInputStream
 import kotlin.test.Test
 
 class LexerTest {
@@ -252,6 +257,74 @@ class LexerTest {
         val actualTokensString = listToString(actualTokens)
 
         assertEquals(expectedTokensString, actualTokensString)
+    }
+
+    @Test
+    fun `test 022 - should read a statement with NEW_LINE`() {
+        val example = "let a: number = 5 * 5;\nlet b: number = 10 / 2;"
+        val lexer = Lexer.getDefaultLexer()
+        val actualTokens = lexer.makeTokens(example)
+
+        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON, NEW_LINE, LET_KEYWORD, IDENTIFIER(b), COLON, NUMBER_TYPE, EQ, NUMBER(10), DIV, NUMBER(2), SEMICOLON]"
+        val actualTokensString = listToString(actualTokens)
+
+        assertEquals(expectedTokensString, actualTokensString)
+    }
+
+    @Test
+    fun `test 023 - should read a statement with empty string`() {
+        val lexer = Lexer.getDefaultLexer()
+        assertThrows(RuntimeException::class.java) {
+            lexer.makeTokens("let a: number = 1.2.3;")
+        }
+    }
+
+    @Test
+    fun `test 024 - should read a statement with empty string`() {
+        val example = "let a: string = '';"
+        val lexer = Lexer.getDefaultLexer()
+        val actualTokens = lexer.makeTokens(example)
+
+        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, STRING(), SEMICOLON]"
+        val actualTokensString = listToString(actualTokens)
+
+        assertEquals(expectedTokensString, actualTokensString)
+    }
+
+    @Test
+    fun `test 025 - should return null for non-newline character`() {
+        val tokenMaker = NewLineTokenMaker()
+        val result = tokenMaker.makeToken("a", 0, 0, 0)
+        assertNull(result)
+    }
+
+    // TokenProvider tests
+    @Test
+    fun `test 026 - should read a statement`() {
+        val example = "let a: number = 5 * 5;"
+        val tokenProvider = TokenProvider(example.byteInputStream())
+        val actualTokens = tokenProvider.readStatement()
+
+        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON]"
+        val actualTokensString = listToString(actualTokens)
+
+        assertEquals(expectedTokensString, actualTokensString)
+    }
+
+    @Test
+    fun `test 027 - should not find semicolon in statement`() {
+        val input = ByteArrayInputStream("print Hello World".toByteArray())
+        val tokenProvider = TokenProvider(input)
+        tokenProvider.readStatement()
+        assertFalse(tokenProvider.hasNextStatement())
+    }
+
+    @Test
+    fun `test 028 - should find semicolon in statement`() {
+        val input = ByteArrayInputStream("print Hello World;".toByteArray())
+        val tokenProvider = TokenProvider(input)
+        tokenProvider.readStatement()
+        assertTrue(tokenProvider.hasNextStatement())
     }
 
     private fun listToString(tokens: List<Token>): String {
