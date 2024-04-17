@@ -1,27 +1,6 @@
 package version_1
 
-class Lexer_1 {
-    private val tokenMakers: Map<Char, TokenMaker> =
-        ('0'..'9').associateWith { NumberTokenMaker() } +
-            ('a'..'z').associateWith { IdentifierTokenMaker() } +
-            ('A'..'Z').associateWith { IdentifierTokenMaker() } +
-            mapOf(
-                Pair('\"', StringTokenMaker()),
-                Pair('\'', StringTokenMaker()),
-                Pair('(', SymbolTokenMaker()),
-                Pair(')', SymbolTokenMaker()),
-                Pair('=', SymbolTokenMaker()),
-                Pair(':', SymbolTokenMaker()),
-                Pair('+', SymbolTokenMaker()),
-                Pair('-', SymbolTokenMaker()),
-                Pair('*', SymbolTokenMaker()),
-                Pair('/', SymbolTokenMaker()),
-                Pair(';', SymbolTokenMaker()),
-                Pair('{', SymbolTokenMaker()),
-                Pair('}', SymbolTokenMaker()),
-                Pair('\n', NewLineTokenMaker()),
-            )
-
+class Lexer_1(private val tokenMakers: Map<Char, TokenMaker>) {
     fun makeTokens(inputText: String): List<Token> {
         var position = 0
         var positionX = 1
@@ -64,5 +43,31 @@ class Lexer_1 {
         }
 
         return tokenList
+    }
+
+    companion object {
+        fun getDefaultLexer(): Lexer_1 {
+            return Lexer_1(
+                ('0'..'9').associateWith { NumberTokenMaker() } +
+                    ('a'..'z').associateWith { IdentifierTokenMaker() } +
+                    ('A'..'Z').associateWith { IdentifierTokenMaker() } +
+                    mapOf(
+                        Pair('\"', StringTokenMaker()),
+                        Pair('\'', StringTokenMaker()),
+                        Pair('(', SymbolTokenMaker()),
+                        Pair(')', SymbolTokenMaker()),
+                        Pair('=', SymbolTokenMaker()),
+                        Pair(':', SymbolTokenMaker()),
+                        Pair('+', SymbolTokenMaker()),
+                        Pair('-', SymbolTokenMaker()),
+                        Pair('*', SymbolTokenMaker()),
+                        Pair('/', SymbolTokenMaker()),
+                        Pair(';', SymbolTokenMaker()),
+                        Pair('{', SymbolTokenMaker()),
+                        Pair('}', SymbolTokenMaker()),
+                        Pair('\n', NewLineTokenMaker()),
+                    ),
+            )
+        }
     }
 }

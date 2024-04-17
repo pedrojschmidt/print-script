@@ -26,16 +26,16 @@ class LexerTest {
     @Test
     fun `test 003 - should make a list of tokens`() {
         val example = "const a: boolean = false;"
-        val lexer = Lexer_1()
+        val lexer = Lexer_1.getDefaultLexer()
         val tokens = lexer.makeTokens(example)
         assertEquals(7, tokens.size)
     }
 
-    // "if(true){ a; } else { b; }"
+    // "if(true){ println(a); } else { println(b); }"
     @Test
     fun `test 004 - should make a list of tokens`() {
         val example = "if(true){ println(a); } else { println(b); }"
-        val lexer = Lexer_1()
+        val lexer = Lexer_1.getDefaultLexer()
         val tokens = lexer.makeTokens(example)
         assertEquals(19, tokens.size)
     }
