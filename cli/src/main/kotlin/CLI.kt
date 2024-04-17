@@ -54,16 +54,7 @@ class CLI : CliktCommand() {
     ) {
         echo("\nValidating...")
 
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
+        fillAstList(file)
 
         echo("File is valid")
     }
@@ -73,17 +64,7 @@ class CLI : CliktCommand() {
         version: String,
     ) {
         echo("\nExecuting...")
-
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
+        val astList = fillAstList(file)
 
         val interpreter = Interpreter()
         val result = interpreter.consume(astList)
@@ -97,16 +78,7 @@ class CLI : CliktCommand() {
         configFile: File,
     ) {
         echo("\nFormatting...")
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
+        val astList = fillAstList(file)
 
         val yamlContent = configFile.readText()
         val formatter = Formatter.fromYaml(yamlContent)
@@ -123,16 +95,8 @@ class CLI : CliktCommand() {
         configFile: File,
     ) {
         echo("\nAnalyzing...")
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
+        val astList = fillAstList(file)
 
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
         val yamlContent = configFile.readText()
         val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
         val scaIssues = sca.analyze(astList)
@@ -146,6 +110,19 @@ class CLI : CliktCommand() {
         } else {
             echo("No static analysis problems found.\n")
         }
+    }
+
+    private fun fillAstList(file: File): MutableList<ASTNode> {
+        val tokenProvider = TokenProvider(FileInputStream(file))
+        val parser = Parser.getDefaultParser()
+        val astList = mutableListOf<ASTNode>()
+        while (tokenProvider.hasNextStatement()) {
+            val tokens = tokenProvider.readStatement()
+            val ast = parser.generateAST(tokens)
+            // Add the AST to the list if it is not null
+            ast?.let { astList.add(it) }
+        }
+        return astList
     }
 }
 
