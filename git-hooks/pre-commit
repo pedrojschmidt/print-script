@@ -1,2 +1,14 @@
 #!/bin/sh
+
+# Obtener la lista de archivos modificados que están en el staging area
+staged_files=$(git diff --name-only --cached)
+
+./gradlew ktlintFormatter
+
+# Agregar solo los archivos que estaban en el staging area
+for file in $staged_files
+do
+  git add $file
+done
+
 ./gradlew build
