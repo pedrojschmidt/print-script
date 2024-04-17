@@ -5,7 +5,7 @@ fun main() {
 //    println("Codigo antes del formatter: \n$example\n")
 
     // El LEXER toma un string y lo convierte en una lista de tokens
-    val lexer = Lexer()
+    val lexer = Lexer.getDefaultLexer()
     val tokens = lexer.makeTokens(example)
     println(tokens)
 
