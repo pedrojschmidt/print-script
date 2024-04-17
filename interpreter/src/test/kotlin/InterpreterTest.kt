@@ -17,7 +17,7 @@ class InterpreterTest {
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("Hello5\n", result)
     }
 
@@ -43,7 +43,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("x")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("1Hello\n", result)
     }
 
@@ -64,7 +64,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("a")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("25\n", result)
     }
 
@@ -91,7 +91,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("10\n", result)
     }
 
@@ -118,7 +118,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("5\n", result)
     }
 
@@ -145,7 +145,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("2\n", result)
     }
 
@@ -172,7 +172,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("Hello World\n", result)
     }
 
@@ -183,7 +183,7 @@ class InterpreterTest {
                 Declaration("a", "string"),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("", result)
     }
 
@@ -195,7 +195,7 @@ class InterpreterTest {
                 SimpleAssignation("a", StringOperator("Hello")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         println(result)
         assertEquals("", result)
     }

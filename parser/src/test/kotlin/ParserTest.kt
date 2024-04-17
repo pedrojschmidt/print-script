@@ -10,13 +10,9 @@ class ParserTest {
         val actualAst = parser.generateAST(tokenProvider.readStatement())
 
         val expectedAst =
-            DeclarationAssignation(
-                Declaration("a", "string"),
-                BinaryOperation(
-                    StringOperator("Hello"),
-                    "+",
-                    StringOperator(" World"),
-                ),
+            Method(
+                "println", StringOperator("Hello, World!")
+
             )
         assertEquals(expectedAst, actualAst)
     }
