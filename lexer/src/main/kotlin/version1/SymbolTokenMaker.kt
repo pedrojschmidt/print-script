@@ -1,4 +1,4 @@
-package version_0
+package version1
 
 import Position
 
@@ -20,6 +20,8 @@ class SymbolTokenMaker : TokenMaker {
             '*' -> Token(TokenType.TIMES, "*", Position(positionX, positionY), Position(positionX + 1, positionY))
             '/' -> Token(TokenType.DIV, "/", Position(positionX, positionY), Position(positionX + 1, positionY))
             ';' -> Token(TokenType.SEMICOLON, ";", Position(positionX, positionY), Position(positionX + 1, positionY))
+            '{' -> Token(TokenType.LKEY, "{", Position(positionX, positionY), Position(positionX + 1, positionY))
+            '}' -> Token(TokenType.RKEY, "}", Position(positionX, positionY), Position(positionX + 1, positionY))
             else -> null
         }
     }

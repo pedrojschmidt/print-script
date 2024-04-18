@@ -1,4 +1,4 @@
-package version_0
+package version0
 
 class Lexer(private val tokenMakers: Map<Char, TokenMaker>) {
     fun makeTokens(inputText: String): List<Token> {

@@ -1,4 +1,4 @@
-package version_1
+package version0
 
 import Position
 
@@ -10,7 +10,7 @@ data class Token(
 ) {
     override fun toString(): String {
         // Si el token es un string, un numero o un identificador, mostramos el valor
-        if (type == TokenType.STRING || type == TokenType.NUMBER || type == TokenType.IDENTIFIER || type == TokenType.BOOLEAN) {
+        if (type == TokenType.STRING || type == TokenType.NUMBER || type == TokenType.IDENTIFIER) {
             return "${type.name}($value)"
         }
         return type.name

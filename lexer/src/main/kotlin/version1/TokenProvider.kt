@@ -1,11 +1,11 @@
-package version_0
+package version1
 
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
 class TokenProvider(private val input: InputStream) {
-    private val lexer = Lexer.getDefaultLexer()
+    private val lexer = Lexer_1.getDefaultLexer()
     private val reader = BufferedReader(InputStreamReader(input))
     private var hasNextStatement = true
 

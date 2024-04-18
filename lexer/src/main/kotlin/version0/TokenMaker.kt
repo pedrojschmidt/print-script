@@ -1,4 +1,4 @@
-package version_0
+package version0
 
 interface TokenMaker {
     fun makeToken(

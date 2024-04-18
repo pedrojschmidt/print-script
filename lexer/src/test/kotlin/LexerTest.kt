@@ -1,5 +1,5 @@
-import version_0.Lexer
-import version_1.Lexer_1
+import version0.Lexer
+import version1.Lexer_1
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull

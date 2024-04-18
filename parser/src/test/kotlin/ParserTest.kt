@@ -1,6 +1,6 @@
 import builder.ContentASTBuilder
 import builder.MethodASTBuilder
-import version_0.TokenProvider
+import version0.TokenProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull

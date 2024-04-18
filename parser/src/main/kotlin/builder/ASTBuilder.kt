@@ -1,8 +1,8 @@
 package builder
 
 import ASTNode
-import version_0.Token
-import version_0.TokenType
+import version0.Token
+import version0.TokenType
 
 interface ASTBuilder<out T : ASTNode> {
     // Method to verify if this builder can build the AST for the given tokens
