@@ -1,0 +1,6 @@
+rules:
+    spaceBeforeColon: true
+    spaceAfterColon: true
+    spaceAroundAssignment: true
+    spaceAfterLet: true
+    stringFormat: true

@@ -1,0 +1,9 @@
+let a: number = 5 + 5 + 5;
+let b: string = "Hello," + " World";
+let c: string = a;
+println(a + 5);
+println(b + "!");
+println("Hello, World!" + 5);
+println("Hello, World!" + "!");
+println(5 + 5 + 5);
+println("a" + a);
