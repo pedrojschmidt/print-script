@@ -63,7 +63,10 @@ class Interpreter {
         }
     }
 
-    private fun checkSameType(type: String, value: BinaryNode): Boolean {
+    private fun checkSameType(
+        type: String,
+        value: BinaryNode,
+    ): Boolean {
         return when (value) {
             is StringOperator -> {
                 type.equals("String", true)

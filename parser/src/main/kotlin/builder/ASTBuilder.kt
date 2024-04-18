@@ -12,7 +12,10 @@ interface ASTBuilder<out T : ASTNode> {
     fun build(statement: List<Token>): T
 
     // Filter tokens from certain token type
-    fun filterTokens(tokens: List<Token>, types: List<TokenType>): List<Token> {
+    fun filterTokens(
+        tokens: List<Token>,
+        types: List<TokenType>,
+    ): List<Token> {
         return tokens.filter { it.type !in types }
     }
 }
