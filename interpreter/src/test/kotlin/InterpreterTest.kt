@@ -599,6 +599,137 @@ class InterpreterTest {
         }
     }
 
+    @Test
+    fun `test 032 - const assignation shouldn't be able to override`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    NumberOperator(1),
+                    true,
+                ),
+                SimpleAssignation(
+                    "x",
+                    NumberOperator(10),
+                ),
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable x is constant", exception.message)
+    }
+
+    @Test
+    fun `test 033 - Conditional statement true`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("true\n", result)
+    }
+
+    @Test
+    fun `test 033 - Conditional statement false`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("false"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("false\n", result)
+    }
+
+    @Test
+    fun `test 034 - when define variable in if statement to not appear out of scope`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        DeclarationAssignation(
+                            Declaration("y", "number"),
+                            NumberOperator(5),
+                            false,
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("y")),
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable y not declared", exception.message)
+    }
+
+    @Test
+    fun `test 034 - change in if statement a variable declare out of the scope`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    NumberOperator(5),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("y", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("y"),
+                    listOf(
+                        SimpleAssignation(
+                            "x",
+                            NumberOperator(10),
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("x")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("10\n", result)
+    }
+
 //    @Test
 //    fun `test 033 - should throw exception for unexpected binary operation node`() {
 //        val ast = listOf(
