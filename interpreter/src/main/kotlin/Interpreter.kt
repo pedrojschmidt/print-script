@@ -41,8 +41,8 @@ class Interpreter {
         when (assignation) {
             // Differentiate between declaration with assignation and a simple assignation
             is DeclarationAssignation -> {
-                // Check if the variable is already declared
-                if (variablesStack.last().keys.any { it.identifier == assignation.declaration.identifier }) {
+                // Check if the variable is already declared in any scope
+                if (variablesStack.any { it.keys.any { it.identifier == assignation.declaration.identifier } }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
                 // Checks if the type corresponds with the value

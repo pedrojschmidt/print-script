@@ -730,6 +730,47 @@ class InterpreterTest {
         assertEquals("10\n", result)
     }
 
+    @Test
+    fun `test 035 - when variable define in outer if statement shouldn't be able to define in inner if statement`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        DeclarationAssignation(
+                            Declaration("y", "number"),
+                            NumberOperator(5),
+                            false,
+                        ),
+                        Conditional(
+                            BooleanOperator("true"),
+                            listOf(
+                                DeclarationAssignation(
+                                    Declaration("y", "number"),
+                                    NumberOperator(5),
+                                    false,
+                                ),
+                            ),
+                            null,
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("y")),
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable y already declared", exception.message)
+    }
+
 //    @Test
 //    fun `test 033 - should throw exception for unexpected binary operation node`() {
 //        val ast = listOf(
