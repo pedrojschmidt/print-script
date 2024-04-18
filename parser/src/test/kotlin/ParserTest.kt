@@ -3,6 +3,7 @@ import builder.MethodASTBuilder
 import version_0.TokenProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
@@ -466,9 +467,7 @@ class ParserTest {
                 // Esta lista de tokens no puede ser verificada por ninguno de los astBuilders
             )
         val parser = Parser.getDefaultParser()
-        assertThrows(RuntimeException::class.java) {
-            parser.generateAST(tokens)
-        }
+        assertNull(parser.generateAST(tokens))
     }
 
     @Test

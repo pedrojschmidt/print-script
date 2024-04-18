@@ -57,7 +57,7 @@ class Formatter(private val formatRules: FormatRules) {
     private fun formatPrintln(value: Any) = "println($value);${applySemicolonFormatting()}"
 
     private fun applySimpleAssignationFormatting(astNode: SimpleAssignation): String {
-        val assignation = astNode.assignation as BinaryOperation
+        val assignation = astNode.value as BinaryOperation
         val leftOperator = (assignation.left as NumberOperator).value
         val symbol = assignation.symbol
         val rightOperator = (assignation.right as NumberOperator).value
@@ -69,7 +69,7 @@ class Formatter(private val formatRules: FormatRules) {
         val spaceAroundAssignment = if (formatRules.spaceAroundAssignment) " " else ""
         val spaceAfterLet = applyLetFormatting()
         val assignationValue =
-            when (val assignation = astNode.assignation) {
+            when (val assignation = astNode.value) {
                 is StringOperator -> "\"${assignation.value}\""
                 is NumberOperator -> "${assignation.value}"
                 is BinaryOperation -> {
