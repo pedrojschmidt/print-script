@@ -13,9 +13,9 @@ class AssignationASTBuilder : ASTBuilder<Assignation> {
     override fun verify(statement: List<Token>): Boolean {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
         return if (isDeclarationAssignation(filteredStatement)) {
-            contentASTBuilder.verify(filteredStatement.subList(5, statement.size))
+            contentASTBuilder.verify(filteredStatement.subList(5, filteredStatement.size))
         } else if (isSimpleAssignation(statement)) {
-            contentASTBuilder.verify(filteredStatement.subList(2, statement.size))
+            contentASTBuilder.verify(filteredStatement.subList(2, filteredStatement.size))
         } else {
             false
         }

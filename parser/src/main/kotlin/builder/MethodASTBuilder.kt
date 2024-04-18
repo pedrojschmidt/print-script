@@ -9,8 +9,8 @@ class MethodASTBuilder : ASTBuilder<Method> {
 
     override fun verify(statement: List<Token>): Boolean {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
-        return if (filteredStatement.size > 3 && filteredStatement[0].type == TokenType.PRINTLN_FUNCTION && filteredStatement[1].type == TokenType.LPAREN && filteredStatement[statement.size - 2].type == TokenType.RPAREN) {
-            contentASTBuilder.verify(filteredStatement.subList(2, statement.size - 1))
+        return if (filteredStatement.size > 3 && filteredStatement[0].type == TokenType.PRINTLN_FUNCTION && filteredStatement[1].type == TokenType.LPAREN && filteredStatement[filteredStatement.size - 2].type == TokenType.RPAREN) {
+            contentASTBuilder.verify(filteredStatement.subList(2, filteredStatement.size - 1))
         } else {
             false
         }
