@@ -33,4 +33,4 @@ data class NumberOperator(val value: Number) : BinaryNode
 data class IdentifierOperator(val identifier: String) : BinaryNode
 
 // Representa un valor booleano, como true o false
-data class BooleanOperator(val value: String): BinaryNode
+data class BooleanOperator(val value: String) : BinaryNode
