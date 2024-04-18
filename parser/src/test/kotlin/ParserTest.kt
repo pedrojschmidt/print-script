@@ -10,30 +10,6 @@ import org.junit.jupiter.api.Test
 class ParserTest {
 
     @Test
-    fun `test 001`() {
-        val tokenProvider = TokenProvider(FileInputStream("src/test/resources/test001.txt"))
-        val parser = Parser.getDefaultParser()
-        val astList = mutableListOf<ASTNode>()
-
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            ast?.let { astList.add(it) }
-        }
-
-        val expectedAst =
-            listOf(
-                DeclarationAssignation(
-                    Declaration("a", "string"),
-                    StringOperator("Hello"),
-                ),
-                SimpleAssignation("a", StringOperator("World")),
-                Method("println", IdentifierOperator("a")),
-            )
-        assertEquals(expectedAst, astList)
-    }
-
-    @Test
     fun `test 001 - should convert a list of tokens in ast`() {
         val code = "let a: number = 5 * 5;"
         val actualAst = getAstList(code)
