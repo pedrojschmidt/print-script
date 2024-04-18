@@ -1,2 +1,3 @@
-let a: number = 5 * 5;
+let a: string;
+a = "Hello World";
 println(a);

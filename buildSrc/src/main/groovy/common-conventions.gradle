@@ -4,10 +4,8 @@ plugins {
     id 'ktlint.common'
     //Test coverage
     id 'jacoco'
+    id 'maven-publish'
 }
-
-group = 'org.example'
-version = 'unspecified'
 
 repositories {
     mavenCentral()

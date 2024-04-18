@@ -22,6 +22,18 @@ class Formatter(private val formatRules: FormatRules) {
                 )
             return Formatter(formatRules)
         }
+
+        fun fromDefault(): Formatter {
+            val formatRules =
+                FormatRules(
+                    spaceBeforeColon = true,
+                    spaceAfterColon = true,
+                    spaceAroundAssignment = true,
+                    newlineBeforePrintln = 1,
+                    spaceAfterLet = true,
+                )
+            return Formatter(formatRules)
+        }
     }
 
     fun formatString(ast: List<ASTNode>): String {
@@ -45,10 +57,7 @@ class Formatter(private val formatRules: FormatRules) {
             is StringOperator -> "$newlineBefore${formatPrintln(value.value)}"
             is NumberOperator -> "$newlineBefore${formatPrintln(value.value)}"
             is BinaryOperation -> {
-                val leftOperator = (value.left as IdentifierOperator).identifier
-                val symbol = value.symbol
-                val rightOperator = (value.right as NumberOperator).value
-                "$newlineBefore${formatPrintln("$leftOperator $symbol $rightOperator")}"
+                "$newlineBefore${formatPrintln("${formatBinaryOperation(value.left)} ${value.symbol} ${formatBinaryOperation(value.right)}")}"
             }
             else -> "$newlineBefore${formatPrintln((value as IdentifierOperator).identifier)}"
         }
@@ -72,16 +81,21 @@ class Formatter(private val formatRules: FormatRules) {
             when (val assignation = astNode.value) {
                 is StringOperator -> "\"${assignation.value}\""
                 is NumberOperator -> "${assignation.value}"
-                is BinaryOperation -> {
-                    val leftOperator = (assignation.left as NumberOperator).value
-                    val symbol = assignation.symbol
-                    val rightOperator = (assignation.right as NumberOperator).value
-                    "$leftOperator$symbol$rightOperator"
-                }
+                is BinaryOperation -> formatBinaryOperation(assignation)
+                is IdentifierOperator -> assignation.identifier
                 else -> throw IllegalArgumentException("Unsupported assignation type: ${assignation.javaClass.simpleName}")
             }
 
         return "let$spaceAfterLet${astNode.declaration.identifier}${applyColonFormatting()}${astNode.declaration.type}$spaceAroundAssignment=$spaceAroundAssignment$assignationValue;${applySemicolonFormatting()}"
+    }
+
+    private fun formatBinaryOperation(binaryNode: BinaryNode): String {
+        return when (binaryNode) {
+            is NumberOperator -> binaryNode.value.toString()
+            is StringOperator -> "\"${binaryNode.value}\""
+            is IdentifierOperator -> binaryNode.identifier
+            is BinaryOperation -> "${formatBinaryOperation(binaryNode.left)} ${binaryNode.symbol} ${formatBinaryOperation(binaryNode.right)}"
+        }
     }
 
     private fun applyDeclarationFormatting(astNode: Declaration): String {
@@ -92,7 +106,7 @@ class Formatter(private val formatRules: FormatRules) {
 
     private fun applySemicolonFormatting() = "\n"
 
-    private fun applyEqualsFormatting() = formatWithSpaces(formatRules.spaceAroundAssignment)
+    private fun applyEqualsFormatting() = formatWithSpacesEqual(formatRules.spaceAroundAssignment)
 
     private fun applyColonFormatting() = formatWithSpaces(formatRules.spaceBeforeColon, formatRules.spaceAfterColon)
 
@@ -100,4 +114,9 @@ class Formatter(private val formatRules: FormatRules) {
         before: Boolean = false,
         after: Boolean = false,
     ) = "${if (before) " " else ""}:${if (after) " " else ""}"
+
+    private fun formatWithSpacesEqual(
+        before: Boolean = false,
+        after: Boolean = false,
+    ) = "${if (before) " " else ""}=${if (after) " " else ""}"
 }

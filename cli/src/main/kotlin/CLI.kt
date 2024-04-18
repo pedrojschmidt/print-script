@@ -33,12 +33,12 @@ class CLI : CliktCommand() {
             3 -> {
                 echo("\nConfiguration file:")
                 val configFilePath = readlnOrNull()
-                val configFile = File(configFilePath.toString())
-                if (!configFile.exists()) {
-                    echo("Configuration file does not exist")
-                    return
+                if (configFilePath == null) {
+                    formatFile(file, version, null)
+                } else {
+                    val configFile = File(configFilePath.toString())
+                    formatFile(file, version, configFile)
                 }
-                formatFile(file, version, configFile)
             }
             4 -> {
                 echo("\nConfiguration file:")
@@ -81,17 +81,22 @@ class CLI : CliktCommand() {
     private fun formatFile(
         file: File,
         version: String,
-        configFile: File,
+        configFile: File?,
     ) {
         echo("\nFormatting...")
         val astList = fillAstListWithProgress(file)
+        val formatter: Formatter
 
-        val yamlContent = configFile.readText()
-        val formatter = Formatter.fromYaml(yamlContent)
+        if (configFile == null || !configFile.exists()) {
+            formatter = Formatter.fromDefault()
+        } else {
+            formatter = Formatter.fromYaml(configFile.readText())
+        }
         val formattedAst = formatter.formatString(astList)
         echo(formattedAst)
 
         file.writeText(formattedAst)
+
         echo("File formatted successfully")
     }
 

@@ -4,12 +4,12 @@ import Method
 import Token
 
 class MethodASTBuilder : ASTBuilder<Method> {
-    private val contentASTBuilder = ContentASTBuilder()
+    private val valueASTBuilder = ValueASTBuilder()
 
     override fun verify(statement: List<Token>): Boolean {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
         return if (filteredStatement.size > 3 && filteredStatement[0].type == TokenType.PRINTLN_FUNCTION && filteredStatement[1].type == TokenType.LPAREN && filteredStatement[filteredStatement.size - 2].type == TokenType.RPAREN) {
-            contentASTBuilder.verify(filteredStatement.subList(2, filteredStatement.size - 1))
+            valueASTBuilder.verify(filteredStatement.subList(2, filteredStatement.size - 1))
         } else {
             false
         }
@@ -17,6 +17,6 @@ class MethodASTBuilder : ASTBuilder<Method> {
 
     override fun build(statement: List<Token>): Method {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
-        return Method(filteredStatement[0].value, contentASTBuilder.build(filteredStatement.subList(2, filteredStatement.size - 2)))
+        return Method(filteredStatement[0].value, valueASTBuilder.build(filteredStatement.subList(2, filteredStatement.size - 2)))
     }
 }

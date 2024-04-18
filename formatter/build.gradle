@@ -5,9 +5,21 @@ plugins {
 dependencies {
     implementation project(":token")
     implementation project(":ast")
-    implementation project(":lexer")
-    implementation project(":parser")
 
     implementation 'org.yaml:snakeyaml:2.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation project(":lexer")
+    testImplementation project(":parser")
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.kotlin
+
+            groupId = 'printscritp'
+            artifactId = 'formater'
+            version = '1.0.0'
+        }
+    }
 }
