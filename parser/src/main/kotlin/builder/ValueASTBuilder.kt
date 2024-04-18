@@ -8,13 +8,14 @@ import StringOperator
 import Token
 import TokenType
 
-class ContentASTBuilder : ASTBuilder<BinaryNode> {
+class ValueASTBuilder : ASTBuilder<BinaryNode> {
     override fun verify(statement: List<Token>): Boolean {
         return statement.isNotEmpty()
     }
 
     override fun build(statement: List<Token>): BinaryNode {
-        val (node, remainingTokens) = buildTerm(statement)
+        val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE, TokenType.SEMICOLON))
+        val (node, remainingTokens) = buildTerm(filteredStatement)
         if (remainingTokens.isNotEmpty()) {
             throw RuntimeException("Unexpected tokens remaining after building expression: " + remainingTokens.joinToString(", ") { it.toString() })
         }
