@@ -1,5 +1,5 @@
 class Interpreter {
-    private val variables = mutableMapOf<Variable, String?>()
+    private val variablesStack = mutableListOf(mutableMapOf<Variable, String?>())
     private val stringBuffer = StringBuffer()
 
     fun interpretAST(astList: List<ASTNode>): String? {
@@ -14,6 +14,9 @@ class Interpreter {
                 is Method -> {
                     interpretMethod(ast)
                 }
+                is Conditional -> {
+                    interpretConditional(ast)
+                }
                 else -> throw Exception("Unexpected ASTNode type")
             }
         }
@@ -27,11 +30,11 @@ class Interpreter {
 
     private fun interpretDeclaration(declaration: Declaration) {
         // Check if the variable is already declared
-        if (variables.keys.any { it.identifier == declaration.identifier }) {
+        if (variablesStack.last().keys.any { it.identifier == declaration.identifier }) {
             throw Exception("Variable ${declaration.identifier} already declared")
         }
         // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
-        variables[Variable(declaration.identifier, declaration.type)] = null
+        variablesStack.last()[Variable(declaration.identifier, declaration.type, false)] = null
     }
 
     private fun interpretAssignation(assignation: Assignation) {
@@ -39,7 +42,7 @@ class Interpreter {
             // Differentiate between declaration with assignation and a simple assignation
             is DeclarationAssignation -> {
                 // Check if the variable is already declared
-                if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
+                if (variablesStack.last().keys.any { it.identifier == assignation.declaration.identifier }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
                 // Checks if the type corresponds with the value
@@ -47,15 +50,19 @@ class Interpreter {
                     throw Exception("Type mismatch in variable ${assignation.declaration.identifier} assignment")
                 }
                 // Assign the value of the assignation to the variable
-                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.value)
+                variablesStack.last()[Variable(assignation.declaration.identifier, assignation.declaration.type, assignation.isConst)] = interpretOperation(assignation.value)
             }
             is SimpleAssignation -> {
                 // Look for the variable in the map
                 val variable = getVariable(assignation.identifier)
+                // Check if the variable is constant
+                if (variable.isConst) {
+                    throw Exception("Variable ${assignation.identifier} is constant")
+                }
                 // Checks if the type corresponds with the value
                 if (checkSameType(variable.type, assignation.value)) {
                     // Assign the value of the assignation to the variable
-                    variables[variable] = interpretOperation(assignation.value)
+                    variablesStack.find { it.containsKey(variable) }?.set(variable, interpretOperation(assignation.value))
                 } else {
                     throw Exception("Type mismatch in variable ${assignation.identifier} assignment")
                 }
@@ -73,6 +80,9 @@ class Interpreter {
             }
             is NumberOperator -> {
                 type.equals("Number", true)
+            }
+            is BooleanOperator -> {
+                type.equals("Boolean", true)
             }
             is IdentifierOperator -> {
                 type.equals(getVariable(value.identifier).type, true)
@@ -93,8 +103,9 @@ class Interpreter {
         return when (operation) {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
+            is BooleanOperator -> return operation.value
             is IdentifierOperator -> {
-                return variables[getVariable(operation.identifier)] ?: throw Exception("Variable ${operation.identifier} not initialized")
+                return variablesStack.last()[getVariable(operation.identifier)] ?: throw Exception("Variable ${operation.identifier} not initialized")
             }
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)
@@ -170,8 +181,25 @@ class Interpreter {
         }
     }
 
+    private fun interpretConditional(conditional: Conditional) {
+        val condition = interpretOperation(conditional.condition)
+        if (condition.toBoolean()) {
+            variablesStack.add(mutableMapOf())
+            interpretAST(conditional.then)
+            variablesStack.removeLast()
+        } else {
+            conditional.otherwise?.let {
+                variablesStack.add(mutableMapOf())
+                interpretAST(it)
+                variablesStack.removeLast()
+            }
+        }
+    }
+
     private fun getVariable(identifier: String): Variable {
-        return variables.keys.find { it.identifier == identifier }
-            ?: throw Exception("Variable $identifier not declared")
+        for (variables in variablesStack.reversed()) {
+            variables.keys.find { it.identifier == identifier }?.let { return it }
+        }
+        throw Exception("Variable $identifier not declared")
     }
 }
