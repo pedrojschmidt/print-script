@@ -56,4 +56,4 @@ jobs:
             - name: Publish to GitHub Packages
               run: ./gradlew publish
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically creates a GITHUB_TOKEN secret to use in your workflow
+                  GITHUB_TOKEN: ${{ secrets.PRINTSCRIPT_TOKEN }}  # GitHub automatically creates a GITHUB_TOKEN secret to use in your workflow
