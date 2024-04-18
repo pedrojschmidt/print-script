@@ -15,7 +15,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.kotlin
 
-            groupId = 'printscritp'
+            groupId = 'printscript'
             artifactId = 'lexer'
             version = '1.0.0'
         }
