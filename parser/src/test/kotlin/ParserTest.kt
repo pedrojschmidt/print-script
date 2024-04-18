@@ -1,6 +1,5 @@
-import builder.ValueASTBuilder
 import builder.MethodASTBuilder
-import java.io.FileInputStream
+import builder.ValueASTBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ParserTest {
-
     @Test
     fun `test 001 - should convert a list of tokens in ast`() {
         val code = "let a: number = 5 * 5;"
