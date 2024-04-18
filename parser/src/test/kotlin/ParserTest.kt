@@ -1,5 +1,6 @@
-import builder.ContentASTBuilder
+import builder.ValueASTBuilder
 import builder.MethodASTBuilder
+import java.io.FileInputStream
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -7,6 +8,31 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 
 class ParserTest {
+
+    @Test
+    fun `test 001`() {
+        val tokenProvider = TokenProvider(FileInputStream("src/test/resources/test001.txt"))
+        val parser = Parser.getDefaultParser()
+        val astList = mutableListOf<ASTNode>()
+
+        while (tokenProvider.hasNextStatement()) {
+            val tokens = tokenProvider.readStatement()
+            val ast = parser.generateAST(tokens)
+            ast?.let { astList.add(it) }
+        }
+
+        val expectedAst =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "string"),
+                    StringOperator("Hello"),
+                ),
+                SimpleAssignation("a", StringOperator("World")),
+                Method("println", IdentifierOperator("a")),
+            )
+        assertEquals(expectedAst, astList)
+    }
+
     @Test
     fun `test 001 - should convert a list of tokens in ast`() {
         val code = "let a: number = 5 * 5;"
@@ -478,7 +504,7 @@ class ParserTest {
                 Token(TokenType.NUMBER, "2", Position(0, 4), Position(0, 5)),
                 Token(TokenType.NUMBER, "3", Position(0, 6), Position(0, 7)), // Token extra
             )
-        val builder = ContentASTBuilder()
+        val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
@@ -490,7 +516,7 @@ class ParserTest {
             listOf(
                 Token(TokenType.UNKNOWN, "???", Position(0, 0), Position(0, 3)), // Tipo de token inesperado
             )
-        val builder = ContentASTBuilder()
+        val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
@@ -506,7 +532,7 @@ class ParserTest {
                 Token(TokenType.NUMBER, "2", Position(0, 6), Position(0, 7)),
                 // Falta un token RPAREN para cerrar el paréntesis
             )
-        val builder = ContentASTBuilder()
+        val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
