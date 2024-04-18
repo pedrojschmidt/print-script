@@ -60,8 +60,8 @@ class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
         if (!scaRules.typeMatchingCheck) return true // Si las reglas están desactivadas, siempre retorna true
 
         return when (node.declaration.type) {
-            "string" -> node.assignation is StringOperator
-            "number" -> node.assignation is NumberOperator || node.assignation is BinaryOperation
+            "string" -> node.value is StringOperator
+            "number" -> node.value is NumberOperator || node.value is BinaryOperation
             else -> false
         }
     }

@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class StaticCodeAnalyzerTest {
     @Test
@@ -138,5 +139,65 @@ class StaticCodeAnalyzerTest {
             )
         val issues = sca.analyze(ast)
         assertTrue(issues.isEmpty())
+    }
+
+    @Test
+    fun `test 010 - should create StaticCodeAnalyzer from YAML content`() {
+        val yamlContent =
+            """
+            rules:
+              printlnArgumentCheck: true
+              typeMatchingCheck: true
+              identifierNamingCheck: true
+            """.trimIndent()
+
+        val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
+
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("aVariable", "string"),
+                    StringOperator("hello"),
+                ),
+            )
+        val issues = sca.analyze(ast)
+        assertTrue(issues.isEmpty())
+    }
+
+    @Test
+    fun `test 011 - should analyze that the type matched for number`() {
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    NumberOperator(5.0),
+                ),
+                DeclarationAssignation(
+                    Declaration("b", "number"),
+                    BinaryOperation(
+                        NumberOperator(2.0),
+                        "+",
+                        NumberOperator(3.0),
+                    ),
+                ),
+            )
+        val issues = sca.analyze(ast)
+        assertTrue(issues.isEmpty())
+    }
+
+    @Test
+    fun `test 012 - should throw IllegalArgumentException when YAML content is invalid`() {
+        val yamlContent =
+            """
+            invalidKey:
+              printlnArgumentCheck: true
+              typeMatchingCheck: true
+              identifierNamingCheck: true
+            """.trimIndent()
+
+        assertThrows<IllegalArgumentException> {
+            StaticCodeAnalyzer.fromYaml(yamlContent)
+        }
     }
 }

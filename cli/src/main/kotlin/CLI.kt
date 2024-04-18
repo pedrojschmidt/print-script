@@ -4,8 +4,14 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.prompt
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.io.FileInputStream
+import kotlin.math.ceil
 
 class CLI : CliktCommand() {
     private val option: Int by option().int().prompt("Option").help("Number of the operation to perform")
@@ -54,16 +60,7 @@ class CLI : CliktCommand() {
     ) {
         echo("\nValidating...")
 
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
+        fillAstListWithProgress(file)
 
         echo("File is valid")
     }
@@ -73,20 +70,10 @@ class CLI : CliktCommand() {
         version: String,
     ) {
         echo("\nExecuting...")
-
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
+        val astList = fillAstListWithProgress(file)
 
         val interpreter = Interpreter()
-        val result = interpreter.consume(astList)
+        val result = interpreter.interpretAST(astList)
 
         echo(result)
     }
@@ -97,16 +84,7 @@ class CLI : CliktCommand() {
         configFile: File,
     ) {
         echo("\nFormatting...")
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
+        val astList = fillAstListWithProgress(file)
 
         val yamlContent = configFile.readText()
         val formatter = Formatter.fromYaml(yamlContent)
@@ -123,16 +101,8 @@ class CLI : CliktCommand() {
         configFile: File,
     ) {
         echo("\nAnalyzing...")
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
+        val astList = fillAstListWithProgress(file)
 
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
         val yamlContent = configFile.readText()
         val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
         val scaIssues = sca.analyze(astList)
@@ -147,12 +117,65 @@ class CLI : CliktCommand() {
             echo("No static analysis problems found.\n")
         }
     }
+
+    private fun fillAstListWithProgress(file: File): MutableList<ASTNode> {
+        val tokenProvider = TokenProvider(FileInputStream(file))
+        val parser = Parser.getDefaultParser()
+        val astList = mutableListOf<ASTNode>()
+
+        val totalLines = file.readLines().size
+        val progressInterval = totalLines / 10 // Actualizar la barra de progreso cada 10%
+
+        var linesProcessed = 0
+        var progressCounter = 0
+
+        // Mutex para evitar condiciones de carrera al actualizar el progreso
+        val progressMutex = Mutex()
+
+        runBlocking {
+            launch(Dispatchers.IO) {
+                while (tokenProvider.hasNextStatement()) {
+                    val tokens = tokenProvider.readStatement()
+                    val ast = parser.generateAST(tokens)
+                    ast?.let {
+                        // Incrementar el contador de líneas procesadas
+                        linesProcessed++
+                        // Incrementar el contador de progreso
+                        progressCounter++
+                        // Actualizar la barra de progreso si es necesario
+                        if (progressCounter >= progressInterval || linesProcessed == totalLines) {
+                            // Bloquear el mutex antes de actualizar el progreso
+                            progressMutex.withLock {
+                                val progress = (linesProcessed.toDouble() / totalLines.toDouble()) * 100
+                                printProgress(progress)
+                                // Reiniciar el contador de progreso
+                                progressCounter = 0
+                            }
+                        }
+                        astList.add(it)
+                    }
+                }
+            }
+        }
+
+        return astList
+    }
+
+    private fun printProgress(progress: Double) {
+        // Limpiar la línea anterior antes de imprimir el progreso actualizado
+        print("\r" + " ".repeat(50) + "\r")
+        // Calcular el número de bloques llenos y vacíos para la barra de progreso
+        val numBlocksFilled = ceil(progress / 2).toInt()
+        val numBlocksEmpty = 50 - numBlocksFilled
+        // Imprimir la barra de progreso
+        print("[" + "#".repeat(numBlocksFilled) + "-".repeat(numBlocksEmpty) + "]  ${progress.toInt()}% \n")
+    }
 }
 
 fun main(args: Array<String>) {
     println(
         """
-| ------- Wellcome to PrintScript 1.0 CLI -------
+| ------- Welcome to PrintScript 1.0 CLI -------
 |
 | Choose one of the following options:
 |
