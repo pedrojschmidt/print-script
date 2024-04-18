@@ -18,6 +18,6 @@ class StringTokenMaker : TokenMaker {
             pos++
         }
 
-        return if (str.isNotEmpty()) Token(TokenType.STRING, str, Position(positionX, positionY), Position(positionX + str.length + 2, positionY)) else null
+        return Token(TokenType.STRING, str, Position(positionX, positionY), Position(positionX + str.length + 2, positionY))
     }
 }
