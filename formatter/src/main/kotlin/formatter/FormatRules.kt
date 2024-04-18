@@ -1,3 +1,5 @@
+package formatter
+
 data class FormatRules(
     val spaceBeforeColon: Boolean,
     val spaceAfterColon: Boolean,

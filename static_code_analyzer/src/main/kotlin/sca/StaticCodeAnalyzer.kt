@@ -1,4 +1,15 @@
+package sca
+
+import ast.ASTNode
+import ast.BinaryNode
+import ast.BinaryOperation
+import ast.DeclarationAssignation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
 import org.yaml.snakeyaml.Yaml
+import token.Position
 
 class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
     companion object {

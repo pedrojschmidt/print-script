@@ -1,3 +1,5 @@
+package ast
+
 sealed interface ASTNode
 
 // Esta interfaz sirve para que se pueda hacer pattern matching con los dos tipos de asignaciones

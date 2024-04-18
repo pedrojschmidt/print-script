@@ -1,3 +1,8 @@
+package lexer
+
+import token.Token
+import token.TokenType
+
 class Lexer(private val tokenMakers: Map<Char, TokenMaker>) {
     fun makeTokens(inputText: String): List<Token> {
         var position = 0
