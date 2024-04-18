@@ -1,5 +1,5 @@
-import builder.ContentASTBuilder
 import builder.MethodASTBuilder
+import builder.ValueASTBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -478,7 +478,7 @@ class ParserTest {
                 Token(TokenType.NUMBER, "2", Position(0, 4), Position(0, 5)),
                 Token(TokenType.NUMBER, "3", Position(0, 6), Position(0, 7)), // Token extra
             )
-        val builder = ContentASTBuilder()
+        val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
@@ -490,7 +490,7 @@ class ParserTest {
             listOf(
                 Token(TokenType.UNKNOWN, "???", Position(0, 0), Position(0, 3)), // Tipo de token inesperado
             )
-        val builder = ContentASTBuilder()
+        val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
@@ -506,7 +506,7 @@ class ParserTest {
                 Token(TokenType.NUMBER, "2", Position(0, 6), Position(0, 7)),
                 // Falta un token RPAREN para cerrar el paréntesis
             )
-        val builder = ContentASTBuilder()
+        val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
