@@ -16,7 +16,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.kotlin
 
-            groupId = 'printscritp'
+            groupId = 'printscript'
             artifactId = 'parser'
             version = '1.0.0'
         }
