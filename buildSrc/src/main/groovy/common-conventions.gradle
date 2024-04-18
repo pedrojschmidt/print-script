@@ -32,19 +32,3 @@ jacocoTestReport {
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
-
-group = 'com.example'
-version = '1.0.0'
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/grupo-9/printscript")
-            credentials {
-                username = System.getenv("GITHUB_USER")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-}

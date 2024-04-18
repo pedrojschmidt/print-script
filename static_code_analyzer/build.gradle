@@ -9,3 +9,15 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.kotlin
+
+            groupId = 'printscritp'
+            artifactId = 'static-code-analyzer'
+            version = '1.0.0'
+        }
+    }
+}

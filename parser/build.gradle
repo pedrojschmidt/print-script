@@ -11,3 +11,15 @@ dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.kotlin
+
+            groupId = 'printscritp'
+            artifactId = 'parser'
+            version = '1.0.0'
+        }
+    }
+}
+
