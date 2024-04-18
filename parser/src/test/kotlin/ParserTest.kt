@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import version0.Token
+import version0.TokenType
 
 class ParserTest {
     @Test
