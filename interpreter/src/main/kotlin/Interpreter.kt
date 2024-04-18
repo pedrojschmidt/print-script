@@ -51,8 +51,7 @@ class Interpreter {
             }
             is SimpleAssignation -> {
                 // Look for the variable in the map
-                val variable = variables.keys.find { it.identifier == assignation.identifier }
-                    ?: throw Exception("Variable ${assignation.identifier} not declared")
+                val variable = getVariable(assignation.identifier)
                 // Checks if the type corresponds with the value
                 if (checkSameType(variable.type, assignation.value)) {
                     // Assign the value of the assignation to the variable
@@ -64,8 +63,8 @@ class Interpreter {
         }
     }
 
-    private fun checkSameType(type: String, operation: BinaryNode): Boolean {
-        return when (operation) {
+    private fun checkSameType(type: String, value: BinaryNode): Boolean {
+        return when (value) {
             is StringOperator -> {
                 type.equals("String", true)
             }
@@ -73,19 +72,13 @@ class Interpreter {
                 type.equals("Number", true)
             }
             is IdentifierOperator -> {
-                val variable =
-                    variables.keys.find { it.identifier == operation.identifier }
-                        ?: throw Exception("Variable ${operation.identifier} not declared")
-                val variableType = variables[variable] ?: throw Exception("Variable ${operation.identifier} not initialized")
-                variableType.equals(
-                    type, true
-                )
+                type.equals(getVariable(value.identifier).type, true)
             }
             is BinaryOperation -> {
-                if (operation.left is StringOperator && operation.right is NumberOperator && operation.symbol == "+") {
+                if (value.symbol == "+" && (checkSameType("String", value.left) || checkSameType("String", value.right))) {
                     return type.equals("String", true)
                 }
-                checkSameType(type, operation.left) && checkSameType(type, operation.right)
+                checkSameType(type, value.left) && checkSameType(type, value.right)
             }
             else -> {
                 throw Exception("Unexpected operation")
@@ -98,12 +91,8 @@ class Interpreter {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
             is IdentifierOperator -> {
-                val variable =
-                    variables.keys.find { it.identifier == operation.identifier }
-                        ?: throw Exception("Variable ${operation.identifier} not declared")
-                return variables[variable] ?: throw Exception("Variable ${operation.identifier} not initialized")
+                return variables[getVariable(operation.identifier)] ?: throw Exception("Variable ${operation.identifier} not initialized")
             }
-
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)
                 val right = interpretOperation(operation.right)
@@ -176,5 +165,10 @@ class Interpreter {
             }
             else -> throw Exception("Unexpected method")
         }
+    }
+
+    private fun getVariable(identifier: String): Variable {
+        return variables.keys.find { it.identifier == identifier }
+            ?: throw Exception("Variable $identifier not declared")
     }
 }
