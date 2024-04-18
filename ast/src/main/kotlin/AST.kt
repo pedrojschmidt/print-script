@@ -17,6 +17,9 @@ data class SimpleAssignation(val identifier: String, val value: BinaryNode) : As
 // println(x);
 data class Method(val identifier: String, val value: BinaryNode) : ASTNode
 
+// if (x > 5) { println(x); } else { println(5); }
+data class Conditional(val condition: BinaryNode, val then: List<ASTNode>, val otherwise: List<ASTNode>?) : ASTNode
+
 // NodeL(value) (+ - * /) NodeR(value)
 data class BinaryOperation(val left: BinaryNode, val symbol: String, val right: BinaryNode) : BinaryNode
 
@@ -28,3 +31,6 @@ data class NumberOperator(val value: Number) : BinaryNode
 
 // Representa cualquier identificador, como x
 data class IdentifierOperator(val identifier: String) : BinaryNode
+
+// Representa un valor booleano, como true o false
+data class BooleanOperator(val value: String): BinaryNode
