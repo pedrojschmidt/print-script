@@ -1,6 +1,10 @@
+import ast.ASTNode
+import formatter.Formatter
+import lexer.TokenProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import parser.Parser
 import java.io.File
 import java.io.FileInputStream
 
@@ -11,7 +15,7 @@ class FormatterTests {
         val astList = fillAstList(File("src/test/resources/test1.txt"))
 
         // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
+        val configFile = File("src/main/kotlin/formatter/format_rules.yaml")
         val yamlContent = configFile.readText()
 
         // Crear el formateador a partir del contenido del archivo YAML
@@ -38,7 +42,7 @@ class FormatterTests {
         val astList = fillAstList(File("src/test/resources/test2.txt"))
 
         // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
+        val configFile = File("src/main/kotlin/formatter/format_rules.yaml")
         val yamlContent = configFile.readText()
 
         // Crear el formateador a partir del contenido del archivo YAML
@@ -68,7 +72,7 @@ class FormatterTests {
         val astList = fillAstList(File("src/test/resources/test2.txt"))
 
         // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
+        val configFile = File("src/main/kotlin/formatter/format_rules.yaml")
 
         // Crear el formateador a partir del contenido del archivo YAML
         val formatter = Formatter.fromDefault()
@@ -139,7 +143,7 @@ class FormatterTests {
         val astList = fillAstList(File("src/test/resources/test3.txt"))
 
         // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
+        val configFile = File("src/main/kotlin/formatter/format_rules.yaml")
         val yamlContent = configFile.readText()
 
         // Crear el formateador a partir del contenido del archivo YAML
@@ -162,7 +166,7 @@ class FormatterTests {
         val astList = fillAstList(File("src/test/resources/test4.txt"))
 
         // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
+        val configFile = File("src/main/kotlin/formatter/format_rules.yaml")
         val yamlContent = configFile.readText()
 
         // Crear el formateador a partir del contenido del archivo YAML

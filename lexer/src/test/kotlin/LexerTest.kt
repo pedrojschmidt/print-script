@@ -1,8 +1,13 @@
+import lexer.Lexer
+import lexer.NewLineTokenMaker
+import lexer.TokenProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
+import token.Token
+import token.TokenType
 import java.io.ByteArrayInputStream
 import kotlin.test.Test
 
@@ -298,7 +303,7 @@ class LexerTest {
         assertNull(result)
     }
 
-    // TokenProvider tests
+    // lexer.TokenProvider tests
     @Test
     fun `test 026 - should read a statement`() {
         val example = "let a: number = 5 * 5;"

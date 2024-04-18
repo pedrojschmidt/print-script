@@ -1,3 +1,9 @@
+package lexer
+
+import token.Position
+import token.Token
+import token.TokenType
+
 class StringTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,
@@ -18,6 +24,11 @@ class StringTokenMaker : TokenMaker {
             pos++
         }
 
-        return Token(TokenType.STRING, str, Position(positionX, positionY), Position(positionX + str.length + 2, positionY))
+        return Token(
+            TokenType.STRING,
+            str,
+            Position(positionX, positionY),
+            Position(positionX + str.length + 2, positionY),
+        )
     }
 }

@@ -1,3 +1,17 @@
+package interpreter
+
+import ast.ASTNode
+import ast.Assignation
+import ast.BinaryNode
+import ast.BinaryOperation
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.SimpleAssignation
+import ast.StringOperator
+
 class Interpreter {
     private val variables = mutableMapOf<Variable, String?>()
     private val stringBuffer = StringBuffer()
@@ -28,7 +42,7 @@ class Interpreter {
     private fun interpretDeclaration(declaration: Declaration) {
         // Check if the variable is already declared
         if (variables.keys.any { it.identifier == declaration.identifier }) {
-            throw Exception("Variable ${declaration.identifier} already declared")
+            throw Exception("interpreter.Variable ${declaration.identifier} already declared")
         }
         // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
         variables[Variable(declaration.identifier, declaration.type)] = null
@@ -40,7 +54,7 @@ class Interpreter {
             is DeclarationAssignation -> {
                 // Check if the variable is already declared
                 if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
-                    throw Exception("Variable ${assignation.declaration.identifier} already declared")
+                    throw Exception("interpreter.Variable ${assignation.declaration.identifier} already declared")
                 }
                 // Checks if the type corresponds with the value
                 if (!checkSameType(assignation.declaration.type, assignation.value)) {
@@ -94,7 +108,7 @@ class Interpreter {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
             is IdentifierOperator -> {
-                return variables[getVariable(operation.identifier)] ?: throw Exception("Variable ${operation.identifier} not initialized")
+                return variables[getVariable(operation.identifier)] ?: throw Exception("interpreter.Variable ${operation.identifier} not initialized")
             }
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)
@@ -172,6 +186,6 @@ class Interpreter {
 
     private fun getVariable(identifier: String): Variable {
         return variables.keys.find { it.identifier == identifier }
-            ?: throw Exception("Variable $identifier not declared")
+            ?: throw Exception("interpreter.Variable $identifier not declared")
     }
 }

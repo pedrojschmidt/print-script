@@ -1,8 +1,8 @@
-package builder
+package parser.builder
 
-import Method
-import Token
-import TokenType
+import ast.Method
+import token.Token
+import token.TokenType
 
 class MethodASTBuilder : ASTBuilder<Method> {
     private val valueASTBuilder = ValueASTBuilder()
