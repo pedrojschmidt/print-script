@@ -2,7 +2,7 @@ class Interpreter {
     private val variables = mutableMapOf<Variable, String?>()
     private val stringBuffer = StringBuffer()
 
-    fun consume(astList: List<ASTNode>): String {
+    fun interpretAST(astList: List<ASTNode>): String? {
         for (ast in astList) {
             when (ast) {
                 is Declaration -> {
@@ -17,10 +17,19 @@ class Interpreter {
                 else -> throw Exception("Unexpected ASTNode type")
             }
         }
-        return stringBuffer.toString()
+
+        return if (stringBuffer.isEmpty()) {
+            null
+        } else {
+            stringBuffer.toString()
+        }
     }
 
     private fun interpretDeclaration(declaration: Declaration) {
+        // Check if the variable is already declared
+        if (variables.keys.any { it.identifier == declaration.identifier }) {
+            throw Exception("Variable ${declaration.identifier} already declared")
+        }
         // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
         variables[Variable(declaration.identifier, declaration.type)] = null
     }
@@ -33,19 +42,20 @@ class Interpreter {
                 if (variables.keys.any { it.identifier == assignation.declaration.identifier }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
+                // Checks if the type corresponds with the value
+                if (!checkSameType(assignation.declaration.type, assignation.value)) {
+                    throw Exception("Type mismatch in variable ${assignation.declaration.identifier} assignment")
+                }
                 // Assign the value of the assignation to the variable
-                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.assignation)
+                variables[Variable(assignation.declaration.identifier, assignation.declaration.type)] = interpretOperation(assignation.value)
             }
             is SimpleAssignation -> {
-                // Check if the type of the declaration is the same as the type of the assignation
-                if (checkSameType(assignation.identifier, assignation.assignation)) {
-                    val variable =
-                        // Check if the variable is declared
-                        variables.keys.find {
-                            it.identifier == assignation.identifier
-                        } ?: throw Exception("Variable ${assignation.identifier} not declared")
+                // Look for the variable in the map
+                val variable = getVariable(assignation.identifier)
+                // Checks if the type corresponds with the value
+                if (checkSameType(variable.type, assignation.value)) {
                     // Assign the value of the assignation to the variable
-                    variables[variable] = interpretOperation(assignation.assignation)
+                    variables[variable] = interpretOperation(assignation.value)
                 } else {
                     throw Exception("Type mismatch in variable ${assignation.identifier} assignment")
                 }
@@ -54,16 +64,24 @@ class Interpreter {
     }
 
     private fun checkSameType(
-        identifier: String,
-        operation: BinaryNode,
+        type: String,
+        value: BinaryNode,
     ): Boolean {
-        val variable = variables.keys.find { it.identifier == identifier } ?: throw Exception("Variable $identifier not declared")
-        return when (operation) {
+        return when (value) {
             is StringOperator -> {
-                variable.type.equals("String", true)
+                type.equals("String", true)
             }
             is NumberOperator -> {
-                variable.type.equals("Number", true)
+                type.equals("Number", true)
+            }
+            is IdentifierOperator -> {
+                type.equals(getVariable(value.identifier).type, true)
+            }
+            is BinaryOperation -> {
+                if (value.symbol == "+" && (checkSameType("String", value.left) || checkSameType("String", value.right))) {
+                    return type.equals("String", true)
+                }
+                checkSameType(type, value.left) && checkSameType(type, value.right)
             }
             else -> {
                 throw Exception("Unexpected operation")
@@ -76,12 +94,8 @@ class Interpreter {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
             is IdentifierOperator -> {
-                val variable =
-                    variables.keys.find { it.identifier == operation.identifier }
-                        ?: throw Exception("Variable ${operation.identifier} not declared")
-                return variables[variable] ?: throw Exception("Variable ${operation.identifier} not initialized")
+                return variables[getVariable(operation.identifier)] ?: throw Exception("Variable ${operation.identifier} not initialized")
             }
-
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)
                 val right = interpretOperation(operation.right)
@@ -154,5 +168,10 @@ class Interpreter {
             }
             else -> throw Exception("Unexpected method")
         }
+    }
+
+    private fun getVariable(identifier: String): Variable {
+        return variables.keys.find { it.identifier == identifier }
+            ?: throw Exception("Variable $identifier not declared")
     }
 }

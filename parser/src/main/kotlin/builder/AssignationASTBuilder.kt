@@ -11,20 +11,22 @@ class AssignationASTBuilder : ASTBuilder<Assignation> {
     private val contentASTBuilder = ContentASTBuilder()
 
     override fun verify(statement: List<Token>): Boolean {
-        return if (isDeclarationAssignation(statement)) {
-            contentASTBuilder.verify(statement.subList(5, statement.size))
+        val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
+        return if (isDeclarationAssignation(filteredStatement)) {
+            contentASTBuilder.verify(filteredStatement.subList(5, filteredStatement.size))
         } else if (isSimpleAssignation(statement)) {
-            contentASTBuilder.verify(statement.subList(2, statement.size))
+            contentASTBuilder.verify(filteredStatement.subList(2, filteredStatement.size))
         } else {
             false
         }
     }
 
     override fun build(statement: List<Token>): Assignation {
-        return if (declarationASTBuilder.verify(statement.subList(0, 4))) {
-            DeclarationAssignation(declarationASTBuilder.build(statement.subList(0, 4)), contentASTBuilder.build(statement.subList(5, statement.size - 1)))
+        val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
+        return if (declarationASTBuilder.verify(filteredStatement.subList(0, 4))) {
+            DeclarationAssignation(declarationASTBuilder.build(filteredStatement.subList(0, 4)), contentASTBuilder.build(filteredStatement.subList(5, filteredStatement.size - 1)))
         } else {
-            SimpleAssignation(statement[0].value, contentASTBuilder.build(statement.subList(2, statement.size)))
+            SimpleAssignation(filteredStatement[0].value, contentASTBuilder.build(filteredStatement.subList(2, filteredStatement.size)))
         }
     }
 

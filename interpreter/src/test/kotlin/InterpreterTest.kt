@@ -20,7 +20,7 @@ class InterpreterTest {
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("Hello5\n", result)
     }
 
@@ -46,18 +46,18 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("x")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("1Hello\n", result)
     }
 
-    // "let a: string = 5 * 5;"
+    // "let a: number = 5 * 5;"
     // "println(a);"
     @Test
     fun `test 003 - should multiply two numbers`() {
         val ast =
             listOf(
                 DeclarationAssignation(
-                    Declaration("a", "string"),
+                    Declaration("a", "number"),
                     BinaryOperation(
                         NumberOperator(5),
                         "*",
@@ -67,7 +67,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("a")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("25\n", result)
     }
 
@@ -98,7 +98,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("10\n", result)
     }
 
@@ -129,7 +129,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("5\n", result)
     }
 
@@ -160,7 +160,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("2\n", result)
     }
 
@@ -191,7 +191,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("c")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("Hello World\n", result)
     }
 
@@ -203,8 +203,8 @@ class InterpreterTest {
                 Declaration("a", "string"),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result)
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result)
     }
 
     // let a: string;
@@ -217,9 +217,9 @@ class InterpreterTest {
                 SimpleAssignation("a", StringOperator("Hello")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         println(result)
-        assertEquals("", result)
+        assertEquals(null, result)
     }
 
     // "let result: number = 5 + 5 * 10 - 2 / 2;"
@@ -251,7 +251,7 @@ class InterpreterTest {
                 Method("println", IdentifierOperator("result")),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
+        val result = interpreter.interpretAST(ast)
         assertEquals("54\n", result)
     }
 
@@ -266,8 +266,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result) // No output expected
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result) // No output expected
     }
 
     // "let sum: number = 5.5 + 5.5;"
@@ -285,8 +285,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result) // No output expected
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result) // No output expected
     }
 
     // "let diff: number = 10.5 - 5.5;"
@@ -304,8 +304,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result) // No output expected
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result) // No output expected
     }
 
     // "let prod: number = 5.5 * 5.5;"
@@ -323,8 +323,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result) // No output expected
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result) // No output expected
     }
 
     // "let quot: number = 10.5 / 5.5;"
@@ -342,8 +342,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result) // No output expected
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result) // No output expected
     }
 
     // "let result: number = 5.5 + 5.5 * 10.5 - 2.5 / 2.5;"
@@ -373,8 +373,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        val result = interpreter.consume(ast)
-        assertEquals("", result) // No output expected
+        val result = interpreter.interpretAST(ast)
+        assertEquals(null, result) // No output expected
     }
 
     @Test
@@ -385,7 +385,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -410,7 +410,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -428,8 +428,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        assertThrows(IllegalArgumentException::class.java) {
-            interpreter.consume(ast)
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -441,7 +441,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -468,7 +468,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -480,7 +480,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -509,7 +509,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -527,8 +527,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        assertThrows(IllegalArgumentException::class.java) {
-            interpreter.consume(ast)
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -546,8 +546,8 @@ class InterpreterTest {
                 ),
             )
         val interpreter = Interpreter()
-        assertThrows(IllegalArgumentException::class.java) {
-            interpreter.consume(ast)
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
         }
     }
 
@@ -566,7 +566,7 @@ class InterpreterTest {
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
-            interpreter.consume(ast)
+            interpreter.interpretAST(ast)
         }
     }
 
