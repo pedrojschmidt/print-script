@@ -67,7 +67,7 @@ class CLI : CliktCommand() {
         val astList = fillAstList(file)
 
         val interpreter = Interpreter()
-        val result = interpreter.consume(astList)
+        val result = interpreter.interpretAST(astList)
 
         echo(result)
     }
