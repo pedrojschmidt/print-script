@@ -95,6 +95,7 @@ class Formatter(private val formatRules: FormatRules) {
             is StringOperator -> "\"${binaryNode.value}\""
             is IdentifierOperator -> binaryNode.identifier
             is BinaryOperation -> "${formatBinaryOperation(binaryNode.left)} ${binaryNode.symbol} ${formatBinaryOperation(binaryNode.right)}"
+            else -> throw IllegalArgumentException("Unsupported binary node type: ${binaryNode.javaClass.simpleName}")
         }
     }
 

@@ -9,7 +9,7 @@ sealed interface BinaryNode : ASTNode
 data class Declaration(val identifier: String, val type: String) : ASTNode
 
 // let x: number = 5;
-data class DeclarationAssignation(val declaration: Declaration, val value: BinaryNode) : Assignation
+data class DeclarationAssignation(val declaration: Declaration, val value: BinaryNode, val isConst: Boolean) : Assignation
 
 // x = 5 + 5;
 data class SimpleAssignation(val identifier: String, val value: BinaryNode) : Assignation

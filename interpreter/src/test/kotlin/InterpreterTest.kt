@@ -16,6 +16,7 @@ class InterpreterTest {
                         "+",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
@@ -34,6 +35,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(1),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("x", "string"),
@@ -42,6 +44,7 @@ class InterpreterTest {
                         "+",
                         StringOperator("Hello"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("x")),
             )
@@ -63,6 +66,7 @@ class InterpreterTest {
                         "*",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("a")),
             )
@@ -82,10 +86,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -94,6 +100,7 @@ class InterpreterTest {
                         "+",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -113,10 +120,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(10),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -125,6 +134,7 @@ class InterpreterTest {
                         "-",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -144,10 +154,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(10),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -156,6 +168,7 @@ class InterpreterTest {
                         "/",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -175,10 +188,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     StringOperator("Hello"),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "string"),
                     StringOperator(" World"),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "string"),
@@ -187,6 +202,7 @@ class InterpreterTest {
                         "+",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -247,6 +263,7 @@ class InterpreterTest {
                             NumberOperator(2),
                         ),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("result")),
             )
@@ -263,6 +280,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     NumberOperator(5.5),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -282,6 +300,7 @@ class InterpreterTest {
                         "+",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -301,6 +320,7 @@ class InterpreterTest {
                         "-",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -320,6 +340,7 @@ class InterpreterTest {
                         "*",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -339,6 +360,7 @@ class InterpreterTest {
                         "/",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -370,6 +392,7 @@ class InterpreterTest {
                             NumberOperator(2.5),
                         ),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -425,6 +448,7 @@ class InterpreterTest {
                         "-",
                         StringOperator("World"), // "-" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -464,6 +488,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"), // "x" is already declared
                     NumberOperator(5),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -505,6 +530,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     IdentifierOperator("y"), // "y" is not declared
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -524,6 +550,7 @@ class InterpreterTest {
                         "*",
                         StringOperator("World"), // "*" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -543,6 +570,7 @@ class InterpreterTest {
                         "/",
                         StringOperator("World"), // "/" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -562,6 +590,7 @@ class InterpreterTest {
                         "%", // "%" is not a valid operation
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
