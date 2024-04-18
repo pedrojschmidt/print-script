@@ -1,3 +1,15 @@
 plugins {
     id 'common-conventions'
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.kotlin
+
+            groupId = 'printscritp'
+            artifactId = 'token'
+            version = '1.0.0'
+        }
+    }
+}

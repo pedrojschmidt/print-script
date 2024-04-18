@@ -1,7 +1,3 @@
-plugins {
-    id 'common-conventions'
-}
-
 dependencies {
     implementation project(":token")
     implementation project(":lexer")
