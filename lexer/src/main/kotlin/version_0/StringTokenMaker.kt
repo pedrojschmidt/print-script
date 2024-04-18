@@ -22,11 +22,11 @@ class StringTokenMaker : TokenMaker {
             pos++
         }
 
-        return if (str.isNotEmpty()) Token(
+        return Token(
             TokenType.STRING,
             str,
             Position(positionX, positionY),
             Position(positionX + str.length + 2, positionY)
-        ) else null
+        )
     }
 }

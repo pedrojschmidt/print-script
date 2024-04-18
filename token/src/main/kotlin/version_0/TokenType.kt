@@ -23,4 +23,6 @@ enum class TokenType {
     MINUS,
     TIMES,
     DIV,
+
+    UNKNOWN,
 }
