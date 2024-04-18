@@ -1,7 +1,7 @@
 name: Gradle Package
 
 on:
-    pull_request:
+    push:
         branches:
             - release
 
@@ -26,19 +26,6 @@ jobs:
 
             - name: Build with Gradle Wrapper
               run: ./gradlew build
-
-            - name: Check if version already exists
-              id: check_version
-              run: |
-                version=$(./gradlew -q getVersion)
-                echo "Checking if version $version already exists..."
-                curl -sSL -H "Authorization: token $GITHUB_TOKEN" "https://maven.pkg.github.com/pedrojschmidt/print-script/com/example/my-package/$version/maven-metadata.xml" > metadata.xml
-                if grep -q "<version>$version</version>" metadata.xml; then
-                  echo "Version $version already exists."
-                  exit 1
-                else
-                  echo "Version $version does not exist yet."
-                fi
 
             - name: Publish to GitHub Packages
               run: ./gradlew publish
