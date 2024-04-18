@@ -5,17 +5,19 @@ import Token
 import TokenType
 
 class MethodASTBuilder : ASTBuilder<Method> {
-    private val contentASTBuilder = ContentASTBuilder()
+    private val valueASTBuilder = ValueASTBuilder()
 
     override fun verify(statement: List<Token>): Boolean {
-        return if (statement.size > 3 && statement[0].type == TokenType.PRINTLN_FUNCTION && statement[1].type == TokenType.LPAREN && statement[statement.size - 2].type == TokenType.RPAREN) {
-            contentASTBuilder.verify(statement.subList(2, statement.size - 1))
+        val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
+        return if (filteredStatement.size > 3 && filteredStatement[0].type == TokenType.PRINTLN_FUNCTION && filteredStatement[1].type == TokenType.LPAREN && filteredStatement[filteredStatement.size - 2].type == TokenType.RPAREN) {
+            valueASTBuilder.verify(filteredStatement.subList(2, filteredStatement.size - 1))
         } else {
             false
         }
     }
 
     override fun build(statement: List<Token>): Method {
-        return Method(statement[0].value, contentASTBuilder.build(statement.subList(2, statement.size - 2)))
+        val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
+        return Method(filteredStatement[0].value, valueASTBuilder.build(filteredStatement.subList(2, filteredStatement.size - 2)))
     }
 }

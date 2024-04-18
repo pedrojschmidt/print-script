@@ -57,7 +57,7 @@ class Formatter(private val formatRules: FormatRules) {
     private fun formatPrintln(value: Any) = "println($value);${applySemicolonFormatting()}"
 
     private fun applySimpleAssignationFormatting(astNode: SimpleAssignation): String {
-        val assignation = astNode.assignation as BinaryOperation
+        val assignation = astNode.value as BinaryOperation
         val leftOperator = (assignation.left as NumberOperator).value
         val symbol = assignation.symbol
         val rightOperator = (assignation.right as NumberOperator).value
@@ -69,19 +69,33 @@ class Formatter(private val formatRules: FormatRules) {
         val spaceAroundAssignment = if (formatRules.spaceAroundAssignment) " " else ""
         val spaceAfterLet = applyLetFormatting()
         val assignationValue =
-            when (val assignation = astNode.assignation) {
+            when (val assignation = astNode.value) {
                 is StringOperator -> "\"${assignation.value}\""
                 is NumberOperator -> "${assignation.value}"
-                is BinaryOperation -> {
-                    val leftOperator = (assignation.left as NumberOperator).value
-                    val symbol = assignation.symbol
-                    val rightOperator = (assignation.right as NumberOperator).value
-                    "$leftOperator$symbol$rightOperator"
-                }
+                is BinaryOperation -> formatBinaryOperation(assignation)
+                is IdentifierOperator -> assignation.identifier
                 else -> throw IllegalArgumentException("Unsupported assignation type: ${assignation.javaClass.simpleName}")
             }
 
         return "let$spaceAfterLet${astNode.declaration.identifier}${applyColonFormatting()}${astNode.declaration.type}$spaceAroundAssignment=$spaceAroundAssignment$assignationValue;${applySemicolonFormatting()}"
+    }
+
+    private fun formatBinaryOperation(binaryOperation: BinaryOperation): String {
+        val left =
+            when (val leftOperand = binaryOperation.left) {
+                is NumberOperator -> leftOperand.value.toString()
+                is IdentifierOperator -> leftOperand.identifier
+                else -> throw IllegalArgumentException("Unsupported left operand type: ${leftOperand.javaClass.simpleName}")
+            }
+
+        val right =
+            when (val rightOperand = binaryOperation.right) {
+                is NumberOperator -> rightOperand.value.toString()
+                is IdentifierOperator -> rightOperand.identifier
+                else -> throw IllegalArgumentException("Unsupported right operand type: ${rightOperand.javaClass.simpleName}")
+            }
+
+        return "$left${binaryOperation.symbol}$right"
     }
 
     private fun applyDeclarationFormatting(astNode: Declaration): String {
