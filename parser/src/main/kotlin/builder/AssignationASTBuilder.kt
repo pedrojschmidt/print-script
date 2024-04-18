@@ -3,8 +3,7 @@ package builder
 import Assignation
 import DeclarationAssignation
 import SimpleAssignation
-import version0.Token
-import version0.TokenType
+import Token
 
 class AssignationASTBuilder : ASTBuilder<Assignation> {
     private val declarationASTBuilder = DeclarationASTBuilder()

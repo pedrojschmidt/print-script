@@ -1,7 +1,3 @@
-package version1
-
-import Position
-
 class NewLineTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,

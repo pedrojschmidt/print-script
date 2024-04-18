@@ -1,5 +1,3 @@
-package version1
-
 interface TokenMaker {
     fun makeToken(
         input: String,

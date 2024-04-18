@@ -1,7 +1,3 @@
-package version0
-
-import Position
-
 class SymbolTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,

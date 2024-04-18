@@ -1,8 +1,7 @@
 package builder
 
 import Method
-import version0.Token
-import version0.TokenType
+import Token
 
 class MethodASTBuilder : ASTBuilder<Method> {
     private val contentASTBuilder = ContentASTBuilder()

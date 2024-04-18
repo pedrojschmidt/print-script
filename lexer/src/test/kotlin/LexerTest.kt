@@ -1,10 +1,9 @@
-import version1.Lexer_1
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
-import version0.*
+import version1.Lexer1
 import java.io.ByteArrayInputStream
 import kotlin.test.Test
 
@@ -342,7 +341,7 @@ class LexerTest {
     @Test
     fun `test 029 - should make a list of tokens`() {
         val example = "const a: boolean = false;"
-        val lexer = Lexer_1.getDefaultLexer()
+        val lexer = Lexer1.getDefaultLexer()
         val tokens = lexer.makeTokens(example)
         assertEquals(7, tokens.size)
     }
@@ -351,7 +350,7 @@ class LexerTest {
     @Test
     fun `test 030 - should make a list of tokens`() {
         val example = "if(true){ println(a); } else { println(b); }"
-        val lexer = Lexer_1.getDefaultLexer()
+        val lexer = Lexer1.getDefaultLexer()
         val tokens = lexer.makeTokens(example)
         assertEquals(19, tokens.size)
     }

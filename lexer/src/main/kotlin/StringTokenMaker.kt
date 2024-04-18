@@ -1,7 +1,3 @@
-package version1
-
-import Position
-
 class StringTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,
@@ -26,7 +22,7 @@ class StringTokenMaker : TokenMaker {
             TokenType.STRING,
             str,
             Position(positionX, positionY),
-            Position(positionX + str.length + 2, positionY)
+            Position(positionX + str.length + 2, positionY),
         )
     }
 }
