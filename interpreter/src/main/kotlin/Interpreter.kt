@@ -77,7 +77,9 @@ class Interpreter {
                     variables.keys.find { it.identifier == operation.identifier }
                         ?: throw Exception("Variable ${operation.identifier} not declared")
                 val variableType = variables[variable] ?: throw Exception("Variable ${operation.identifier} not initialized")
-                variableType.equals(type, true)
+                variableType.equals(
+                    type, true
+                )
             }
             is BinaryOperation -> {
                 if (operation.left is StringOperator && operation.right is NumberOperator && operation.symbol == "+") {
