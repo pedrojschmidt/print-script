@@ -22,6 +22,18 @@ class Formatter(private val formatRules: FormatRules) {
                 )
             return Formatter(formatRules)
         }
+
+        fun fromDefault(): Formatter {
+            val formatRules =
+                FormatRules(
+                    spaceBeforeColon = true,
+                    spaceAfterColon = true,
+                    spaceAroundAssignment = true,
+                    newlineBeforePrintln = 1,
+                    spaceAfterLet = true,
+                )
+            return Formatter(formatRules)
+        }
     }
 
     fun formatString(ast: List<ASTNode>): String {
@@ -85,6 +97,8 @@ class Formatter(private val formatRules: FormatRules) {
             when (val leftOperand = binaryOperation.left) {
                 is NumberOperator -> leftOperand.value.toString()
                 is IdentifierOperator -> leftOperand.identifier
+                is StringOperator -> "\"${leftOperand.value}\""
+                is BinaryOperation -> formatBinaryOperation(leftOperand)
                 else -> throw IllegalArgumentException("Unsupported left operand type: ${leftOperand.javaClass.simpleName}")
             }
 
@@ -92,10 +106,12 @@ class Formatter(private val formatRules: FormatRules) {
             when (val rightOperand = binaryOperation.right) {
                 is NumberOperator -> rightOperand.value.toString()
                 is IdentifierOperator -> rightOperand.identifier
+                is StringOperator -> "\"${rightOperand.value}\""
+                is BinaryOperation -> formatBinaryOperation(rightOperand)
                 else -> throw IllegalArgumentException("Unsupported right operand type: ${rightOperand.javaClass.simpleName}")
             }
 
-        return "$left${binaryOperation.symbol}$right"
+        return "$left ${binaryOperation.symbol} $right"
     }
 
     private fun applyDeclarationFormatting(astNode: Declaration): String {

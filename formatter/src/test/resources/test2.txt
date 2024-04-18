@@ -1,0 +1,6 @@
+let a: number = 5 * 5;
+let b: number = 10 + a;
+let c: string = "Resultado: " + b;
+println(a);
+println(b);
+println(c);
