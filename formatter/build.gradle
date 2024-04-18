@@ -5,6 +5,8 @@ plugins {
 dependencies {
     implementation project(":token")
     implementation project(":ast")
+    implementation project(":lexer")
+    implementation project(":parser")
 
     implementation 'org.yaml:snakeyaml:2.2'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
