@@ -22,8 +22,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo '✅ Pre-commit passed successfully.'
-
-echo '------------- Finished pre-commit hook -------------'
+echo '------------- ✅ Finished pre-commit hook -------------'
 
 exit 0
