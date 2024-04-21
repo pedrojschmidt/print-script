@@ -76,6 +76,7 @@ class ValueASTBuilder : ASTBuilder<BinaryNode> {
                         return i
                     }
                 }
+                else -> {}
             }
         }
         throw RuntimeException("Mismatched parentheses in expression")

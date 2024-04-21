@@ -19,7 +19,6 @@ class CLI : CliktCommand() {
 
     //    private val version by option().prompt("\nVersion").help("Version of the PrintScript")
     private val version = "1.0"
-
     private val validVersions = listOf("1.0")
 
     override fun run() {
@@ -175,21 +174,4 @@ class CLI : CliktCommand() {
         // Imprimir la barra de progreso
         print("[" + "#".repeat(numBlocksFilled) + "-".repeat(numBlocksEmpty) + "]  ${progress.toInt()}% \n")
     }
-}
-
-fun main(args: Array<String>) {
-    println(
-        """
-| ------- Welcome to PrintScript 1.0 CLI -------
-|
-| Choose one of the following options:
-|
-|   1. Validation
-|   2. Execution
-|   3. Formatting
-|   4. Analyzing
-|
-    """,
-    )
-    CLI().main(args)
 }
