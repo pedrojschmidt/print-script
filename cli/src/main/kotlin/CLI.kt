@@ -84,7 +84,7 @@ class CLI : CliktCommand() {
         val executeFormatter = ExecuteFormatter()
         var formattedAst = ""
         for (ast in astList) {
-            formattedAst = executeFormatter.formatNode(ast, FormatRules(), FormatterFactory().assignFormatters())
+            formattedAst += executeFormatter.formatNode(ast, FormatRules(), FormatterFactory().assignFormatters())
         }
 
         echo(formattedAst)

@@ -1,4 +1,4 @@
-package formatter.nodeFormatters
+package formatter.formatters
 
 import ASTNode
 import Declaration
@@ -28,8 +28,7 @@ class DeclarationFormatter : FormatterAux {
                 },
             )
             append(declaration.type)
-            append(";")
+            append(";\n")
         }
     }
-// return "let${applyLetFormatting()}${astNode.identifier}${applyColonFormatting()}${astNode.type};${applySemicolonFormatting()}"
 }

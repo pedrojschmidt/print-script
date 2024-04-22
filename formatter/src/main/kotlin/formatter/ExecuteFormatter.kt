@@ -2,7 +2,13 @@ package formatter
 
 import ASTNode
 import Declaration
-import formatter.nodeFormatters.DeclarationFormatter
+import DeclarationAssignation
+import Method
+import SimpleAssignation
+import formatter.formatters.DeclarationAssignationFormatter
+import formatter.formatters.DeclarationFormatter
+import formatter.formatters.MethodFormatter
+import formatter.formatters.SimpleAssignationFormatter
 import kotlin.reflect.KClass
 
 class ExecuteFormatter : FormatterAux {
@@ -13,7 +19,9 @@ class ExecuteFormatter : FormatterAux {
     ): String {
         return when (astNode) {
             is Declaration -> DeclarationFormatter().formatNode(astNode, rules, formatterList)
-//            is Println -> PrintlnNodeFormatter().formatNode(astNode, rules, formatterList)
+            is DeclarationAssignation -> DeclarationAssignationFormatter().formatNode(astNode, rules, formatterList)
+            is SimpleAssignation -> SimpleAssignationFormatter().formatNode(astNode, rules, formatterList)
+            is Method -> MethodFormatter().formatNode(astNode, rules, formatterList)
             else -> ""
         }
     }
