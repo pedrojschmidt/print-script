@@ -1,4 +1,4 @@
-enum class Option {
+enum class Operation {
     VALIDATE,
     EXECUTE,
     FORMAT,

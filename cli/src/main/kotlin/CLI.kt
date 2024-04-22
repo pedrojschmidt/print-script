@@ -175,3 +175,5 @@ class CLI : CliktCommand() {
         print("[" + "#".repeat(numBlocksFilled) + "-".repeat(numBlocksEmpty) + "]  ${progress.toInt()}% \n")
     }
 }
+
+fun main(args: Array<String>) = CLI().main(args)

@@ -1,4 +1,4 @@
-import java.io.FileInputStream
+import java.io.File
 
 fun main(args: Array<String>) {
     println(
@@ -36,11 +36,10 @@ Version:
 //    val staticCodeAnalyzer = StaticCodeAnalyzer.getSCAByVersion(version)
 
     val lexer = Lexer.getDefaultLexer()
-    val tokenProvider = TokenProvider(FileInputStream("file"))
     val parser = Parser.getDefaultParser()
     val interpreter = Interpreter()
     val formatter = Formatter.fromDefault()
-    val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml("")
+    val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("C:/Users/Pedro/faculty/IDEA/print-script/static_code_analyzer/src/main/kotlin/sca_rules.yaml").readText())
 
     println(
         """
@@ -60,7 +59,6 @@ Version:
     CLIaux(
         CommandFactory(
             lexer,
-            tokenProvider,
             parser,
             interpreter,
             formatter,
