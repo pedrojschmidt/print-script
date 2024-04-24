@@ -16,6 +16,7 @@ class InterpreterTest {
                         "+",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
@@ -34,6 +35,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(1),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("x", "string"),
@@ -42,6 +44,7 @@ class InterpreterTest {
                         "+",
                         StringOperator("Hello"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("x")),
             )
@@ -63,6 +66,7 @@ class InterpreterTest {
                         "*",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("a")),
             )
@@ -82,10 +86,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -94,6 +100,7 @@ class InterpreterTest {
                         "+",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -113,10 +120,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(10),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -125,6 +134,7 @@ class InterpreterTest {
                         "-",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -144,10 +154,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(10),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -156,6 +168,7 @@ class InterpreterTest {
                         "/",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -175,10 +188,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     StringOperator("Hello"),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "string"),
                     StringOperator(" World"),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "string"),
@@ -187,6 +202,7 @@ class InterpreterTest {
                         "+",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
@@ -247,6 +263,7 @@ class InterpreterTest {
                             NumberOperator(2),
                         ),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("result")),
             )
@@ -263,6 +280,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     NumberOperator(5.5),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -282,6 +300,7 @@ class InterpreterTest {
                         "+",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -301,6 +320,7 @@ class InterpreterTest {
                         "-",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -320,6 +340,7 @@ class InterpreterTest {
                         "*",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -339,6 +360,7 @@ class InterpreterTest {
                         "/",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -370,6 +392,7 @@ class InterpreterTest {
                             NumberOperator(2.5),
                         ),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -425,6 +448,7 @@ class InterpreterTest {
                         "-",
                         StringOperator("World"), // "-" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -464,6 +488,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"), // "x" is already declared
                     NumberOperator(5),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -505,6 +530,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     IdentifierOperator("y"), // "y" is not declared
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -524,6 +550,7 @@ class InterpreterTest {
                         "*",
                         StringOperator("World"), // "*" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -543,6 +570,7 @@ class InterpreterTest {
                         "/",
                         StringOperator("World"), // "/" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
@@ -562,12 +590,185 @@ class InterpreterTest {
                         "%", // "%" is not a valid operation
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         val interpreter = Interpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
+    }
+
+    @Test
+    fun `test 032 - const assignation shouldn't be able to override`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    NumberOperator(1),
+                    true,
+                ),
+                SimpleAssignation(
+                    "x",
+                    NumberOperator(10),
+                ),
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable x is constant", exception.message)
+    }
+
+    @Test
+    fun `test 033 - Conditional statement true`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("true\n", result)
+    }
+
+    @Test
+    fun `test 033 - Conditional statement false`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("false"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("false\n", result)
+    }
+
+    @Test
+    fun `test 034 - when define variable in if statement to not appear out of scope`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        DeclarationAssignation(
+                            Declaration("y", "number"),
+                            NumberOperator(5),
+                            false,
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("y")),
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable y not declared", exception.message)
+    }
+
+    @Test
+    fun `test 034 - change in if statement a variable declare out of the scope`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    NumberOperator(5),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("y", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("y"),
+                    listOf(
+                        SimpleAssignation(
+                            "x",
+                            NumberOperator(10),
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("x")),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("10\n", result)
+    }
+
+    @Test
+    fun `test 035 - when variable define in outer if statement shouldn't be able to define in inner if statement`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        DeclarationAssignation(
+                            Declaration("y", "number"),
+                            NumberOperator(5),
+                            false,
+                        ),
+                        Conditional(
+                            BooleanOperator("true"),
+                            listOf(
+                                DeclarationAssignation(
+                                    Declaration("y", "number"),
+                                    NumberOperator(5),
+                                    false,
+                                ),
+                            ),
+                            null,
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("y")),
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable y already declared", exception.message)
     }
 
 //    @Test

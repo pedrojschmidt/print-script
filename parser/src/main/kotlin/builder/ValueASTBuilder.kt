@@ -2,6 +2,7 @@ package builder
 
 import BinaryNode
 import BinaryOperation
+import BooleanOperator
 import IdentifierOperator
 import NumberOperator
 import StringOperator
@@ -58,6 +59,7 @@ class ValueASTBuilder : ASTBuilder<BinaryNode> {
                     Pair(StringOperator(firstToken.value), tokens.subList(1, tokens.size))
                 }
             }
+            TokenType.BOOLEAN_TYPE -> Pair(BooleanOperator(firstToken.value), tokens.subList(1, tokens.size))
             TokenType.IDENTIFIER -> Pair(IdentifierOperator(firstToken.value), tokens.subList(1, tokens.size))
             else -> throw RuntimeException("Unexpected token type: ${firstToken.type} at ${firstToken.positionStart.y}:${firstToken.positionStart.x}")
         }
