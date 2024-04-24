@@ -327,106 +327,10 @@ class LexerTest {
         assertTrue(tokenProvider.hasNextStatement())
     }
 
-    @Test
-    fun `test 029 - should read a statement with if else`() {
-        val example = "if (true) { println('Hello'); }"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[IF_KEYWORD, LPAREN, BOOLEAN(true), RPAREN, LBRACE, PRINTLN_FUNCTION, LPAREN, STRING(Hello), RPAREN, SEMICOLON, RBRACE]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 030 - should read a statement with if else`() {
-        val example = "if (true) { println('Hello'); }\nelse { println('World'); }"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[IF_KEYWORD, LPAREN, BOOLEAN(true), RPAREN, LBRACE, PRINTLN_FUNCTION, LPAREN, STRING(Hello), RPAREN, SEMICOLON, RBRACE, NEW_LINE, ELSE_KEYWORD, LBRACE, PRINTLN_FUNCTION, LPAREN, STRING(World), RPAREN, SEMICOLON, RBRACE]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 031 - should read a statement with boolean values`() {
-        val example = "let a: boolean = true;\nlet b: boolean = false;"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, BOOLEAN_TYPE, EQ, BOOLEAN(true), SEMICOLON, NEW_LINE, LET_KEYWORD, IDENTIFIER(b), COLON, BOOLEAN_TYPE, EQ, BOOLEAN(false), SEMICOLON]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 032 - should read a statement with const keyword`() {
-        val example = "const a: number = 5;"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[CONST_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), SEMICOLON]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 033 - should read a statement with readInput function`() {
-        val example = "let a: string = readInput();"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, READINPUT_FUNCTION, LPAREN, RPAREN, SEMICOLON]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 034 - should read a statement with readEnv function`() {
-        val example = "let a: string = readEnv();"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, READENV_FUNCTION, LPAREN, RPAREN, SEMICOLON]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 035 - should read a statement with readInput function with argument`() {
-        val example = "let a: string = readInput('Enter a value: ');"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, READINPUT_FUNCTION, LPAREN, STRING(Enter a value: ), RPAREN, SEMICOLON]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
-    @Test
-    fun `test 036 - should read a statement with readEnv function with argument`() {
-        val example = "let a: string = readEnv('HOME');"
-        val lexer = Lexer.getDefaultLexer()
-        val actualTokens = lexer.makeTokens(example)
-
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, READENV_FUNCTION, LPAREN, STRING(HOME), RPAREN, SEMICOLON]"
-        val actualTokensString = listToString(actualTokens)
-
-        assertEquals(expectedTokensString, actualTokensString)
-    }
-
     private fun listToString(tokens: List<Token>): String {
         return tokens.map {
             when (it.type) {
-                TokenType.IDENTIFIER, TokenType.NUMBER, TokenType.STRING, TokenType.BOOLEAN -> "${it.type.name}(${it.value})"
+                TokenType.IDENTIFIER, TokenType.NUMBER, TokenType.STRING -> "${it.type.name}(${it.value})"
                 else -> it.type.name
             }
         }.toString()

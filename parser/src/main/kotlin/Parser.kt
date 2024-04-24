@@ -1,6 +1,5 @@
 import builder.ASTBuilder
 import builder.AssignationASTBuilder
-import builder.ConditionalASTBuilder
 import builder.DeclarationASTBuilder
 import builder.MethodASTBuilder
 
@@ -23,7 +22,6 @@ class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
                     DeclarationASTBuilder(),
                     AssignationASTBuilder(),
                     MethodASTBuilder(),
-                    ConditionalASTBuilder(),
                 ),
             )
         }

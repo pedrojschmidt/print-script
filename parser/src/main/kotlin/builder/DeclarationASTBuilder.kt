@@ -8,7 +8,7 @@ class DeclarationASTBuilder : ASTBuilder<Declaration> {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
         if (filteredStatement.isEmpty()) {
             return false
-        } else if (filteredStatement[0].type != TokenType.LET_KEYWORD && filteredStatement[0].type != TokenType.CONST_KEYWORD) {
+        } else if (filteredStatement[0].type != TokenType.LET_KEYWORD) {
             return false
         } else if (filteredStatement[1].type != TokenType.IDENTIFIER) {
             return false
