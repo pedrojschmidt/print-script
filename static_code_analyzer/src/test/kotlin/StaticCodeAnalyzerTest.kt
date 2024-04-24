@@ -12,7 +12,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     StringOperator("hello"),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -27,7 +26,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     NumberOperator(5.0),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -76,7 +74,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("a_variable", "string"),
                     StringOperator("hello"),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -92,7 +89,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("aVariable", "string"),
                     StringOperator("hello"),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -107,7 +103,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     NumberOperator(5.0),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -122,7 +117,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("Variable", "string"),
                     StringOperator("hello"),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -164,7 +158,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("aVariable", "string"),
                     StringOperator("hello"),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)
@@ -179,7 +172,6 @@ class StaticCodeAnalyzerTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(5.0),
-                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
@@ -188,7 +180,6 @@ class StaticCodeAnalyzerTest {
                         "+",
                         NumberOperator(3.0),
                     ),
-                    false,
                 ),
             )
         val issues = sca.analyze(ast)

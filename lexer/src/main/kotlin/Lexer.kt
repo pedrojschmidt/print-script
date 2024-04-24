@@ -61,8 +61,6 @@ class Lexer(private val tokenMakers: Map<Char, TokenMaker>) {
                         Pair('*', SymbolTokenMaker()),
                         Pair('/', SymbolTokenMaker()),
                         Pair(';', SymbolTokenMaker()),
-                        Pair('{', SymbolTokenMaker()),
-                        Pair('}', SymbolTokenMaker()),
                         Pair('\n', NewLineTokenMaker()),
                     ),
             )

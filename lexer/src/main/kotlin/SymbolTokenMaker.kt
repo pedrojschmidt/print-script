@@ -16,8 +16,6 @@ class SymbolTokenMaker : TokenMaker {
             '*' -> Token(TokenType.TIMES, "*", Position(positionX, positionY), Position(positionX + 1, positionY))
             '/' -> Token(TokenType.DIV, "/", Position(positionX, positionY), Position(positionX + 1, positionY))
             ';' -> Token(TokenType.SEMICOLON, ";", Position(positionX, positionY), Position(positionX + 1, positionY))
-            '{' -> Token(TokenType.LBRACE, "{", Position(positionX, positionY), Position(positionX + 1, positionY))
-            '}' -> Token(TokenType.RBRACE, "}", Position(positionX, positionY), Position(positionX + 1, positionY))
             else -> null
         }
     }
