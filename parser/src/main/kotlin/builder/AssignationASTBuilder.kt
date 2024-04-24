@@ -23,8 +23,9 @@ class AssignationASTBuilder : ASTBuilder<Assignation> {
 
     override fun build(statement: List<Token>): Assignation {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
+        val isConst = filteredStatement[0].type == TokenType.CONST_KEYWORD
         return if (declarationASTBuilder.verify(filteredStatement.subList(0, 4))) {
-            DeclarationAssignation(declarationASTBuilder.build(filteredStatement.subList(0, 4)), valueASTBuilder.build(filteredStatement.subList(5, filteredStatement.size - 1)))
+            DeclarationAssignation(declarationASTBuilder.build(filteredStatement.subList(0, 4)), valueASTBuilder.build(filteredStatement.subList(5, filteredStatement.size - 1)), isConst)
         } else {
             SimpleAssignation(filteredStatement[0].value, valueASTBuilder.build(filteredStatement.subList(2, filteredStatement.size)))
         }

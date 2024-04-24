@@ -21,6 +21,7 @@ class ParserTest {
                         "*",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -71,6 +72,7 @@ class ParserTest {
                 DeclarationAssignation(
                     Declaration("y", "string"),
                     StringOperator("Hello"),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -86,6 +88,7 @@ class ParserTest {
                 DeclarationAssignation(
                     Declaration("z", "number"),
                     NumberOperator(5.5),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -105,6 +108,7 @@ class ParserTest {
                         "+",
                         StringOperator(" world!"),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -124,6 +128,7 @@ class ParserTest {
                         "+",
                         StringOperator("5"),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -163,6 +168,7 @@ class ParserTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     NumberOperator(5),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -182,6 +188,7 @@ class ParserTest {
                         "+",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -201,6 +208,7 @@ class ParserTest {
                         "-",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -220,6 +228,7 @@ class ParserTest {
                         "*",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -239,6 +248,7 @@ class ParserTest {
                         "/",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -258,6 +268,7 @@ class ParserTest {
                         "+",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -277,6 +288,7 @@ class ParserTest {
                         "-",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -296,6 +308,7 @@ class ParserTest {
                         "*",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -315,6 +328,7 @@ class ParserTest {
                         "/",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -398,6 +412,7 @@ class ParserTest {
                             NumberOperator(5),
                         ),
                     ),
+                    false,
                 ),
             )
         assertEquals(expectedAst, actualAst)
@@ -510,6 +525,139 @@ class ParserTest {
         assertThrows(RuntimeException::class.java) {
             builder.build(tokens)
         }
+    }
+
+    @Test
+    fun `test031 - if statement`() {
+        val tokens =
+            listOf(
+                Token(TokenType.IF_KEYWORD, "if", Position(0, 0), Position(0, 2)),
+                Token(TokenType.LPAREN, "(", Position(0, 3), Position(0, 4)),
+                Token(TokenType.IDENTIFIER, "a", Position(0, 5), Position(0, 6)),
+                Token(TokenType.RPAREN, ")", Position(0, 7), Position(0, 9)),
+                Token(TokenType.LBRACE, "{", Position(0, 10), Position(0, 11)),
+                Token(TokenType.NEW_LINE, "\n", Position(0, 12), Position(1, 0)),
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(1, 1), Position(1, 2)),
+                Token(TokenType.LPAREN, "(", Position(1, 3), Position(1, 4)),
+                Token(TokenType.STRING, "Hello", Position(1, 5), Position(1, 10)),
+                Token(TokenType.RPAREN, ")", Position(1, 11), Position(1, 12)),
+                Token(TokenType.SEMICOLON, ";", Position(1, 13), Position(1, 14)),
+                Token(TokenType.NEW_LINE, "\n", Position(1, 15), Position(2, 0)),
+                Token(TokenType.RBRACE, "}", Position(2, 1), Position(2, 2)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst =
+            Conditional(
+                IdentifierOperator("a"),
+                listOf(Method("println", StringOperator("Hello"))),
+                null,
+            )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test032 - if else statement`() {
+        val tokens =
+            listOf(
+                Token(TokenType.IF_KEYWORD, "if", Position(0, 0), Position(0, 2)),
+                Token(TokenType.LPAREN, "(", Position(0, 3), Position(0, 4)),
+                Token(TokenType.IDENTIFIER, "a", Position(0, 5), Position(0, 6)),
+                Token(TokenType.RPAREN, ")", Position(0, 7), Position(0, 9)),
+                Token(TokenType.LBRACE, "{", Position(0, 10), Position(0, 11)),
+                Token(TokenType.NEW_LINE, "\n", Position(0, 12), Position(1, 0)),
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(1, 1), Position(1, 2)),
+                Token(TokenType.LPAREN, "(", Position(1, 3), Position(1, 4)),
+                Token(TokenType.STRING, "Hello", Position(1, 5), Position(1, 10)),
+                Token(TokenType.RPAREN, ")", Position(1, 11), Position(1, 12)),
+                Token(TokenType.SEMICOLON, ";", Position(1, 13), Position(1, 14)),
+                Token(TokenType.NEW_LINE, "\n", Position(1, 15), Position(2, 0)),
+                Token(TokenType.RBRACE, "}", Position(2, 1), Position(2, 2)),
+                Token(TokenType.ELSE_KEYWORD, "else", Position(2, 3), Position(2, 7)),
+                Token(TokenType.LBRACE, "{", Position(2, 8), Position(2, 9)),
+                Token(TokenType.NEW_LINE, "\n", Position(2, 10), Position(3, 0)),
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(3, 1), Position(3, 2)),
+                Token(TokenType.LPAREN, "(", Position(3, 3), Position(3, 4)),
+                Token(TokenType.STRING, "World", Position(3, 5), Position(3, 10)),
+                Token(TokenType.RPAREN, ")", Position(3, 11), Position(3, 12)),
+                Token(TokenType.SEMICOLON, ";", Position(3, 13), Position(3, 14)),
+                Token(TokenType.NEW_LINE, "\n", Position(3, 15), Position(4, 0)),
+                Token(TokenType.RBRACE, "}", Position(4, 1), Position(4, 2)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst =
+            Conditional(
+                IdentifierOperator("a"),
+                listOf(Method("println", StringOperator("Hello"))),
+                listOf(Method("println", StringOperator("World"))),
+            )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test033 - if statement with if statement inside`() {
+        val tokens =
+            listOf(
+                Token(TokenType.IF_KEYWORD, "if", Position(0, 0), Position(0, 2)),
+                Token(TokenType.LPAREN, "(", Position(0, 3), Position(0, 4)),
+                Token(TokenType.IDENTIFIER, "a", Position(0, 5), Position(0, 6)),
+                Token(TokenType.RPAREN, ")", Position(0, 7), Position(0, 9)),
+                Token(TokenType.LBRACE, "{", Position(0, 10), Position(0, 11)),
+                Token(TokenType.NEW_LINE, "\n", Position(0, 12), Position(1, 0)),
+                Token(TokenType.IF_KEYWORD, "if", Position(1, 1), Position(1, 2)),
+                Token(TokenType.LPAREN, "(", Position(1, 3), Position(1, 4)),
+                Token(TokenType.IDENTIFIER, "b", Position(1, 5), Position(1, 10)),
+                Token(TokenType.RPAREN, ")", Position(1, 11), Position(1, 12)),
+                Token(TokenType.LBRACE, ";", Position(1, 13), Position(1, 14)),
+                Token(TokenType.NEW_LINE, "\n", Position(1, 15), Position(2, 0)),
+                Token(TokenType.PRINTLN_FUNCTION, "println", Position(2, 1), Position(2, 2)),
+                Token(TokenType.LPAREN, "(", Position(2, 3), Position(2, 4)),
+                Token(TokenType.STRING, "Hello", Position(2, 5), Position(2, 10)),
+                Token(TokenType.RPAREN, ")", Position(2, 11), Position(2, 12)),
+                Token(TokenType.SEMICOLON, ";", Position(2, 13), Position(2, 14)),
+                Token(TokenType.NEW_LINE, "\n", Position(2, 15), Position(3, 0)),
+                Token(TokenType.RBRACE, "}", Position(3, 1), Position(3, 2)),
+                Token(TokenType.NEW_LINE, "\n", Position(3, 3), Position(4, 0)),
+                Token(TokenType.RBRACE, "}", Position(4, 1), Position(4, 2)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst =
+            Conditional(
+                IdentifierOperator("a"),
+                listOf(
+                    Conditional(
+                        IdentifierOperator("b"),
+                        listOf(Method("println", StringOperator("Hello"))),
+                        null,
+                    ),
+                ),
+                null,
+            )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 034 - const statement`() {
+        val tokens =
+            listOf(
+                Token(TokenType.CONST_KEYWORD, "const", Position(0, 0), Position(0, 5)),
+                Token(TokenType.IDENTIFIER, "a", Position(0, 6), Position(0, 7)),
+                Token(TokenType.COLON, ":", Position(0, 8), Position(0, 9)),
+                Token(TokenType.NUMBER_TYPE, "number", Position(0, 10), Position(0, 16)),
+                Token(TokenType.EQ, "=", Position(0, 17), Position(0, 18)),
+                Token(TokenType.NUMBER, "5", Position(0, 19), Position(0, 20)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 21), Position(0, 22)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst =
+            DeclarationAssignation(
+                Declaration("a", "number"),
+                NumberOperator(5),
+                true,
+            )
     }
 
     private fun getAstList(input: String): MutableList<ASTNode> {
