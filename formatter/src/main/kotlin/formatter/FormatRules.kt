@@ -1,5 +1,6 @@
 package formatter
 
+import formatter.rules.NSpacesIndentationForIfStatement
 import formatter.rules.NewLineBeforePrintln
 import formatter.rules.SpaceAfterColon
 import formatter.rules.SpaceAroundAssignment
@@ -10,4 +11,5 @@ data class FormatRules(
     val spaceAfterColon: Boolean = SpaceAfterColon().applyRule(),
     val spaceAroundAssignment: Boolean = SpaceAroundAssignment().applyRule(),
     val newlineBeforePrintln: Int = NewLineBeforePrintln().applyRule(),
+    val nSpacesIndentationForIfStatement: Int = NSpacesIndentationForIfStatement().applyRule(),
 )

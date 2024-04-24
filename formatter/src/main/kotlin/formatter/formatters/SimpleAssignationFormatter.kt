@@ -3,14 +3,14 @@ package formatter.formatters
 import ASTNode
 import SimpleAssignation
 import formatter.FormatRules
-import formatter.FormatterAux
+import formatter.Formatter
 import kotlin.reflect.KClass
 
-class SimpleAssignationFormatter : FormatterAux {
+class SimpleAssignationFormatter : Formatter {
     override fun formatNode(
         astNode: ASTNode,
         rules: FormatRules,
-        formatterList: Map<KClass<out ASTNode>, FormatterAux>,
+        formatterList: Map<KClass<out ASTNode>, Formatter>,
     ): String {
         val simpleAssignation = astNode as SimpleAssignation
         return buildString {

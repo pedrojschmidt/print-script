@@ -7,14 +7,14 @@ import Method
 import NumberOperator
 import StringOperator
 import formatter.FormatRules
-import formatter.FormatterAux
+import formatter.Formatter
 import kotlin.reflect.KClass
 
-class MethodFormatter : FormatterAux {
+class MethodFormatter : Formatter {
     override fun formatNode(
         astNode: ASTNode,
         rules: FormatRules,
-        formatterList: Map<KClass<out ASTNode>, FormatterAux>,
+        formatterList: Map<KClass<out ASTNode>, Formatter>,
     ): String {
         val method = astNode as Method
         val newlineBefore = "\n".repeat(rules.newlineBeforePrintln)
@@ -24,14 +24,14 @@ class MethodFormatter : FormatterAux {
             append("(")
             append(
                 when (val methodValue = method.value) {
-                    is StringOperator -> methodValue.value
+                    is StringOperator -> "\"${methodValue.value}\""
                     is NumberOperator -> methodValue.value.toString()
                     is BinaryOperation -> BinaryOperationFormatter().formatNode(methodValue, rules, formatterList)
                     is IdentifierOperator -> methodValue.identifier
                     else -> ""
                 },
             )
-            append(");\n ")
+            append(");\n")
         }
     }
 }
