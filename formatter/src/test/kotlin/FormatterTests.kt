@@ -250,7 +250,7 @@ class FormatterTests {
         val executeFormatter = ExecuteFormatter()
         var formattedAst = ""
         for (ast in astList) {
-            formattedAst += executeFormatter.formatNode(ast, FormatRules(), FormatterFactory().assignFormatters())
+            formattedAst += executeFormatter.formatNode(ast, FormatRules("src/main/resources/format_rules.yaml"), FormatterFactory().assignFormatters())
         }
         return formattedAst
     }
