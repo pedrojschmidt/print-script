@@ -57,7 +57,7 @@ Version:
 
 Option"""
 
-    CLIaux(
+    CLI(
         CommandFactory(
             lexer,
             parser,
