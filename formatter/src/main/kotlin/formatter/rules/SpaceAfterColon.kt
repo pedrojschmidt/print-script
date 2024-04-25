@@ -1,6 +1,6 @@
 package formatter.rules
 
-class SpaceAfterColon : FormattingRules<Boolean> {
+class SpaceAfterColon : FormatterRules<Boolean> {
     private val ruleName = "spaceAfterColon"
     private val spaceAfterColon = getConfigFileValue(ruleName, String::toBoolean)
 

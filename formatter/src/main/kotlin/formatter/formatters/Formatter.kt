@@ -1,6 +1,7 @@
-package formatter
+package formatter.formatters
 
 import ASTNode
+import formatter.FormatRules
 import kotlin.reflect.KClass
 
 interface Formatter {

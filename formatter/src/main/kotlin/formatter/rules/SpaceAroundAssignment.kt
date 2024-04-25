@@ -1,6 +1,6 @@
 package formatter.rules
 
-class SpaceAroundAssignment : FormattingRules<Boolean> {
+class SpaceAroundAssignment : FormatterRules<Boolean> {
     private val ruleName = "spaceAroundAssignment"
     private val spaceAroundAssignment = getConfigFileValue(ruleName, String::toBoolean)
 

@@ -1,6 +1,6 @@
 package formatter.rules
 
-class NSpacesIndentationForIfStatement : FormattingRules<Int> {
+class NSpacesIndentationForIfStatement : FormatterRules<Int> {
     private val ruleName = "nSpacesIndentationForIfStatement"
     private val nSpacesIndentationForIfStatement = getConfigFileValue(ruleName, String::toInt)
 

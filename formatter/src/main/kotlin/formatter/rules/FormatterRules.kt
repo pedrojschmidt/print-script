@@ -3,7 +3,7 @@ package formatter.rules
 import org.yaml.snakeyaml.Yaml
 import java.io.FileInputStream
 
-interface FormattingRules<T> {
+interface FormatterRules<T> {
     fun applyRule(): T
 
     fun getConfigFileValue(

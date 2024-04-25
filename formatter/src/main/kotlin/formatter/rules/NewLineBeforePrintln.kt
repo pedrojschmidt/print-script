@@ -1,6 +1,6 @@
 package formatter.rules
 
-class NewLineBeforePrintln : FormattingRules<Int> {
+class NewLineBeforePrintln : FormatterRules<Int> {
     private val ruleName = "newlineBeforePrintln"
     private val newlineBeforePrintln = getConfigFileValue(ruleName, String::toInt)
 
