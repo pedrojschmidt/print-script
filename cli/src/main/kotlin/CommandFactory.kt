@@ -1,16 +1,17 @@
+import formatter.ExecuteFormatter
 import java.io.File
 
 class CommandFactory(
     private val lexer: Lexer,
     private val parser: Parser,
     private val interpreter: Interpreter,
-    private val formatter: Formatter,
+    private val formatter: ExecuteFormatter,
     private val staticCodeAnalyzer: StaticCodeAnalyzer,
 ) {
     fun createCommand(
         operation: Operation,
         file: File,
-        configFile: File?,
+        configFile: String,
     ): Command {
         return when (operation) {
 //            Option.VALIDATE -> ValidateCommand(file, lexer, tokenProvider, parser)

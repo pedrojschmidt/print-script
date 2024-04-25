@@ -1,3 +1,4 @@
+import formatter.ExecuteFormatter
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -38,10 +39,8 @@ Version:
     val lexer = Lexer.getDefaultLexer()
     val parser = Parser.getDefaultParser()
     val interpreter = Interpreter()
-    val formatter = Formatter.fromDefault()
+    val formatter = ExecuteFormatter()
     val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("static_code_analyzer/src/main/kotlin/sca_rules.yaml").readText())
-
-    var exit = false
 
     val optionsStr =
         """

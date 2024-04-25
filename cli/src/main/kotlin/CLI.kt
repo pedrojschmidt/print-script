@@ -4,7 +4,6 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.prompt
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
-import java.io.File
 
 class CLI(
     private val commandFactory: CommandFactory,
@@ -18,16 +17,15 @@ class CLI(
     override fun run() {
         operation = commandFactory.getOperation(option) ?: return
 
-        var configFile: File? = null
+        var configFilePath: String? = null
         when (operation) {
             Operation.FORMAT, Operation.ANALYZE -> {
                 print("Insert configuration file path: ")
-                val path = readlnOrNull()
-                configFile = File(path!!)
+                configFilePath = readlnOrNull().toString()
             }
             else -> {}
         }
-        val command = commandFactory.createCommand(operation, file, configFile)
+        val command = commandFactory.createCommand(operation, file, configFilePath!!)
         command.execute()
     }
 }

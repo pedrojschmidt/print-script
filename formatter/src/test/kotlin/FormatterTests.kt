@@ -1,26 +1,34 @@
+import formatter.ExecuteFormatter
+import formatter.FormatRules
+import formatter.FormatterFactory
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import java.io.File
-import java.io.FileInputStream
+import kotlin.test.Test
 
 class FormatterTests {
     @Test
-    fun `test01 formatString with real file`() {
-        // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test1.txt"))
+    fun `test 001 - Should format 2 declaration assignations and their prints`() {
+        val astList =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    BinaryOperation(
+                        NumberOperator(5),
+                        "*",
+                        NumberOperator(5),
+                    ),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("c", "string"),
+                    StringOperator("Hello, world!"),
+                    false,
+                ),
+                Method("println", IdentifierOperator("a")),
+                Method("println", IdentifierOperator("c")),
+            )
 
-        // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
-        val yamlContent = configFile.readText()
+        val formattedAst = formatASTList(astList)
 
-        // Crear el formateador a partir del contenido del archivo YAML
-        val formatter = Formatter.fromYaml(yamlContent)
-
-        // Formatear la lista de nodos AST
-        val formattedAst = formatter.formatString(astList)
-
-        // Aquí debes reemplazar "expectedString" con la cadena formateada que esperas obtener
         val expectedString =
             "let a : number = 5 * 5;\n" +
                 "let c : string = \"Hello, world!\";\n" +
@@ -33,21 +41,43 @@ class FormatterTests {
     }
 
     @Test
-    fun `test02 formatString with real file`() {
-        // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test2.txt"))
+    fun `test 002 - Should format 3 declaration assignations and their prints`() {
+        val astList =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    BinaryOperation(
+                        NumberOperator(5),
+                        "*",
+                        NumberOperator(5),
+                    ),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("b", "number"),
+                    BinaryOperation(
+                        NumberOperator(10),
+                        "+",
+                        IdentifierOperator("a"),
+                    ),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("c", "string"),
+                    BinaryOperation(
+                        StringOperator("Resultado: "),
+                        "+",
+                        IdentifierOperator("b"),
+                    ),
+                    false,
+                ),
+                Method("println", IdentifierOperator("a")),
+                Method("println", IdentifierOperator("b")),
+                Method("println", IdentifierOperator("c")),
+            )
 
-        // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
-        val yamlContent = configFile.readText()
+        val formattedAst = formatASTList(astList)
 
-        // Crear el formateador a partir del contenido del archivo YAML
-        val formatter = Formatter.fromYaml(yamlContent)
-
-        // Formatear la lista de nodos AST
-        val formattedAst = formatter.formatString(astList)
-
-        // Aquí debes reemplazar "expectedString" con la cadena formateada que esperas obtener
         val expectedString =
             "let a : number = 5 * 5;\n" +
                 "let b : number = 10 + a;\n" +
@@ -63,145 +93,165 @@ class FormatterTests {
     }
 
     @Test
-    fun `test03 formatString with real file`() {
-        // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test2.txt"))
+    fun `test 003 - Should format a simple assignation node`() {
+        val astList =
+            listOf(
+                SimpleAssignation(
+                    "a",
+                    BinaryOperation(
+                        NumberOperator(10),
+                        "+",
+                        NumberOperator(5),
+                    ),
+                ),
+            )
+        val formattedAst = formatASTList(astList)
+        val expectedString = "a = 10 + 5;\n"
+        assertEquals(expectedString, formattedAst)
+    }
 
-        // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
-
-        // Crear el formateador a partir del contenido del archivo YAML
-        val formatter = Formatter.fromDefault()
-
-        // Formatear la lista de nodos AST
-        val formattedAst = formatter.formatString(astList)
-
-        // Aquí debes reemplazar "expectedString" con la cadena formateada que esperas obtener
+    @Test
+    fun `test 004 - Should format method calls with different types of values`() {
+        val astList =
+            listOf(
+                Method("println", StringOperator("Hello, world!")),
+                Method("println", NumberOperator(5)),
+                Method("println", IdentifierOperator("a")),
+            )
+        val formattedAst = formatASTList(astList)
         val expectedString =
-            "let a : number = 5 * 5;\n" +
-                "let b : number = 10 + a;\n" +
-                "let c : string = \"Resultado: \" + b;\n" +
-                "\n" +
-                "println(a);\n" +
-                "\n" +
-                "println(b);\n" +
-                "\n" +
-                "println(c);\n"
+            "\nprintln(\"Hello, world!\");\n" +
+                "\nprintln(5);\n" +
+                "\nprintln(a);\n"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 005 - Should format a binary operation node`() {
+        val astList =
+            listOf(
+                BinaryOperation(
+                    NumberOperator(5),
+                    "+",
+                    NumberOperator(5),
+                ),
+            )
+        val formattedAst = formatASTList(astList)
+        val expectedString = "5 + 5"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 006 - Should format a binary operation node with a string`() {
+        val astList =
+            listOf(
+                BinaryOperation(
+                    StringOperator("Hello,"),
+                    "+",
+                    StringOperator(" world!"),
+                ),
+            )
+        val formattedAst = formatASTList(astList)
+        val expectedString = "\"Hello,\" + \" world!\""
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 007 - Should format a declaration assignation node`() {
+        val astList =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("a", "number"),
+                    NumberOperator(5),
+                    false,
+                ),
+            )
+        val formattedAst = formatASTList(astList)
+        val expectedString = "let a : number = 5;\n"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 008 - Should format a conditional AST with else`() {
+        // Crear una instancia real de ASTNode
+        val astList =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+
+        val formattedAst = formatASTList(astList)
+
+        val expectedString =
+            "let x : boolean = true;\n" +
+                "if (x) {\n" +
+                "\tprintln(\"true\");\n" +
+                "} else {\n" +
+                "\tprintln(\"false\");\n" +
+                "}\n"
 
         assertEquals(expectedString, formattedAst)
     }
 
     @Test
-    fun `test04 formatString with real file`() {
+    fun `test 009 - Should format a conditional AST without else`() {
         // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test2.txt"))
+        val astList =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    null,
+                ),
+            )
 
-        // Leer el archivo de configuración
-        val configFile = File("src/test/resources/invalid_format_rules.yaml")
-        val yamlContent = configFile.readText()
+        val formattedAst = formatASTList(astList)
 
-        assertThrows<IllegalArgumentException> {
-            // Crear el formateador a partir del contenido del archivo YAML
-            Formatter.fromYaml(yamlContent)
+        val expectedString =
+            "let x : boolean = true;\n" +
+                "if (x) {\n" +
+                "\tprintln(\"true\");\n" +
+                "}\n"
+
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 010 - Should format a Declaration node`() {
+        val astList =
+            listOf(
+                Declaration("a", "number"),
+            )
+        val formattedAst = formatASTList(astList)
+        val expectedString = "let a : number;\n"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    private fun formatASTList(astList: List<ASTNode>): String {
+        val executeFormatter = ExecuteFormatter()
+        var formattedAst = ""
+        for (ast in astList) {
+            formattedAst += executeFormatter.formatNode(ast, FormatRules("src/main/resources/format_rules.yaml"), FormatterFactory().assignFormatters())
         }
-    }
-
-    @Test
-    fun `test05 formatString with real file`() {
-        // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test2.txt"))
-
-        // Leer el archivo de configuración
-        val configFile = File("src/test/resources/test_rules_1.yaml")
-        val yamlContent = configFile.readText()
-
-        // Crear el formateador a partir del contenido del archivo YAML
-        val formatter = Formatter.fromYaml(yamlContent)
-
-        // Formatear la lista de nodos AST
-        val formattedAst = formatter.formatString(astList)
-
-        // Aquí debes reemplazar "expectedString" con la cadena formateada que esperas obtener
-        val expectedString =
-            "let a : number = 5 * 5;\n" +
-                "let b : number = 10 + a;\n" +
-                "let c : string = \"Resultado: \" + b;\n" +
-                "println(a);\n" +
-                "println(b);\n" +
-                "println(c);\n"
-
-        assertEquals(expectedString, formattedAst)
-    }
-
-    @Test
-    fun `test06 formatString with real file`() {
-        // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test3.txt"))
-
-        // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
-        val yamlContent = configFile.readText()
-
-        // Crear el formateador a partir del contenido del archivo YAML
-        val formatter = Formatter.fromYaml(yamlContent)
-
-        // Formatear la lista de nodos AST
-        val formattedAst = formatter.formatString(astList)
-
-        // Aquí debes reemplazar "expectedString" con la cadena formateada que esperas obtener
-        val expectedString =
-            "let a : number;\n" +
-                "a = 10 + 5;\n"
-
-        assertEquals(expectedString, formattedAst)
-    }
-
-    @Test
-    fun `test07 formatString with real file`() {
-        // Crear una instancia real de ASTNode
-        val astList = fillAstList(File("src/test/resources/test4.txt"))
-
-        // Leer el archivo de configuración
-        val configFile = File("src/main/kotlin/format_rules.yaml")
-        val yamlContent = configFile.readText()
-
-        // Crear el formateador a partir del contenido del archivo YAML
-        val formatter = Formatter.fromYaml(yamlContent)
-
-        // Formatear la lista de nodos AST
-        val formattedAst = formatter.formatString(astList)
-
-        // Aquí debes reemplazar "expectedString" con la cadena formateada que esperas obtener
-        val expectedString =
-            "let a : number = 5 + 5 + 5;\n" +
-                "let b : string = \"Hello,\" + \" World\";\n" +
-                "let c : string = a;\n" +
-                "\n" +
-                "println(a + 5);\n" +
-                "\n" +
-                "println(b + \"!\");\n" +
-                "\n" +
-                "println(\"Hello, World!\" + \"5\");\n" +
-                "\n" +
-                "println(\"Hello, World!\" + \"!\");\n" +
-                "\n" +
-                "println(5 + 5 + 5);\n" +
-                "\n" +
-                "println(\"a\" + a);\n"
-
-        assertEquals(expectedString, formattedAst)
-    }
-
-    private fun fillAstList(file: File): MutableList<ASTNode> {
-        val tokenProvider = TokenProvider(FileInputStream(file))
-        val parser = Parser.getDefaultParser()
-        val astList = mutableListOf<ASTNode>()
-        while (tokenProvider.hasNextStatement()) {
-            val tokens = tokenProvider.readStatement()
-            val ast = parser.generateAST(tokens)
-            // Add the AST to the list if it is not null
-            ast?.let { astList.add(it) }
-        }
-        return astList
+        return formattedAst
     }
 }
