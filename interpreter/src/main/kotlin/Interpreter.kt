@@ -30,7 +30,7 @@ class Interpreter {
 
     private fun interpretDeclaration(declaration: Declaration) {
         // Check if the variable is already declared
-        if (variablesStack.last().keys.any { it.identifier == declaration.identifier }) {
+        if (variablesStack.any { stack -> stack.keys.any { it.identifier == declaration.identifier } }) {
             throw Exception("Variable ${declaration.identifier} already declared")
         }
         // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
@@ -42,7 +42,7 @@ class Interpreter {
             // Differentiate between declaration with assignation and a simple assignation
             is DeclarationAssignation -> {
                 // Check if the variable is already declared in any scope
-                if (variablesStack.any { it.keys.any { it.identifier == assignation.declaration.identifier } }) {
+                if (variablesStack.any { stack -> stack.keys.any { it.identifier == assignation.declaration.identifier } }) {
                     throw Exception("Variable ${assignation.declaration.identifier} already declared")
                 }
                 // Checks if the type corresponds with the value
@@ -105,7 +105,8 @@ class Interpreter {
             is NumberOperator -> return operation.value.toString()
             is BooleanOperator -> return operation.value
             is IdentifierOperator -> {
-                return variablesStack.last()[getVariable(operation.identifier)] ?: throw Exception("Variable ${operation.identifier} not initialized")
+                val variable = getVariable(operation.identifier)
+                return variablesStack.find { it.containsKey(variable) }?.get(variable) ?: throw Exception("Variable ${operation.identifier} not declared")
             }
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)

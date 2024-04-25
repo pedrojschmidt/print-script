@@ -771,6 +771,33 @@ class InterpreterTest {
         assertEquals("Variable y already declared", exception.message)
     }
 
+    @Test
+    fun `test 035 - when variable define in outer if statement should be able to use in inner if statement`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("y", "number"),
+                    NumberOperator(5),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", IdentifierOperator("y")),
+                    ),
+                    null,
+                ),
+            )
+        val interpreter = Interpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("5\n", result)
+    }
+
 //    @Test
 //    fun `test 033 - should throw exception for unexpected binary operation node`() {
 //        val ast = listOf(
