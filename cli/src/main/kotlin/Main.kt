@@ -39,9 +39,11 @@ Version:
     val parser = Parser.getDefaultParser()
     val interpreter = Interpreter()
     val formatter = Formatter.fromDefault()
-    val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("C:/Users/Pedro/faculty/IDEA/print-script/static_code_analyzer/src/main/kotlin/sca_rules.yaml").readText())
+    val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("static_code_analyzer/src/main/kotlin/sca_rules.yaml").readText())
 
-    println(
+    var exit = false
+
+    val optionsStr =
         """
 | ------- PrintScript $version CLI -------
 |
@@ -51,10 +53,9 @@ Version:
 |   2. Execution
 |   3. Formatting
 |   4. Analyzing
-|   5. Exit
 |
-    """,
-    )
+
+Option"""
 
     CLIaux(
         CommandFactory(
@@ -64,5 +65,6 @@ Version:
             formatter,
             staticCodeAnalyzer,
         ),
+        optionsStr
     ).main(args)
 }

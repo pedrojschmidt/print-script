@@ -23,4 +23,17 @@ class CommandFactory(
             Operation.ANALYZE -> AnalyzeCommand(file, configFile, lexer, parser, staticCodeAnalyzer)
         }
     }
+
+    fun getOperation(option: Int): Operation? {
+        return when (option) {
+            1 -> Operation.VALIDATE
+            2 -> Operation.EXECUTE
+            3 -> Operation.FORMAT
+            4 -> Operation.ANALYZE
+            else -> {
+                println("Invalid option")
+                null
+            }
+        }
+    }
 }

@@ -8,34 +8,21 @@ import java.io.File
 
 class CLIaux(
     private val commandFactory: CommandFactory,
+    private val optionsStr: String,
 ) : CliktCommand() {
-    private val option: Int by option().int().prompt("Option").help("Number of the operation to perform")
     private val file by option().file(mustExist = true, canBeDir = false).prompt("\nFile path")
+    private val option: Int by option().int()
+                                       .prompt(optionsStr)
+                                       .help("Number of the operation to perform")
 
-    private var exit = false
     private lateinit var operation: Operation
 
     override fun run() {
-        when (option) {
-            1 -> operation = Operation.VALIDATE
-            2 -> operation = Operation.EXECUTE
-            3 -> operation = Operation.FORMAT
-            4 -> operation = Operation.ANALYZE
-            5 -> exit = true
-            else -> {
-                println("Invalid option")
-                return
-            }
-        }
+        operation = commandFactory.getOperation(option) ?: return
 
         var configFile: File? = null
         when (operation) {
-            Operation.FORMAT -> {
-                print("Ingrese la ruta del archivo de configuración: ")
-                val path = readlnOrNull()
-                configFile = File(path!!)
-            }
-            Operation.ANALYZE -> {
+            Operation.FORMAT, Operation.ANALYZE -> {
                 print("Ingrese la ruta del archivo de configuración: ")
                 val path = readlnOrNull()
                 configFile = File(path!!)
