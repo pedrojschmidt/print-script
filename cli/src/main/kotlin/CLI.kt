@@ -4,6 +4,9 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.prompt
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
+import formatter.ExecuteFormatter
+import formatter.FormatRules
+import formatter.FormatterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -31,14 +34,7 @@ class CLI : CliktCommand() {
             1 -> validateFile(file, version)
             2 -> executeFile(file, version)
             3 -> {
-                echo("\nConfiguration file:")
-                val configFilePath = readlnOrNull()
-                if (configFilePath == null) {
-                    formatFile(file, version, null)
-                } else {
-                    val configFile = File(configFilePath.toString())
-                    formatFile(file, version, configFile)
-                }
+                formatFile(file, version)
             }
             4 -> {
                 echo("\nConfiguration file:")
@@ -81,18 +77,16 @@ class CLI : CliktCommand() {
     private fun formatFile(
         file: File,
         version: String,
-        configFile: File?,
     ) {
         echo("\nFormatting...")
         val astList = fillAstListWithProgress(file)
-        val formatter: Formatter
 
-        if (configFile == null || !configFile.exists()) {
-            formatter = Formatter.fromDefault()
-        } else {
-            formatter = Formatter.fromYaml(configFile.readText())
+        val executeFormatter = ExecuteFormatter()
+        var formattedAst = ""
+        for (ast in astList) {
+            formattedAst += executeFormatter.formatNode(ast, FormatRules(), FormatterFactory().assignFormatters())
         }
-        val formattedAst = formatter.formatString(astList)
+
         echo(formattedAst)
 
         file.writeText(formattedAst)

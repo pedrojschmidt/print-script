@@ -1,3 +1,5 @@
-let a: string;
+let a : string;
 a = "Hello World";
+
 println(a);
+ 
