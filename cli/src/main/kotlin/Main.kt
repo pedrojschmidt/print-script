@@ -65,6 +65,6 @@ Option"""
             formatter,
             staticCodeAnalyzer,
         ),
-        optionsStr
+        optionsStr,
     ).main(args)
 }

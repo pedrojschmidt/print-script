@@ -12,8 +12,8 @@ class CLIaux(
 ) : CliktCommand() {
     private val file by option().file(mustExist = true, canBeDir = false).prompt("\nFile path")
     private val option: Int by option().int()
-                                       .prompt(optionsStr)
-                                       .help("Number of the operation to perform")
+        .prompt(optionsStr)
+        .help("Number of the operation to perform")
 
     private lateinit var operation: Operation
 
