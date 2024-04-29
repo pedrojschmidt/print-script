@@ -30,13 +30,12 @@ Version:
         version = readlnOrNull()
     }
 
-//    val lexer = Lexer.getLexerByVersion(version)
+    val lexer = Lexer.getLexerByVersion(version)
 //    val parser = Parser.getParserByVersion(version)
 //    val interpreter = Interpreter.getInterpreterByVersion(version)
 //    val formatter = Formatter.getFormatterByVersion(version)
 //    val staticCodeAnalyzer = StaticCodeAnalyzer.getSCAByVersion(version)
 
-    val lexer = Lexer.getDefaultLexer()
     val parser = Parser.getDefaultParser()
     val interpreter = Interpreter()
     val formatter = ExecuteFormatter()

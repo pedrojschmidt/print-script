@@ -45,24 +45,28 @@ class Lexer(private val tokenMakers: Map<Char, TokenMaker>) {
 
     companion object {
         fun getDefaultLexer(): Lexer {
+            return getLexerByVersion("1.1")
+        }
+
+        fun getLexerByVersion(version: String): Lexer {
             return Lexer(
                 ('0'..'9').associateWith { NumberTokenMaker() } +
-                    ('a'..'z').associateWith { IdentifierTokenMaker() } +
-                    ('A'..'Z').associateWith { IdentifierTokenMaker() } +
+                    ('a'..'z').associateWith { IdentifierTokenMaker(version) } +
+                    ('A'..'Z').associateWith { IdentifierTokenMaker(version) } +
                     mapOf(
                         Pair('\"', StringTokenMaker()),
                         Pair('\'', StringTokenMaker()),
-                        Pair('(', SymbolTokenMaker()),
-                        Pair(')', SymbolTokenMaker()),
-                        Pair('=', SymbolTokenMaker()),
-                        Pair(':', SymbolTokenMaker()),
-                        Pair('+', SymbolTokenMaker()),
-                        Pair('-', SymbolTokenMaker()),
-                        Pair('*', SymbolTokenMaker()),
-                        Pair('/', SymbolTokenMaker()),
-                        Pair(';', SymbolTokenMaker()),
-                        Pair('{', SymbolTokenMaker()),
-                        Pair('}', SymbolTokenMaker()),
+                        Pair('(', SymbolTokenMaker(version)),
+                        Pair(')', SymbolTokenMaker(version)),
+                        Pair('=', SymbolTokenMaker(version)),
+                        Pair(':', SymbolTokenMaker(version)),
+                        Pair('+', SymbolTokenMaker(version)),
+                        Pair('-', SymbolTokenMaker(version)),
+                        Pair('*', SymbolTokenMaker(version)),
+                        Pair('/', SymbolTokenMaker(version)),
+                        Pair(';', SymbolTokenMaker(version)),
+                        Pair('{', SymbolTokenMaker(version)),
+                        Pair('}', SymbolTokenMaker(version)),
                         Pair('\n', NewLineTokenMaker()),
                     ),
             )
