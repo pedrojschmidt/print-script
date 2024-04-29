@@ -17,7 +17,7 @@ class CLI(
     override fun run() {
         operation = commandFactory.getOperation(option) ?: return
 
-        var configFilePath: String? = null
+        var configFilePath = ""
         when (operation) {
             Operation.FORMAT, Operation.ANALYZE -> {
                 print("Insert configuration file path: ")
@@ -25,7 +25,7 @@ class CLI(
             }
             else -> {}
         }
-        val command = commandFactory.createCommand(operation, file, configFilePath!!)
+        val command = commandFactory.createCommand(operation, file, configFilePath)
         command.execute()
     }
 }
