@@ -4,7 +4,7 @@ import Method
 import Token
 import TokenType
 
-class MethodASTBuilder : ASTBuilder<Method> {
+class MethodASTBuilder(private val version: String) : ASTBuilder<Method> {
     private val valueASTBuilder = ValueASTBuilder()
 
     override fun verify(statement: List<Token>): Boolean {

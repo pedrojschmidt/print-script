@@ -426,7 +426,7 @@ class ParserTest {
                 Token(TokenType.LPAREN, "(", Position(0, 7), Position(0, 8)),
                 // Falta el token RPAREN
             )
-        val builder = MethodASTBuilder()
+        val builder = MethodASTBuilder("1.0")
         val result = builder.verify(tokens)
         assertFalse(result)
     }
@@ -440,7 +440,7 @@ class ParserTest {
                 Token(TokenType.RPAREN, ")", Position(0, 9), Position(0, 10)),
                 Token(TokenType.SEMICOLON, ";", Position(0, 11), Position(0, 12)),
             )
-        val builder = MethodASTBuilder()
+        val builder = MethodASTBuilder("1.0")
         val result = builder.verify(tokens)
         assertFalse(result)
     }
@@ -454,7 +454,7 @@ class ParserTest {
                 Token(TokenType.RPAREN, ")", Position(0, 9), Position(0, 10)),
                 Token(TokenType.SEMICOLON, ";", Position(0, 11), Position(0, 12)),
             )
-        val builder = MethodASTBuilder()
+        val builder = MethodASTBuilder("1.0")
         val result = builder.verify(tokens)
         assertFalse(result)
     }
@@ -468,7 +468,7 @@ class ParserTest {
                 Token(TokenType.IDENTIFIER, ")", Position(0, 9), Position(0, 10)), // Cambiado a IDENTIFIER
                 Token(TokenType.SEMICOLON, ";", Position(0, 11), Position(0, 12)),
             )
-        val builder = MethodASTBuilder()
+        val builder = MethodASTBuilder("1.0")
         val result = builder.verify(tokens)
         assertFalse(result)
     }

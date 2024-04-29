@@ -6,10 +6,13 @@ import Parser
 import Token
 import java.util.Stack
 
-class ConditionalASTBuilder : ASTBuilder<Conditional> {
+class ConditionalASTBuilder(private val version: String) : ASTBuilder<Conditional> {
     private val valueASTBuilder = ValueASTBuilder()
 
     override fun verify(statement: List<Token>): Boolean {
+        if (version == "1.0") {
+            return false
+        }
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
         if (filteredStatement.isEmpty()) {
             return false
