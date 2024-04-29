@@ -2,7 +2,7 @@ import formatter.ExecuteFormatter
 import java.io.File
 
 fun main(args: Array<String>) {
-    println(
+    print(
         """
 | ------- Welcome to PrintScript CLI -------
 |
@@ -14,8 +14,7 @@ fun main(args: Array<String>) {
 |  - 1.1
 |
 
-Version:
-    """,
+Version: """,
     )
 
     var version = readlnOrNull()
