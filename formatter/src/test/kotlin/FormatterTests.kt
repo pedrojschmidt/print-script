@@ -247,7 +247,7 @@ class FormatterTests {
     }
 
     private fun formatASTList(astList: List<ASTNode>): String {
-        val executeFormatter = ExecuteFormatter()
+        val executeFormatter = ExecuteFormatter.getDefaultFormatter()
         var formattedAst = ""
         for (ast in astList) {
             formattedAst += executeFormatter.formatNode(ast, FormatRules("src/main/resources/format_rules.yaml"), FormatterFactory().assignFormatters())
