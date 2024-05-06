@@ -6,8 +6,8 @@ import SimpleAssignation
 import Token
 import TokenType
 
-class AssignationASTBuilder : ASTBuilder<Assignation> {
-    private val declarationASTBuilder = DeclarationASTBuilder()
+class AssignationASTBuilder(private val version: String) : ASTBuilder<Assignation> {
+    private val declarationASTBuilder = DeclarationASTBuilder(version)
     private val valueASTBuilder = ValueASTBuilder()
 
     override fun verify(statement: List<Token>): Boolean {
@@ -23,7 +23,10 @@ class AssignationASTBuilder : ASTBuilder<Assignation> {
 
     override fun build(statement: List<Token>): Assignation {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
-        val isConst = filteredStatement[0].type == TokenType.CONST_KEYWORD
+        var isConst = false
+        if (version == "1.1") {
+            isConst = filteredStatement[0].type == TokenType.CONST_KEYWORD
+        }
         return if (declarationASTBuilder.verify(filteredStatement.subList(0, 4))) {
             DeclarationAssignation(declarationASTBuilder.build(filteredStatement.subList(0, 4)), valueASTBuilder.build(filteredStatement.subList(5, filteredStatement.size - 1)), isConst)
         } else {

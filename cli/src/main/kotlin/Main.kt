@@ -30,12 +30,11 @@ Version: """,
     }
 
     val lexer = Lexer.getLexerByVersion(version)
-//    val parser = Parser.getParserByVersion(version)
+    val parser = Parser.getParserByVersion(version)
 //    val interpreter = Interpreter.getInterpreterByVersion(version)
 //    val formatter = Formatter.getFormatterByVersion(version)
 //    val staticCodeAnalyzer = StaticCodeAnalyzer.getSCAByVersion(version)
 
-    val parser = Parser.getDefaultParser()
     val interpreter = Interpreter()
     val formatter = ExecuteFormatter()
     val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("static_code_analyzer/src/main/kotlin/sca_rules.yaml").readText())
