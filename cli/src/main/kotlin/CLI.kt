@@ -12,6 +12,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import sca.ExecuteSca
+import sca.ScaFactory
+import sca.StaticCodeAnalyzerRules
+import sca.StaticCodeIssue
 import java.io.File
 import java.io.FileInputStream
 import kotlin.math.ceil
@@ -102,9 +106,15 @@ class CLI : CliktCommand() {
         echo("\nAnalyzing...")
         val astList = fillAstListWithProgress(file)
 
-        val yamlContent = configFile.readText()
-        val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
-        val scaIssues = sca.analyze(astList)
+        val executeSca = ExecuteSca()
+        var scaIssues: MutableList<StaticCodeIssue> = mutableListOf()
+        for (ast in astList) {
+            scaIssues += executeSca.analyzeNode(ast, StaticCodeAnalyzerRules(), ScaFactory().assignAnalyzers())
+        }
+
+//        val yamlContent = configFile.readText()
+//        val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
+//        val scaIssues = sca.analyze(astList)
 
         if (scaIssues.isNotEmpty()) {
             echo("Problems found by the linter:")

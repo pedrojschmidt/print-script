@@ -1,3 +1,14 @@
+package sca
+
+import ASTNode
+import BinaryNode
+import BinaryOperation
+import DeclarationAssignation
+import IdentifierOperator
+import Method
+import NumberOperator
+import Position
+import StringOperator
 import org.yaml.snakeyaml.Yaml
 
 class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
@@ -82,7 +93,7 @@ class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
 
     private fun isValidPrintlnArgument(argument: String): Boolean {
         // Verificar si el argumento es un identificador o un literal (número o string)
-        if (!scaRules.printlnArgumentCheck) return true // Si las reglas están desactivadas, siempre retorna true
+        if (!scaRules.functionArgumentCheck) return true // Si las reglas están desactivadas, siempre retorna true
 
         return argument.matches("""^[\w\d]+$""".toRegex())
     }
