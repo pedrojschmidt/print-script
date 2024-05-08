@@ -7,9 +7,10 @@ import formatter.rules.SpaceAroundAssignment
 import formatter.rules.SpaceBeforeColon
 
 data class FormatRules(
-    val spaceBeforeColon: Boolean = SpaceBeforeColon().applyRule(),
-    val spaceAfterColon: Boolean = SpaceAfterColon().applyRule(),
-    val spaceAroundAssignment: Boolean = SpaceAroundAssignment().applyRule(),
-    val newlineBeforePrintln: Int = NewLineBeforePrintln().applyRule(),
-    val nSpacesIndentationForIfStatement: Int = NSpacesIndentationForIfStatement().applyRule(),
+    val configFilePath: String,
+    val spaceBeforeColon: Boolean = SpaceBeforeColon(configFilePath).applyRule(),
+    val spaceAfterColon: Boolean = SpaceAfterColon(configFilePath).applyRule(),
+    val spaceAroundAssignment: Boolean = SpaceAroundAssignment(configFilePath).applyRule(),
+    val newlineBeforePrintln: Int = NewLineBeforePrintln(configFilePath).applyRule(),
+    val nSpacesIndentationForIfStatement: Int = NSpacesIndentationForIfStatement(configFilePath).applyRule(),
 )

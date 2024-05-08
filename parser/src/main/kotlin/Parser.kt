@@ -18,12 +18,16 @@ class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
 
     companion object {
         fun getDefaultParser(): Parser {
+            return getParserByVersion("1.1")
+        }
+
+        fun getParserByVersion(version: String): Parser {
             return Parser(
                 listOf(
-                    DeclarationASTBuilder(),
-                    AssignationASTBuilder(),
-                    MethodASTBuilder(),
-                    ConditionalASTBuilder(),
+                    DeclarationASTBuilder(version),
+                    AssignationASTBuilder(version),
+                    MethodASTBuilder(version),
+                    ConditionalASTBuilder(version),
                 ),
             )
         }

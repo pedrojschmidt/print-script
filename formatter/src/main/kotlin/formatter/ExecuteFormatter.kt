@@ -18,7 +18,7 @@ import formatter.formatters.MethodFormatter
 import formatter.formatters.SimpleAssignationFormatter
 import kotlin.reflect.KClass
 
-class ExecuteFormatter : Formatter {
+class ExecuteFormatter(val version: String) : Formatter {
     override fun formatNode(
         astNode: ASTNode,
         rules: FormatRules,
@@ -29,10 +29,26 @@ class ExecuteFormatter : Formatter {
             is DeclarationAssignation -> DeclarationAssignationFormatter().formatNode(astNode, rules, formatterList)
             is SimpleAssignation -> SimpleAssignationFormatter().formatNode(astNode, rules, formatterList)
             is Method -> MethodFormatter().formatNode(astNode, rules, formatterList)
-            is Conditional -> ConditionalFormatter().formatNode(astNode, rules, formatterList)
+            is Conditional -> { // Creo que es inneceario porque si se usó el Parser 1.0 nunca llegaría a haber un nodo Conditional acá
+                if (version == "1.1") {
+                    ConditionalFormatter().formatNode(astNode, rules, formatterList)
+                } else {
+                    ""
+                }
+            }
             is BinaryOperation -> BinaryOperationFormatter().formatNode(astNode, rules, formatterList)
             is Assignation -> AssignationValueFormatter().formatNode(astNode, rules, formatterList)
             else -> ""
+        }
+    }
+
+    companion object {
+        fun getDefaultFormatter(): ExecuteFormatter {
+            return getFormatterByVersion("1.1")
+        }
+
+        fun getFormatterByVersion(version: String): ExecuteFormatter {
+            return ExecuteFormatter(version)
         }
     }
 }
