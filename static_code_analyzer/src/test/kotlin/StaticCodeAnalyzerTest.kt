@@ -2,11 +2,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import sca.StaticCodeAnalyzer
+import sca.StaticCodeAnalyzerRules
 
 class StaticCodeAnalyzerTest {
     @Test
     fun `test 001 - should analyze that the type matched`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -21,7 +23,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 002 - should analyze that the type did not match`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -37,7 +39,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 003 - should analyze that the println argument is valid`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 Method(
@@ -51,7 +53,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 004 - should analyze that the println argument is invalid`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 Method(
@@ -70,7 +72,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 005 - should analyze that the identifier is not in lower camel case`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -86,7 +88,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 006 - should analyze that the identifier is in lower camel case`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -101,7 +103,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 007 - should ignore type matching check when false`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = false, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = false, identifierNamingCheck = true))
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -116,7 +118,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 008 - should ignore identifier naming check when false`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = false))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = false))
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -131,7 +133,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 009 - should ignore println argument check when false`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = false, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = false, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 Method(
@@ -173,7 +175,7 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 011 - should analyze that the type matched for number`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(printlnArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
         val ast =
             listOf(
                 DeclarationAssignation(

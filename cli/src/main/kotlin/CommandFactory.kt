@@ -1,4 +1,5 @@
 import formatter.ExecuteFormatter
+import sca.StaticCodeAnalyzer
 import java.io.File
 
 class CommandFactory(

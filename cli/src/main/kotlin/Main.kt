@@ -1,4 +1,5 @@
 import formatter.ExecuteFormatter
+import sca.StaticCodeAnalyzer
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -36,7 +37,7 @@ Version: """,
 //    val staticCodeAnalyzer = StaticCodeAnalyzer.getSCAByVersion(version)
 
     val interpreter = Interpreter()
-    val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("static_code_analyzer/src/main/kotlin/sca_rules.yaml").readText())
+    val staticCodeAnalyzer = StaticCodeAnalyzer.fromYaml(File("static_code_analyzer/src/main/resources/sca_rules.yaml").readText())
 
     val optionsStr =
         """

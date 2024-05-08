@@ -11,6 +11,7 @@ import formatter.formatters.BinaryOperationFormatter
 import formatter.formatters.ConditionalFormatter
 import formatter.formatters.DeclarationAssignationFormatter
 import formatter.formatters.DeclarationFormatter
+import formatter.formatters.Formatter
 import formatter.formatters.MethodFormatter
 import formatter.formatters.SimpleAssignationFormatter
 import kotlin.reflect.KClass

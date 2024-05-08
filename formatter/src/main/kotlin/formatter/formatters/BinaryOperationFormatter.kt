@@ -7,7 +7,6 @@ import IdentifierOperator
 import NumberOperator
 import StringOperator
 import formatter.FormatRules
-import formatter.Formatter
 import kotlin.reflect.KClass
 
 class BinaryOperationFormatter : Formatter {

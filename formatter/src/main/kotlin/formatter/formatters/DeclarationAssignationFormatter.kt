@@ -3,7 +3,6 @@ package formatter.formatters
 import ASTNode
 import DeclarationAssignation
 import formatter.FormatRules
-import formatter.Formatter
 import kotlin.reflect.KClass
 
 class DeclarationAssignationFormatter : Formatter {
