@@ -72,7 +72,7 @@ class Interpreter {
 
     private fun checkSameType(
         type: String,
-        value: BinaryNode,
+        value: ValueNode,
     ): Boolean {
         return when (value) {
             is StringOperator -> {
@@ -99,7 +99,7 @@ class Interpreter {
         }
     }
 
-    private fun interpretOperation(operation: BinaryNode): String {
+    private fun interpretOperation(operation: ValueNode): String {
         return when (operation) {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
