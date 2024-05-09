@@ -108,6 +108,24 @@ class Interpreter {
                 val variable = getVariable(operation.identifier)
                 return variablesStack.find { it.containsKey(variable) }?.get(variable) ?: throw Exception("Variable ${operation.identifier} not declared")
             }
+            is Method -> {
+                when (operation.identifier.lowercase()) {
+                    "readenv" -> {
+                        val argument =
+                            (operation.value as? StringOperator)?.value
+                                ?: throw IllegalArgumentException("readEnv requires a string argument")
+                        System.getenv(argument) ?: throw IllegalArgumentException("Environment variable $argument does not exist")
+                    }
+                    "readinput" -> {
+                        val argument =
+                            (operation.value as? StringOperator)?.value
+                                ?: throw IllegalArgumentException("readInput requires a string argument")
+                        println(argument) // Print the prompt
+                        readLine() ?: throw IllegalArgumentException("Failed to read input")
+                    }
+                    else -> throw IllegalArgumentException("Unsupported method: ${operation.identifier}")
+                }
+            }
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)
                 val right = interpretOperation(operation.right)

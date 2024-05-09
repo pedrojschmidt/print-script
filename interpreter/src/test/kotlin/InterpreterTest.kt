@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
 
 class InterpreterTest {
@@ -796,6 +797,19 @@ class InterpreterTest {
         val interpreter = Interpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("5\n", result)
+    }
+
+    @Test
+    fun `test readInput function`() {
+        val ast =
+            listOf(
+                Method("println", Method("readInput", StringOperator("Enter a value:"))),
+            )
+        val interpreter = Interpreter()
+        val input = "Test input"
+        System.setIn(ByteArrayInputStream(input.toByteArray()))
+        val result = interpreter.interpretAST(ast)
+        assertEquals(input, result?.trim())
     }
 
 //    @Test
