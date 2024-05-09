@@ -1,18 +1,22 @@
-import sca.StaticCodeAnalyzer
+import sca.ExecuteSca
+import sca.ScaFactory
+import sca.StaticCodeAnalyzerRules
+import sca.StaticCodeIssue
 import java.io.File
 import java.io.FileInputStream
 
-class AnalyzeCommand(private val file: File, private val configFilePath: String, private val lexer: Lexer, private val parser: Parser, private val staticCodeAnalyzer: StaticCodeAnalyzer) : Command {
+class AnalyzeCommand(private val file: File, private val configFilePath: String, private val lexer: Lexer, private val parser: Parser, private val staticCodeAnalyzer: ExecuteSca) : Command {
     override fun execute() {
         println("Analyzing...")
 
         val tokenProvider = TokenProvider(FileInputStream(file))
         val astList = fillAstListWithProgress(file, parser, tokenProvider)
 
-        val configFile = File(configFilePath)
-        val yamlContent = configFile.readText()
-        val sca = StaticCodeAnalyzer.fromYaml(yamlContent)
-        val scaIssues = sca.analyze(astList)
+        val sca = ExecuteSca()
+        val scaIssues: MutableList<StaticCodeIssue> = mutableListOf()
+        for (ast in astList) {
+            scaIssues += sca.analyzeNode(ast, StaticCodeAnalyzerRules(configFilePath), ScaFactory().assignAnalyzers())
+        }
 
         if (scaIssues.isNotEmpty()) {
             println("Problems found by the linter:")

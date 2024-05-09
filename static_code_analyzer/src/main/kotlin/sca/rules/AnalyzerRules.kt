@@ -4,13 +4,14 @@ import org.yaml.snakeyaml.Yaml
 import java.io.FileInputStream
 
 interface AnalyzerRules {
-    fun applyRule(): Boolean
+    fun applyRule(configFilePath: String): Boolean
 
     fun getConfigFileValue(
+        configFilePath: String,
         ruleName: String,
         convert: (String) -> Boolean,
     ): Boolean {
-        val input = FileInputStream("/Users/maiacamarero/IdeaProjects/print-script/static_code_analyzer/src/main/resources/sca_rules.yaml")
+        val input = FileInputStream(configFilePath)
         val yaml = Yaml()
         val data = yaml.load(input) as Map<String, Map<String, Any>>
         val rulesMap = data["rules"] ?: throw IllegalArgumentException("Invalid YAML content")
