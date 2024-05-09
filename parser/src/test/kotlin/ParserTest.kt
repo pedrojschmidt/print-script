@@ -334,65 +334,69 @@ class ParserTest {
         assertEquals(expectedAst, actualAst)
     }
 
-//    @Test
-//    fun `test 020 - should convert a list of tokens in ast for let result number = 5 + 5 times 10 - 2 div 2`() {
-//        val code = "let result: number = 5 + 5 * 10 - 2 / 2;"
-//        val actualAst = getAstList(code)
-//
-//        val expectedAst = listOf(
-//            DeclarationAssignation(
-//                Declaration("result", "number"),
-//                BinaryOperation(
-//                    BinaryOperation(
-//                        NumberOperator(5),
-//                        "+",
-//                        BinaryOperation(
-//                            NumberOperator(5),
-//                            "*",
-//                            NumberOperator(10)
-//                        )
-//                    ),
-//                    "-",
-//                    BinaryOperation(
-//                        NumberOperator(2),
-//                        "/",
-//                        NumberOperator(2)
-//                    )
-//                )
-//            )
-//        )
-//        assertEquals(expectedAst, actualAst)
-//    }
+    @Test
+    fun `test 020 - should convert a list of tokens in ast for let result number = 5 + 5 times 10 - 2 div 2`() {
+        val code = "let result: number = 5 + 5 * 10 - 2 / 2;"
+        val actualAst = getAstList(code)
 
-//    @Test
-//    fun `test 021 - should convert a list of tokens in ast for let result number = 5,5 + 5,5 times 10,5 - 2,5 div 2,5`() {
-//        val code = "let result: number = 5.5 + 5.5 * 10.5 - 2.5 / 2.5;"
-//        val actualAst = getAstList(code)
-//
-//        val expectedAst = listOf(
-//            DeclarationAssignation(
-//                Declaration("result", "number"),
-//                BinaryOperation(
-//                    BinaryOperation(
-//                        NumberOperator(5.5),
-//                        "+",
-//                        BinaryOperation(
-//                            NumberOperator(5.5),
-//                            "*",
-//                            NumberOperator(10.5)
-//                        )
-//                    ),
-//                    "-",
-//                    BinaryOperation(
-//                        NumberOperator(2.5),
-//                        "/",
-//                        NumberOperator(2.5)
-//                    )
-//                )
-//            )
-//        )
-//        assertEquals(expectedAst, actualAst)
-//    }
+        val expectedAst =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("result", "number"),
+                    BinaryOperation(
+                        BinaryOperation(
+                            NumberOperator(5),
+                            "+",
+                            BinaryOperation(
+                                NumberOperator(5),
+                                "*",
+                                NumberOperator(10),
+                            ),
+                        ),
+                        "-",
+                        BinaryOperation(
+                            NumberOperator(2),
+                            "/",
+                            NumberOperator(2),
+                        ),
+                    ),
+                    false,
+                ),
+            )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 021 - should convert a list of tokens in ast for let result number = 5,5 + 5,5 times 10,5 - 2,5 div 2,5`() {
+        val code = "let result: number = 5.5 + 5.5 * 10.5 - 2.5 / 2.5;"
+        val actualAst = getAstList(code)
+
+        val expectedAst =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("result", "number"),
+                    BinaryOperation(
+                        BinaryOperation(
+                            NumberOperator(5.5),
+                            "+",
+                            BinaryOperation(
+                                NumberOperator(5.5),
+                                "*",
+                                NumberOperator(10.5),
+                            ),
+                        ),
+                        "-",
+                        BinaryOperation(
+                            NumberOperator(2.5),
+                            "/",
+                            NumberOperator(2.5),
+                        ),
+                    ),
+                    false,
+                ),
+            )
+        assertEquals(expectedAst, actualAst)
+    }
 
     @Test
     fun `test 022 - should convert a list of tokens in ast for let a number = 5 + (5 times 5)`() {
@@ -658,6 +662,49 @@ class ParserTest {
                 NumberOperator(5),
                 true,
             )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 035 - declaration statement with readEnv function`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 3)),
+                Token(TokenType.IDENTIFIER, "home", Position(0, 4), Position(0, 8)),
+                Token(TokenType.COLON, ":", Position(0, 9), Position(0, 10)),
+                Token(TokenType.STRING_TYPE, "string", Position(0, 11), Position(0, 17)),
+                Token(TokenType.EQ, "=", Position(0, 18), Position(0, 19)),
+                Token(TokenType.READENV_FUNCTION, "readEnv", Position(0, 20), Position(0, 27)),
+                Token(TokenType.LPAREN, "(", Position(0, 28), Position(0, 29)),
+                Token(TokenType.STRING, "HOME", Position(0, 30), Position(0, 34)),
+                Token(TokenType.RPAREN, ")", Position(0, 35), Position(0, 36)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 37), Position(0, 38)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst = DeclarationAssignation(Declaration("home", "string"), Method("readEnv", StringOperator("HOME")), false)
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 036 - declaration statement with readInput function`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 3)),
+                Token(TokenType.IDENTIFIER, "home", Position(0, 4), Position(0, 8)),
+                Token(TokenType.COLON, ":", Position(0, 9), Position(0, 10)),
+                Token(TokenType.STRING_TYPE, "string", Position(0, 11), Position(0, 17)),
+                Token(TokenType.EQ, "=", Position(0, 18), Position(0, 19)),
+                Token(TokenType.READINPUT_FUNCTION, "readInput", Position(0, 20), Position(0, 27)),
+                Token(TokenType.LPAREN, "(", Position(0, 28), Position(0, 29)),
+                Token(TokenType.STRING, "Write the name of your home: ", Position(0, 30), Position(0, 34)),
+                Token(TokenType.RPAREN, ")", Position(0, 35), Position(0, 36)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 37), Position(0, 38)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst = DeclarationAssignation(Declaration("home", "string"), Method("readInput", StringOperator("Write the name of your home: ")), false)
+        assertEquals(expectedAst, actualAst)
     }
 
     private fun getAstList(input: String): MutableList<ASTNode> {

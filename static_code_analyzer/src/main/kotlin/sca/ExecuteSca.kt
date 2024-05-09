@@ -14,4 +14,14 @@ class ExecuteSca : StaticCodeAnalyzerAux {
         issues.addAll(scaList[astNode::class]?.analyzeNode(astNode, rules, scaList) ?: emptyList())
         return issues
     }
+
+    companion object {
+        fun getDefaultSCA(): ExecuteSca {
+            return ExecuteSca()
+        }
+
+        fun getSCAByVersion(version: String): ExecuteSca {
+            return ExecuteSca()
+        }
+    }
 }
