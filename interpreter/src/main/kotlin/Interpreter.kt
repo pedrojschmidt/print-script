@@ -72,7 +72,7 @@ class Interpreter {
 
     private fun checkSameType(
         type: String,
-        value: BinaryNode,
+        value: ValueNode,
     ): Boolean {
         return when (value) {
             is StringOperator -> {
@@ -99,7 +99,7 @@ class Interpreter {
         }
     }
 
-    private fun interpretOperation(operation: BinaryNode): String {
+    private fun interpretOperation(operation: ValueNode): String {
         return when (operation) {
             is StringOperator -> return operation.value
             is NumberOperator -> return operation.value.toString()
@@ -107,6 +107,24 @@ class Interpreter {
             is IdentifierOperator -> {
                 val variable = getVariable(operation.identifier)
                 return variablesStack.find { it.containsKey(variable) }?.get(variable) ?: throw Exception("Variable ${operation.identifier} not declared")
+            }
+            is Method -> {
+                when (operation.identifier.lowercase()) {
+                    "readenv" -> {
+                        val argument =
+                            (operation.value as? StringOperator)?.value
+                                ?: throw IllegalArgumentException("readEnv requires a string argument")
+                        System.getenv(argument) ?: throw IllegalArgumentException("Environment variable $argument does not exist")
+                    }
+                    "readinput" -> {
+                        val argument =
+                            (operation.value as? StringOperator)?.value
+                                ?: throw IllegalArgumentException("readInput requires a string argument")
+                        println(argument) // Print the prompt
+                        readLine() ?: throw IllegalArgumentException("Failed to read input")
+                    }
+                    else -> throw IllegalArgumentException("Unsupported method: ${operation.identifier}")
+                }
             }
             is BinaryOperation -> {
                 val left = interpretOperation(operation.left)
