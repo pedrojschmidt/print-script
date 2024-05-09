@@ -1,10 +1,16 @@
-class StringTokenMaker : TokenMaker {
+package version1
+
+import Position
+import Token1
+import TokenType1
+
+class StringTokenMaker1 : TokenMaker1 {
     override fun makeToken(
         input: String,
         position: Int,
         positionX: Int,
         positionY: Int,
-    ): Token? {
+    ): Token1? {
         var str = ""
         var pos = position
 
@@ -18,8 +24,8 @@ class StringTokenMaker : TokenMaker {
             pos++
         }
 
-        return Token(
-            TokenType.STRING,
+        return Token1(
+            TokenType1.STRING,
             str,
             Position(positionX, positionY),
             Position(positionX + str.length + 2, positionY),

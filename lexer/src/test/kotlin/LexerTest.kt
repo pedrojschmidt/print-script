@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
+import version1.Lexer1
 import java.io.ByteArrayInputStream
 import kotlin.test.Test
 
@@ -334,5 +335,23 @@ class LexerTest {
                 else -> it.type.name
             }
         }.toString()
+    }
+
+    // "const a: boolean = false;"
+    @Test
+    fun `test 029 - should make a list of tokens`() {
+        val example = "const a: boolean = false;"
+        val lexer = Lexer1.getDefaultLexer()
+        val tokens = lexer.makeTokens(example)
+        assertEquals(7, tokens.size)
+    }
+
+    // "if(true){ println(a); } else { println(b); }"
+    @Test
+    fun `test 030 - should make a list of tokens`() {
+        val example = "if(true){ println(a); } else { println(b); }"
+        val lexer = Lexer1.getDefaultLexer()
+        val tokens = lexer.makeTokens(example)
+        assertEquals(19, tokens.size)
     }
 }

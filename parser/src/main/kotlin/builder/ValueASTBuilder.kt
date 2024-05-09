@@ -6,7 +6,6 @@ import IdentifierOperator
 import NumberOperator
 import StringOperator
 import Token
-import TokenType
 
 class ValueASTBuilder : ASTBuilder<BinaryNode> {
     override fun verify(statement: List<Token>): Boolean {

@@ -4,7 +4,6 @@ import Assignation
 import DeclarationAssignation
 import SimpleAssignation
 import Token
-import TokenType
 
 class AssignationASTBuilder : ASTBuilder<Assignation> {
     private val declarationASTBuilder = DeclarationASTBuilder()

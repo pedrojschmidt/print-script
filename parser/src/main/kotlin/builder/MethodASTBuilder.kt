@@ -2,7 +2,6 @@ package builder
 
 import Method
 import Token
-import TokenType
 
 class MethodASTBuilder : ASTBuilder<Method> {
     private val valueASTBuilder = ValueASTBuilder()

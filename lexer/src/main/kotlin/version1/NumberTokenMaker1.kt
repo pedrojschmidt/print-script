@@ -1,10 +1,16 @@
-class NumberTokenMaker : TokenMaker {
+package version1
+
+import Position
+import Token1
+import TokenType1
+
+class NumberTokenMaker1 : TokenMaker1 {
     override fun makeToken(
         input: String,
         position: Int,
         positionX: Int,
         positionY: Int,
-    ): Token? {
+    ): Token1? {
         var number = ""
         var pos = position
         var decimalPointEncountered = false
@@ -21,7 +27,12 @@ class NumberTokenMaker : TokenMaker {
             pos++
         }
         return if (number.isNotEmpty()) {
-            Token(TokenType.NUMBER, number, Position(positionX, positionY), Position(positionX + number.length, positionY))
+            Token1(
+                TokenType1.NUMBER,
+                number,
+                Position(positionX, positionY),
+                Position(positionX + number.length, positionY),
+            )
         } else {
             null
         }
