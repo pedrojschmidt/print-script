@@ -1,5 +1,5 @@
 import formatter.ExecuteFormatter
-import sca.StaticCodeAnalyzer
+import sca.ExecuteSca
 import java.io.File
 
 class CommandFactory(
@@ -7,7 +7,7 @@ class CommandFactory(
     private val parser: Parser,
     private val interpreter: Interpreter,
     private val formatter: ExecuteFormatter,
-    private val staticCodeAnalyzer: StaticCodeAnalyzer,
+    private val staticCodeAnalyzer: ExecuteSca,
 ) {
     fun createCommand(
         operation: Operation,
