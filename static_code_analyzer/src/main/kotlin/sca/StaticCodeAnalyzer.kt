@@ -1,7 +1,6 @@
 package sca
 
 import ASTNode
-import BinaryNode
 import BinaryOperation
 import DeclarationAssignation
 import IdentifierOperator
@@ -9,6 +8,7 @@ import Method
 import NumberOperator
 import Position
 import StringOperator
+import ValueNode
 import org.yaml.snakeyaml.Yaml
 
 class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
@@ -77,7 +77,7 @@ class StaticCodeAnalyzer(private val scaRules: StaticCodeAnalyzerRules) {
         }
     }
 
-    private fun extractPrintlnArgument(value: BinaryNode): String {
+    private fun extractPrintlnArgument(value: ValueNode): String {
         return when (value) {
             is IdentifierOperator -> value.identifier
             is StringOperator -> value.value

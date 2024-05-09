@@ -1,36 +1,35 @@
 sealed interface ASTNode
 
-// Esta interfaz sirve para que se pueda hacer pattern matching con los dos tipos de asignaciones
 sealed interface Assignation : ASTNode
 
-sealed interface BinaryNode : ASTNode
+sealed interface ValueNode : ASTNode
 
 // let x: number;
 data class Declaration(val identifier: String, val type: String) : ASTNode
 
 // let x: number = 5;
-data class DeclarationAssignation(val declaration: Declaration, val value: BinaryNode, val isConst: Boolean) : Assignation
+data class DeclarationAssignation(val declaration: Declaration, val value: ValueNode, val isConst: Boolean) : Assignation
 
 // x = 5 + 5;
-data class SimpleAssignation(val identifier: String, val value: BinaryNode) : Assignation
+data class SimpleAssignation(val identifier: String, val value: ValueNode) : Assignation
 
 // println(x);
-data class Method(val identifier: String, val value: BinaryNode) : ASTNode
+data class Method(val identifier: String, val value: ValueNode) : ValueNode
 
 // if (x > 5) { println(x); } else { println(5); }
-data class Conditional(val condition: BinaryNode, val then: List<ASTNode>, val otherwise: List<ASTNode>?) : ASTNode
+data class Conditional(val condition: ValueNode, val then: List<ASTNode>, val otherwise: List<ASTNode>?) : ASTNode
 
 // NodeL(value) (+ - * /) NodeR(value)
-data class BinaryOperation(val left: BinaryNode, val symbol: String, val right: BinaryNode) : BinaryNode
+data class BinaryOperation(val left: ValueNode, val symbol: String, val right: ValueNode) : ValueNode
 
-// Representa cualquier String, como "Hello"
-data class StringOperator(val value: String) : BinaryNode
+// Represents any String like "Hello"
+data class StringOperator(val value: String) : ValueNode
 
-// Representa cualquier número, como 5
-data class NumberOperator(val value: Number) : BinaryNode
+// Represents any Number like 5
+data class NumberOperator(val value: Number) : ValueNode
 
-// Representa cualquier identificador, como x
-data class IdentifierOperator(val identifier: String) : BinaryNode
+// Represents any Identifier like x
+data class IdentifierOperator(val identifier: String) : ValueNode
 
-// Representa un valor booleano, como true o false
-data class BooleanOperator(val value: String) : BinaryNode
+// Represents a Boolean like true or false
+data class BooleanOperator(val value: String) : ValueNode
