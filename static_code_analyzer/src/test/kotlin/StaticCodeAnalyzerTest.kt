@@ -2,13 +2,18 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import sca.ExecuteSca
+import sca.ScaFactory
 import sca.StaticCodeAnalyzer
 import sca.StaticCodeAnalyzerRules
+import sca.StaticCodeIssue
 
 class StaticCodeAnalyzerTest {
     @Test
     fun `test 001 - should analyze that the type matched`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -17,13 +22,17 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
     @Test
     fun `test 002 - should analyze that the type did not match`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -32,14 +41,18 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertEquals(1, issues.size)
-        assertEquals("La declaración de variable no coincide con el tipo del valor asignado", issues[0].message)
+        assertEquals("Variable declaration does not match the type of the assigned value", issues[0].message)
     }
 
     @Test
     fun `test 003 - should analyze that the println argument is valid`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 Method(
@@ -47,13 +60,17 @@ class StaticCodeAnalyzerTest {
                     IdentifierOperator("a"),
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
     @Test
     fun `test 004 - should analyze that the println argument is invalid`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 Method(
@@ -65,14 +82,18 @@ class StaticCodeAnalyzerTest {
                     ),
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertEquals(1, issues.size)
-        assertEquals("La función println debe llamarse solo con un identificador o un literal, la expresión: a + world es inválida.", issues[0].message)
+        assertEquals("The println function should be called only with an identifier or a literal, the expression: a + world is invalid.", issues[0].message)
     }
 
     @Test
     fun `test 005 - should analyze that the identifier is not in lower camel case`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -81,14 +102,18 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertEquals(1, issues.size)
-        assertEquals("El identificador 'a_variable' debe estar en lower camel case.", issues[0].message)
+        assertEquals("The identifier 'a_variable' must be in lower camel case.", issues[0].message)
     }
 
     @Test
     fun `test 006 - should analyze that the identifier is in lower camel case`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -97,13 +122,17 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
     @Test
     fun `test 007 - should ignore type matching check when false`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = false, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = false, identifierNamingCheck = true)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -112,13 +141,17 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
     @Test
     fun `test 008 - should ignore identifier naming check when false`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = false))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = false)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -127,13 +160,17 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
     @Test
     fun `test 009 - should ignore println argument check when false`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = false, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = false, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 Method(
@@ -145,7 +182,9 @@ class StaticCodeAnalyzerTest {
                     ),
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
@@ -175,7 +214,9 @@ class StaticCodeAnalyzerTest {
 
     @Test
     fun `test 011 - should analyze that the type matched for number`() {
-        val sca = StaticCodeAnalyzer(StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true))
+        val executeSca = ExecuteSca()
+        val issues: MutableList<StaticCodeIssue> = mutableListOf()
+        val scaRules = StaticCodeAnalyzerRules(functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -193,7 +234,9 @@ class StaticCodeAnalyzerTest {
                     false,
                 ),
             )
-        val issues = sca.analyze(ast)
+        for (node in ast) {
+            issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
+        }
         assertTrue(issues.isEmpty())
     }
 
