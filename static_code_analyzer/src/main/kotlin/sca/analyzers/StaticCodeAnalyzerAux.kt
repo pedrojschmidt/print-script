@@ -1,11 +1,11 @@
 package sca.analyzers
 
 import ASTNode
-import BinaryNode
 import BinaryOperation
 import IdentifierOperator
 import NumberOperator
 import StringOperator
+import ValueNode
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 import kotlin.reflect.KClass
@@ -25,7 +25,7 @@ interface StaticCodeAnalyzerAux {
         return identifier.matches("""^[a-z]+(?:[A-Z][a-z\d]*)*$""".toRegex())
     }
 
-    fun extractArgument(value: BinaryNode): String {
+    fun extractArgument(value: ValueNode): String {
         return when (value) {
             is IdentifierOperator -> value.identifier
             is StringOperator -> value.value
