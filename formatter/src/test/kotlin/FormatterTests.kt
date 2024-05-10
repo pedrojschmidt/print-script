@@ -27,7 +27,7 @@ class FormatterTests {
                 Method("println", IdentifierOperator("c")),
             )
 
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
 
         val expectedString =
             "let a : number = 5 * 5;\n" +
@@ -76,7 +76,7 @@ class FormatterTests {
                 Method("println", IdentifierOperator("c")),
             )
 
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
 
         val expectedString =
             "let a : number = 5 * 5;\n" +
@@ -105,7 +105,7 @@ class FormatterTests {
                     ),
                 ),
             )
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
         val expectedString = "a = 10 + 5;\n"
         assertEquals(expectedString, formattedAst)
     }
@@ -118,7 +118,7 @@ class FormatterTests {
                 Method("println", NumberOperator(5)),
                 Method("println", IdentifierOperator("a")),
             )
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
         val expectedString =
             "\nprintln(\"Hello, world!\");\n" +
                 "\nprintln(5);\n" +
@@ -136,7 +136,7 @@ class FormatterTests {
                     NumberOperator(5),
                 ),
             )
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
         val expectedString = "5 + 5"
         assertEquals(expectedString, formattedAst)
     }
@@ -151,7 +151,7 @@ class FormatterTests {
                     StringOperator(" world!"),
                 ),
             )
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
         val expectedString = "\"Hello,\" + \" world!\""
         assertEquals(expectedString, formattedAst)
     }
@@ -166,7 +166,7 @@ class FormatterTests {
                     false,
                 ),
             )
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
         val expectedString = "let a : number = 5;\n"
         assertEquals(expectedString, formattedAst)
     }
@@ -192,7 +192,7 @@ class FormatterTests {
                 ),
             )
 
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
 
         val expectedString =
             "let x : boolean = true;\n" +
@@ -224,7 +224,7 @@ class FormatterTests {
                 ),
             )
 
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
 
         val expectedString =
             "let x : boolean = true;\n" +
@@ -241,16 +241,52 @@ class FormatterTests {
             listOf(
                 Declaration("a", "number"),
             )
-        val formattedAst = formatASTList(astList)
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules.yaml")
         val expectedString = "let a : number;\n"
         assertEquals(expectedString, formattedAst)
     }
 
-    private fun formatASTList(astList: List<ASTNode>): String {
+    @Test
+    fun `test 011 - Should format a Declaration node`() {
+        val astList =
+            listOf(
+                Declaration("a", "number"),
+            )
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules_2.yaml")
+        val expectedString = "let a: number;\n"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 012 - Should format a Declaration node`() {
+        val astList =
+            listOf(
+                Declaration("a", "number"),
+            )
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules_3.yaml")
+        val expectedString = "let a:number;\n"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    @Test
+    fun `test 013 - Should format a Declaration node`() {
+        val astList =
+            listOf(
+                Declaration("a", "number"),
+            )
+        val formattedAst = formatASTList(astList, "src/main/resources/format_rules_4.yaml")
+        val expectedString = "let a :number;\n"
+        assertEquals(expectedString, formattedAst)
+    }
+
+    private fun formatASTList(
+        astList: List<ASTNode>,
+        configFilePath: String,
+    ): String {
         val executeFormatter = ExecuteFormatter.getDefaultFormatter()
         var formattedAst = ""
         for (ast in astList) {
-            formattedAst += executeFormatter.formatNode(ast, FormatRules("src/main/resources/format_rules.yaml"), FormatterFactory().assignFormatters())
+            formattedAst += executeFormatter.formatNode(ast, FormatRules(configFilePath), FormatterFactory().assignFormatters())
         }
         return formattedAst
     }
