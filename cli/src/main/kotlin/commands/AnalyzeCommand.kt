@@ -1,3 +1,8 @@
+package commands
+
+import Lexer
+import Parser
+import TokenProvider
 import sca.ExecuteSca
 import sca.ScaFactory
 import sca.StaticCodeAnalyzerRules
@@ -5,7 +10,8 @@ import sca.StaticCodeIssue
 import java.io.File
 import java.io.FileInputStream
 
-class AnalyzeCommand(private val file: File, private val configFilePath: String, private val lexer: Lexer, private val parser: Parser, private val staticCodeAnalyzer: ExecuteSca) : Command {
+class AnalyzeCommand(private val file: File, private val configFilePath: String, private val lexer: Lexer, private val parser: Parser, private val staticCodeAnalyzer: ExecuteSca) :
+    Command {
     override fun execute() {
         println("Analyzing...")
 

@@ -1,7 +1,14 @@
+package commands
+
+import Interpreter
+import Lexer
+import Parser
+import TokenProvider
 import java.io.File
 import java.io.FileInputStream
 
-class ExecuteCommand(private val file: File, private val lexer: Lexer, private val parser: Parser, private val interpreter: Interpreter) : Command {
+class ExecuteCommand(private val file: File, private val lexer: Lexer, private val parser: Parser, private val interpreter: Interpreter) :
+    Command {
     override fun execute() {
         println("Executing...")
 

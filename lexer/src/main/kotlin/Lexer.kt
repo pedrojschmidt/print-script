@@ -1,3 +1,10 @@
+import tokenmakers.IdentifierTokenMaker
+import tokenmakers.NewLineTokenMaker
+import tokenmakers.NumberTokenMaker
+import tokenmakers.StringTokenMaker
+import tokenmakers.SymbolTokenMaker
+import tokenmakers.TokenMaker
+
 class Lexer(private val tokenMakers: Map<Char, TokenMaker>) {
     fun makeTokens(inputText: String): List<Token> {
         var position = 0

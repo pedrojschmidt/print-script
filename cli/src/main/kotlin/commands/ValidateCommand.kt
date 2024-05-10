@@ -1,3 +1,8 @@
+package commands
+
+import Lexer
+import Parser
+import TokenProvider
 import java.io.File
 import java.io.FileInputStream
 

@@ -1,3 +1,7 @@
+package tokenmakers
+
+import Token
+
 interface TokenMaker {
     fun makeToken(
         input: String,

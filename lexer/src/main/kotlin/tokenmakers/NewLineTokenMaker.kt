@@ -1,3 +1,9 @@
+package tokenmakers
+
+import Position
+import Token
+import TokenType
+
 class NewLineTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,
