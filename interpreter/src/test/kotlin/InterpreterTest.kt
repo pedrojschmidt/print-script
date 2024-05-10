@@ -800,7 +800,20 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test readInput function`() {
+    fun `test 036 - should throw exception for variable already declared`() {
+        val ast =
+            listOf(
+                Declaration("x", "number"),
+                Declaration("x", "number"), // "x" is redeclared
+            )
+        val interpreter = Interpreter()
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
+        }
+    }
+
+    @Test
+    fun `test1 readInput function`() {
         val ast =
             listOf(
                 Method("println", Method("readInput", StringOperator("Enter a value:"))),
@@ -810,6 +823,123 @@ class InterpreterTest {
         System.setIn(ByteArrayInputStream(input.toByteArray()))
         val result = interpreter.interpretAST(ast)
         assertEquals(input, result?.trim())
+    }
+
+    @Test
+    fun `test2 readInput function`() {
+        val ast =
+            listOf(
+                Method("println", Method("readInput", NumberOperator(5))), // NumberOperator throws exception
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("readInput requires a string argument", exception.message)
+    }
+
+    @Test
+    fun `test readEnv function`() {
+        val ast =
+            listOf(
+                Method("println", Method("readEnv", NumberOperator(5))), // NumberOperator throws exception
+            )
+        val interpreter = Interpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("readEnv requires a string argument", exception.message)
+    }
+
+    // Tests for interpretOperation exceptions
+    @Test
+    fun `test 031 - should throw exception for invalid operation symbol`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    BinaryOperation(
+                        NumberOperator(5),
+                        "%", // "%" is not a valid operation
+                        NumberOperator(5),
+                    ),
+                    false,
+                ),
+            )
+        val interpreter = Interpreter()
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
+        }
+    }
+
+    @Test
+    fun `test 032 - should throw exception for unsupported operation with non-numeric operands`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    BinaryOperation(
+                        StringOperator("Hello"),
+                        "*",
+                        StringOperator("World"), // "*" operation is not supported for strings
+                    ),
+                    false,
+                ),
+            )
+        val interpreter = Interpreter()
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
+        }
+    }
+
+    @Test
+    fun `test 033 - should throw exception for unsupported operation with non-numeric operands in division`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    BinaryOperation(
+                        StringOperator("Hello"),
+                        "/",
+                        StringOperator("World"), // "/" operation is not supported for strings
+                    ),
+                    false,
+                ),
+            )
+        val interpreter = Interpreter()
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
+        }
+    }
+
+    @Test
+    fun `test 034 - should throw exception for variable not declared in operation`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    IdentifierOperator("y"), // "y" is not declared
+                    false,
+                ),
+            )
+        val interpreter = Interpreter()
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
+        }
+    }
+
+    @Test
+    fun `test 035 - should throw exception for variable not declared`() {
+        val ast =
+            listOf(
+                SimpleAssignation("x", NumberOperator(5)), // "x" is not declared
+            )
+        val interpreter = Interpreter()
+        assertThrows(Exception::class.java) {
+            interpreter.interpretAST(ast)
+        }
     }
 
 //    @Test
