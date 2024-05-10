@@ -1,3 +1,4 @@
+import builder.DeclarationASTBuilder
 import builder.MethodASTBuilder
 import builder.ValueASTBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -705,6 +706,74 @@ class ParserTest {
         val actualAst = parser.generateAST(tokens)
         val expectedAst = DeclarationAssignation(Declaration("home", "string"), Method("readInput", StringOperator("Write the name of your home: ")), false)
         assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 037 - should return false for Declaration`() {
+        val tokens =
+            listOf(
+                Token(TokenType.STRING_TYPE, "let", Position(0, 0), Position(0, 2)), // este hace que tire false
+                Token(TokenType.IDENTIFIER, "a", Position(0, 3), Position(0, 4)),
+                Token(TokenType.SEMICOLON, ":", Position(0, 5), Position(0, 6)),
+                Token(TokenType.STRING_TYPE, "string", Position(0, 7), Position(0, 13)),
+                Token(TokenType.EQ, "=", Position(0, 13), Position(0, 14)),
+                Token(TokenType.STRING, "Hello", Position(0, 15), Position(0, 20)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 21), Position(0, 22)),
+            )
+        val builder = DeclarationASTBuilder("1.0")
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 038 - should return false for Declaration`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 2)),
+                Token(TokenType.STRING_TYPE, "a", Position(0, 3), Position(0, 4)), // este hace que tire false
+                Token(TokenType.SEMICOLON, ":", Position(0, 5), Position(0, 6)),
+                Token(TokenType.STRING_TYPE, "string", Position(0, 7), Position(0, 13)),
+                Token(TokenType.EQ, "=", Position(0, 13), Position(0, 14)),
+                Token(TokenType.STRING, "Hello", Position(0, 15), Position(0, 20)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 21), Position(0, 22)),
+            )
+        val builder = DeclarationASTBuilder("1.0")
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 039 - should return false for Declaration`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 2)),
+                Token(TokenType.IDENTIFIER, "a", Position(0, 3), Position(0, 4)),
+                Token(TokenType.STRING_TYPE, ":", Position(0, 5), Position(0, 6)), // este hace que tire false
+                Token(TokenType.STRING_TYPE, "string", Position(0, 7), Position(0, 13)),
+                Token(TokenType.EQ, "=", Position(0, 13), Position(0, 14)),
+                Token(TokenType.STRING, "Hello", Position(0, 15), Position(0, 20)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 21), Position(0, 22)),
+            )
+        val builder = DeclarationASTBuilder("1.0")
+        val result = builder.verify(tokens)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `test 040 - should return false for Declaration`() {
+        val tokens =
+            listOf(
+                Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 2)),
+                Token(TokenType.IDENTIFIER, "a", Position(0, 3), Position(0, 4)),
+                Token(TokenType.SEMICOLON, ":", Position(0, 5), Position(0, 6)),
+                Token(TokenType.IDENTIFIER, "string", Position(0, 7), Position(0, 13)), // este hace que tire false
+                Token(TokenType.EQ, "=", Position(0, 13), Position(0, 14)),
+                Token(TokenType.STRING, "Hello", Position(0, 15), Position(0, 20)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 21), Position(0, 22)),
+            )
+        val builder = DeclarationASTBuilder("1.0")
+        val result = builder.verify(tokens)
+        assertFalse(result)
     }
 
     private fun getAstList(input: String): MutableList<ASTNode> {
