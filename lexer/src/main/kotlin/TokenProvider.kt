@@ -2,9 +2,8 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class TokenProvider(private val input: InputStream) {
-    private val lexer = Lexer.getDefaultLexer()
-    private val reader = BufferedReader(InputStreamReader(input))
+class TokenProvider(input: InputStream, private val lexer: Lexer) {
+    private var reader = BufferedReader(InputStreamReader(input))
     private var hasNextStatement = true
 
     fun readStatement(): List<Token> {

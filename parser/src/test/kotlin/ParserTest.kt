@@ -708,7 +708,8 @@ class ParserTest {
     }
 
     private fun getAstList(input: String): MutableList<ASTNode> {
-        val tokenProvider = TokenProvider(input.byteInputStream())
+        val lexer = Lexer.getDefaultLexer()
+        val tokenProvider = TokenProvider(input.byteInputStream(), lexer)
         val parser = Parser.getDefaultParser()
         val astList = mutableListOf<ASTNode>()
         while (tokenProvider.hasNextStatement()) {

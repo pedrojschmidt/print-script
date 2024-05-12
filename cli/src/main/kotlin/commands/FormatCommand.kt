@@ -1,3 +1,8 @@
+package commands
+
+import Lexer
+import Parser
+import TokenProvider
 import formatter.ExecuteFormatter
 import formatter.FormatRules
 import formatter.FormatterFactory
@@ -8,7 +13,7 @@ class FormatCommand(private val file: File, private val configFilePath: String, 
     override fun execute() {
         println("Formatting...")
 
-        val tokenProvider = TokenProvider(FileInputStream(file))
+        val tokenProvider = TokenProvider(FileInputStream(file), lexer)
         val astList = fillAstListWithProgress(file, parser, tokenProvider)
 
         var formattedAst = ""
