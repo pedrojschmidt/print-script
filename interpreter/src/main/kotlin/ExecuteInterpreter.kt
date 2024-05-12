@@ -17,20 +17,35 @@ class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Inter
 
     companion object {
         fun getDefaultInterpreter(): ExecuteInterpreter {
-            return getInterpreterByVersion("1.0")
+            return getInterpreterByVersion("1.1")
         }
 
         fun getInterpreterByVersion(version: String): ExecuteInterpreter {
             val utils = InterpreterUtils()
-            val visitors =
-                mapOf(
-                    Declaration::class.java to DeclarationInterpreter(),
-                    Assignation::class.java to AssignationInterpreter(),
-                    DeclarationAssignation::class.java to AssignationInterpreter(),
-                    SimpleAssignation::class.java to AssignationInterpreter(),
-                    Method::class.java to MethodInterpreter(),
-                    Conditional::class.java to ConditionalInterpreter(),
-                )
+            var visitors: Map<Class<out ASTNode>, Interpreter> = emptyMap()
+            when (version) {
+                "1.0" -> {
+                    visitors =
+                        mapOf(
+                            Declaration::class.java to DeclarationInterpreter(),
+                            Assignation::class.java to AssignationInterpreter(),
+                            DeclarationAssignation::class.java to AssignationInterpreter(),
+                            SimpleAssignation::class.java to AssignationInterpreter(),
+                            Method::class.java to MethodInterpreter(),
+                        )
+                }
+                "1.1" -> {
+                    visitors =
+                        mapOf(
+                            Declaration::class.java to DeclarationInterpreter(),
+                            Assignation::class.java to AssignationInterpreter(),
+                            DeclarationAssignation::class.java to AssignationInterpreter(),
+                            SimpleAssignation::class.java to AssignationInterpreter(),
+                            Method::class.java to MethodInterpreter(),
+                            Conditional::class.java to ConditionalInterpreter(),
+                        )
+                }
+            }
             return ExecuteInterpreter(visitors, utils)
         }
     }
