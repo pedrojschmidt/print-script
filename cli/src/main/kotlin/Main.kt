@@ -35,7 +35,7 @@ Version: """,
     val formatter = ExecuteFormatter.getFormatterByVersion(version)
     val staticCodeAnalyzer = ExecuteSca.getSCAByVersion(version)
 
-    val interpreter = Interpreter()
+    val interpreter = ExecuteInterpreter.getDefaultInterpreter()
 
     val optionsStr =
         """

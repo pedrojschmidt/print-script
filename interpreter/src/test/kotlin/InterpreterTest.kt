@@ -21,7 +21,7 @@ class InterpreterTest {
                 ),
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("Hello5\n", result)
     }
@@ -49,7 +49,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("x")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("1Hello\n", result)
     }
@@ -71,7 +71,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("a")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("25\n", result)
     }
@@ -105,7 +105,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("10\n", result)
     }
@@ -139,7 +139,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("5\n", result)
     }
@@ -173,7 +173,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("2\n", result)
     }
@@ -207,7 +207,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("Hello World\n", result)
     }
@@ -219,7 +219,7 @@ class InterpreterTest {
             listOf(
                 Declaration("a", "string"),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result)
     }
@@ -233,7 +233,7 @@ class InterpreterTest {
                 Declaration("a", "string"),
                 SimpleAssignation("a", StringOperator("Hello")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         println(result)
         assertEquals(null, result)
@@ -268,7 +268,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("result")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("54\n", result)
     }
@@ -284,7 +284,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -304,7 +304,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -324,7 +324,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -344,7 +344,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -364,7 +364,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -396,7 +396,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -407,7 +407,7 @@ class InterpreterTest {
             listOf(
                 SimpleAssignation("x", NumberOperator(5.5)), // "x" is not declared
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -432,7 +432,7 @@ class InterpreterTest {
                 Declaration("x", "number"),
                 SimpleAssignation("x", StringOperator("Hello")), // "x" is a number, but we try to assign a string
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -452,7 +452,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -464,7 +464,7 @@ class InterpreterTest {
             listOf(
                 Method("unknownMethod", NumberOperator(5)), // "unknownMethod" is not a supported method
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -492,7 +492,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -504,7 +504,7 @@ class InterpreterTest {
             listOf(
                 SimpleAssignation("x", NumberOperator(5)), // "x" is not declared
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -534,7 +534,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -554,7 +554,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -574,7 +574,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -594,7 +594,7 @@ class InterpreterTest {
                     false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -614,7 +614,7 @@ class InterpreterTest {
                     NumberOperator(10),
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val exception =
             assertThrows(Exception::class.java) {
                 interpreter.interpretAST(ast)
@@ -641,7 +641,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("true\n", result)
     }
@@ -665,7 +665,7 @@ class InterpreterTest {
                     ),
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("false\n", result)
     }
@@ -692,7 +692,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("y")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val exception =
             assertThrows(Exception::class.java) {
                 interpreter.interpretAST(ast)
@@ -726,7 +726,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("x")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("10\n", result)
     }
@@ -764,7 +764,7 @@ class InterpreterTest {
                 ),
                 Method("println", IdentifierOperator("y")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val exception =
             assertThrows(Exception::class.java) {
                 interpreter.interpretAST(ast)
@@ -794,7 +794,7 @@ class InterpreterTest {
                     null,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("5\n", result)
     }
@@ -805,7 +805,7 @@ class InterpreterTest {
             listOf(
                 Method("println", Method("readInput", StringOperator("Enter a value:"))),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val input = "Test input"
         System.setIn(ByteArrayInputStream(input.toByteArray()))
         val result = interpreter.interpretAST(ast)

@@ -5,7 +5,7 @@ import java.io.File
 class CommandFactory(
     private val lexer: Lexer,
     private val parser: Parser,
-    private val interpreter: Interpreter,
+    private val interpreter: ExecuteInterpreter,
     private val formatter: ExecuteFormatter,
     private val staticCodeAnalyzer: ExecuteSca,
 ) {
