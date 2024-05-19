@@ -1,3 +1,8 @@
+package commands
+
+import Lexer
+import Parser
+import TokenProvider
 import sca.ExecuteSca
 import sca.ScaFactory
 import sca.StaticCodeAnalyzerRules
@@ -9,7 +14,7 @@ class AnalyzeCommand(private val file: File, private val configFilePath: String,
     override fun execute() {
         println("Analyzing...")
 
-        val tokenProvider = TokenProvider(FileInputStream(file))
+        val tokenProvider = TokenProvider(FileInputStream(file), lexer)
         val astList = fillAstListWithProgress(file, parser, tokenProvider)
 
         val sca = ExecuteSca()

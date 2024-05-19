@@ -302,7 +302,8 @@ class LexerTest {
     @Test
     fun `test 026 - should read a statement`() {
         val example = "let a: number = 5 * 5;"
-        val tokenProvider = TokenProvider(example.byteInputStream())
+        val lexer = Lexer.getDefaultLexer()
+        val tokenProvider = TokenProvider(example.byteInputStream(), lexer)
         val actualTokens = tokenProvider.readStatement()
 
         val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON]"
@@ -314,7 +315,8 @@ class LexerTest {
     @Test
     fun `test 027 - should not find semicolon in statement`() {
         val input = ByteArrayInputStream("print Hello World".toByteArray())
-        val tokenProvider = TokenProvider(input)
+        val lexer = Lexer.getDefaultLexer()
+        val tokenProvider = TokenProvider(input, lexer)
         tokenProvider.readStatement()
         assertFalse(tokenProvider.hasNextStatement())
     }
@@ -322,7 +324,8 @@ class LexerTest {
     @Test
     fun `test 028 - should find semicolon in statement`() {
         val input = ByteArrayInputStream("print Hello World;".toByteArray())
-        val tokenProvider = TokenProvider(input)
+        val lexer = Lexer.getDefaultLexer()
+        val tokenProvider = TokenProvider(input, lexer)
         tokenProvider.readStatement()
         assertTrue(tokenProvider.hasNextStatement())
     }

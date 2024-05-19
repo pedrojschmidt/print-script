@@ -1,3 +1,8 @@
+package commands
+
+import ASTNode
+import Parser
+import TokenProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
