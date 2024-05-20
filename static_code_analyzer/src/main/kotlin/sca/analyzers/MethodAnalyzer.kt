@@ -1,17 +1,22 @@
 package sca.analyzers
 
 import ASTNode
+import BinaryOperation
+import IdentifierOperator
 import Method
+import NumberOperator
 import Position
+import StringOperator
+import ValueNode
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 import kotlin.reflect.KClass
 
-class MethodAnalyzer : StaticCodeAnalyzerAux {
+class MethodAnalyzer : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: ASTNode,
         rules: StaticCodeAnalyzerRules,
-        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzerAux>,
+        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzer>,
     ): List<StaticCodeIssue> {
         val methodNode = astNode as Method
         val issues = mutableListOf<StaticCodeIssue>()
@@ -26,5 +31,28 @@ class MethodAnalyzer : StaticCodeAnalyzerAux {
             }
         }
         return issues
+    }
+
+    private fun extractArgument(value: ValueNode): String {
+        return when (value) {
+            is IdentifierOperator -> value.identifier
+            is StringOperator -> value.value
+            is NumberOperator -> value.value.toString()
+            is BinaryOperation -> {
+                val left = extractArgument(value.left)
+                val right = extractArgument(value.right)
+                "$left ${value.symbol} $right"
+            }
+            else -> ""
+        }
+    }
+
+    private fun checkMethodArgument(
+        argument: String,
+        rule: Boolean,
+    ): Boolean {
+        // Verificar si el argumento es un identificador o un literal (número o string)
+        if (!rule) return true // Si las reglas están desactivadas, siempre retorna true
+        return argument.matches("""^[\w\d]+$""".toRegex())
     }
 }
