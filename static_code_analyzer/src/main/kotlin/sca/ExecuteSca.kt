@@ -1,17 +1,31 @@
 package sca
 
 import ASTNode
-import sca.analyzers.StaticCodeAnalyzerAux
+import DeclarationAssignation
+import Method
+import sca.analyzers.DeclarationAssignationAnalyzer
+import sca.analyzers.MethodAnalyzer
+import sca.analyzers.StaticCodeAnalyzer
 import kotlin.reflect.KClass
 
-class ExecuteSca : StaticCodeAnalyzerAux {
+class ExecuteSca : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: ASTNode,
         rules: StaticCodeAnalyzerRules,
-        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzerAux>,
+        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzer>,
     ): List<StaticCodeIssue> {
         val issues = mutableListOf<StaticCodeIssue>()
-        issues.addAll(scaList[astNode::class]?.analyzeNode(astNode, rules, scaList) ?: emptyList())
+        when (astNode) {
+            is DeclarationAssignation ->
+                DeclarationAssignationAnalyzer().analyzeNode(astNode, rules, scaList).forEach {
+                    issues.add(it)
+                }
+            is Method ->
+                MethodAnalyzer().analyzeNode(astNode, rules, scaList).forEach {
+                    issues.add(it)
+                }
+            else -> println("No analyzer for this node")
+        }
         return issues
     }
 

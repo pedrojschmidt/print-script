@@ -10,11 +10,11 @@ import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 import kotlin.reflect.KClass
 
-class DeclarationAssignationAnalyzer : StaticCodeAnalyzerAux {
+class DeclarationAssignationAnalyzer : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: ASTNode,
         rules: StaticCodeAnalyzerRules,
-        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzerAux>,
+        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzer>,
     ): List<StaticCodeIssue> {
         val declarationAssignation = astNode as DeclarationAssignation
         val issues = mutableListOf<StaticCodeIssue>()
@@ -47,5 +47,13 @@ class DeclarationAssignationAnalyzer : StaticCodeAnalyzerAux {
 
             else -> false
         }
+    }
+
+    private fun checkIdentifierFormat(
+        identifier: String,
+        rule: Boolean,
+    ): Boolean {
+        if (!rule) return true
+        return identifier.matches("""^[a-z]+(?:[A-Z][a-z\d]*)*$""".toRegex())
     }
 }

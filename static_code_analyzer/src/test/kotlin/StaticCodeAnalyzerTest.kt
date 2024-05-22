@@ -5,6 +5,9 @@ import sca.ExecuteSca
 import sca.ScaFactory
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
+import sca.rules.FunctionArgumentCheck
+import sca.rules.IdentifierNamingCheck
+import sca.rules.TypeMatchingCheck
 
 class StaticCodeAnalyzerTest {
     @Test
@@ -212,5 +215,44 @@ class StaticCodeAnalyzerTest {
             issues.addAll(executeSca.analyzeNode(node, scaRules, ScaFactory().assignAnalyzers()))
         }
         assertTrue(issues.isEmpty())
+    }
+
+    @Test
+    fun `test 011 - should test companion object getSCAByVersion()`() {
+        val result = ExecuteSca.Companion.getSCAByVersion("1.0")
+        assertEquals(ExecuteSca()::class, result::class)
+    }
+
+    @Test
+    fun `test 012 - should test companion object getDefaultSCA()`() {
+        val result = ExecuteSca.Companion.getDefaultSCA()
+        assertEquals(ExecuteSca()::class, result::class)
+    }
+
+    @Test
+    fun `test 013 - should test rules applyRule()`() {
+        val rule = FunctionArgumentCheck()
+        val result = rule.applyRule("src/main/resources/sca_rules.yaml")
+        assertTrue(result)
+    }
+
+    @Test
+    fun `test 014 - should test rules applyRule()`() {
+        val rule = IdentifierNamingCheck()
+        val result = rule.applyRule("src/main/resources/sca_rules.yaml")
+        assertTrue(result)
+    }
+
+    @Test
+    fun `test 015 - should test rules applyRule()`() {
+        val rule = TypeMatchingCheck()
+        val result = rule.applyRule("src/main/resources/sca_rules.yaml")
+        assertTrue(result)
+    }
+
+    @Test
+    fun `test 016 - should test config file path`() {
+        val scaRules = StaticCodeAnalyzerRules("src/main/resources/sca_rules.yaml")
+        assertEquals("src/main/resources/sca_rules.yaml", scaRules.configFilePath)
     }
 }
