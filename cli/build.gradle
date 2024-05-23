@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     // clikt para la CLI
-    implementation("com.github.ajalt.clikt:clikt:3.4.0")
+    implementation("com.github.ajalt.clikt:clikt:4.3.0")
     // kotlinx-coroutines para el progreso de la CLI
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
 
