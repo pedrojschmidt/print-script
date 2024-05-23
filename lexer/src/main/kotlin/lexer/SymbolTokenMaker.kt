@@ -1,3 +1,8 @@
+import lexer.TokenMaker
+import token.Position
+import token.Token
+import token.TokenType
+
 class SymbolTokenMaker(private val version: String) : TokenMaker {
     private val versionSymbols =
         mapOf(

@@ -1,3 +1,5 @@
+package ast
+
 sealed interface ASTNode
 
 sealed interface Assignation : ASTNode

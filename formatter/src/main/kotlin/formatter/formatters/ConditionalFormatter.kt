@@ -1,7 +1,7 @@
 package formatter.formatters
 
-import ASTNode
-import Conditional
+import ast.ASTNode
+import ast.Conditional
 import formatter.FormatRules
 import kotlin.reflect.KClass
 

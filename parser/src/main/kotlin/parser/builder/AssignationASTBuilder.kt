@@ -1,10 +1,10 @@
-package builder
+package parser.builder
 
-import Assignation
-import DeclarationAssignation
-import SimpleAssignation
-import Token
-import TokenType
+import ast.Assignation
+import ast.DeclarationAssignation
+import ast.SimpleAssignation
+import token.Token
+import token.TokenType
 
 class AssignationASTBuilder(private val version: String) : ASTBuilder<Assignation> {
     private val declarationASTBuilder = DeclarationASTBuilder(version)

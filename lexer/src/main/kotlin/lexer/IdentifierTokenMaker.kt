@@ -1,3 +1,9 @@
+package lexer
+
+import token.Position
+import token.Token
+import token.TokenType
+
 class IdentifierTokenMaker(private val version: String) : TokenMaker {
     private val versionKeywords =
         mapOf(

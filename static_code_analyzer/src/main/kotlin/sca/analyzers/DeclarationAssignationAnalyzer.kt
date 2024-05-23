@@ -1,13 +1,13 @@
 package sca.analyzers
 
-import ASTNode
-import BinaryOperation
-import DeclarationAssignation
-import NumberOperator
-import Position
-import StringOperator
+import ast.ASTNode
+import ast.BinaryOperation
+import ast.DeclarationAssignation
+import ast.NumberOperator
+import ast.StringOperator
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
+import token.Position
 import kotlin.reflect.KClass
 
 class DeclarationAssignationAnalyzer : StaticCodeAnalyzer {

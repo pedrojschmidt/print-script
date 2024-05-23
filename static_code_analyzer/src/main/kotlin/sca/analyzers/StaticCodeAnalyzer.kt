@@ -1,6 +1,6 @@
 package sca.analyzers
 
-import ASTNode
+import ast.ASTNode
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 import kotlin.reflect.KClass

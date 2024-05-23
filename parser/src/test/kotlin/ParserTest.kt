@@ -1,10 +1,24 @@
-import builder.MethodASTBuilder
-import builder.ValueASTBuilder
+import ast.ASTNode
+import ast.BinaryOperation
+import ast.Conditional
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
+import lexer.Lexer
+import lexer.TokenProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import parser.builder.MethodASTBuilder
+import parser.builder.ValueASTBuilder
+import token.Position
+import token.Token
+import token.TokenType
 
 class ParserTest {
     @Test
@@ -495,7 +509,7 @@ class ParserTest {
                 Token(TokenType.NUMBER, "1", Position(0, 0), Position(0, 1)),
                 Token(TokenType.PLUS, "+", Position(0, 2), Position(0, 3)),
                 Token(TokenType.NUMBER, "2", Position(0, 4), Position(0, 5)),
-                Token(TokenType.NUMBER, "3", Position(0, 6), Position(0, 7)), // Token extra
+                Token(TokenType.NUMBER, "3", Position(0, 6), Position(0, 7)), // token.Token extra
             )
         val builder = ValueASTBuilder()
         assertThrows(RuntimeException::class.java) {

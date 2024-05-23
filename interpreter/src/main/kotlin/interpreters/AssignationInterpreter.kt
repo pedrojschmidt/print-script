@@ -1,12 +1,12 @@
 package interpreters
 
-import ASTNode
-import Assignation
-import DeclarationAssignation
 import Interpreter
 import InterpreterUtils
-import SimpleAssignation
 import Variable
+import ast.ASTNode
+import ast.Assignation
+import ast.DeclarationAssignation
+import ast.SimpleAssignation
 
 class AssignationInterpreter : Interpreter {
     override fun interpret(

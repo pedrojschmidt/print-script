@@ -1,9 +1,9 @@
 package commands
 
 import ExecuteInterpreter
-import Lexer
 import Parser
-import TokenProvider
+import lexer.Lexer
+import lexer.TokenProvider
 import java.io.File
 import java.io.FileInputStream
 

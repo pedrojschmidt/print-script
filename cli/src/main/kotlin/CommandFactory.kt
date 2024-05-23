@@ -3,6 +3,7 @@ import commands.Command
 import commands.ExecuteCommand
 import commands.FormatCommand
 import formatter.ExecuteFormatter
+import lexer.Lexer
 import sca.ExecuteSca
 import java.io.File
 

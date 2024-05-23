@@ -1,13 +1,13 @@
 package commands
 
-import ASTNode
 import Parser
-import TokenProvider
+import ast.ASTNode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import lexer.TokenProvider
 import java.io.File
 import kotlin.math.ceil
 

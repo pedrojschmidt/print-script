@@ -1,3 +1,10 @@
+import ast.ASTNode
+import ast.Assignation
+import ast.Conditional
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.Method
+import ast.SimpleAssignation
 import interpreters.AssignationInterpreter
 import interpreters.ConditionalInterpreter
 import interpreters.DeclarationInterpreter

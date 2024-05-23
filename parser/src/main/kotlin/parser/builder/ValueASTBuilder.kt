@@ -1,14 +1,14 @@
-package builder
+package parser.builder
 
-import BinaryOperation
-import BooleanOperator
-import IdentifierOperator
-import Method
-import NumberOperator
-import StringOperator
-import Token
-import TokenType
-import ValueNode
+import ast.BinaryOperation
+import ast.BooleanOperator
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
+import ast.ValueNode
+import token.Token
+import token.TokenType
 
 class ValueASTBuilder : ASTBuilder<ValueNode> {
     override fun verify(statement: List<Token>): Boolean {
