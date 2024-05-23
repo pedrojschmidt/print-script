@@ -1,4 +1,4 @@
-package commands
+package cli.commands
 
 import Parser
 import ast.ASTNode

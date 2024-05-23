@@ -8,6 +8,7 @@ import ast.Method
 import ast.NumberOperator
 import ast.SimpleAssignation
 import ast.StringOperator
+import interpreter.ExecuteInterpreter
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream

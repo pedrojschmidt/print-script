@@ -1,4 +1,4 @@
-import commands.Command
+import cli.commands.Command
 import lexer.Lexer
 import lexer.TokenProvider
 import java.io.File

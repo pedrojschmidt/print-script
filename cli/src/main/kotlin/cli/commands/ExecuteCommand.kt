@@ -1,7 +1,7 @@
-package commands
+package cli.commands
 
-import ExecuteInterpreter
 import Parser
+import interpreter.ExecuteInterpreter
 import lexer.Lexer
 import lexer.TokenProvider
 import java.io.File

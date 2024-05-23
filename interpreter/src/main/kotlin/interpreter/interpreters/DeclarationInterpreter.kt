@@ -1,10 +1,10 @@
-package interpreters
+package interpreter.interpreters
 
 import Interpreter
-import InterpreterUtils
 import Variable
 import ast.ASTNode
 import ast.Declaration
+import interpreter.InterpreterUtils
 
 class DeclarationInterpreter : Interpreter {
     override fun interpret(

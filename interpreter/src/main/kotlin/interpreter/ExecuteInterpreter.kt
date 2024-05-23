@@ -1,3 +1,6 @@
+package interpreter
+
+import Interpreter
 import ast.ASTNode
 import ast.Assignation
 import ast.Conditional
@@ -5,10 +8,10 @@ import ast.Declaration
 import ast.DeclarationAssignation
 import ast.Method
 import ast.SimpleAssignation
-import interpreters.AssignationInterpreter
-import interpreters.ConditionalInterpreter
-import interpreters.DeclarationInterpreter
-import interpreters.MethodInterpreter
+import interpreter.interpreters.AssignationInterpreter
+import interpreter.interpreters.ConditionalInterpreter
+import interpreter.interpreters.DeclarationInterpreter
+import interpreter.interpreters.MethodInterpreter
 
 class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Interpreter>, private val utils: InterpreterUtils) {
     fun interpretAST(astList: List<ASTNode>): String? {

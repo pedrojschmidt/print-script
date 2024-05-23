@@ -1,4 +1,9 @@
+package cli
+
+import CLI
+import Parser
 import formatter.ExecuteFormatter
+import interpreter.ExecuteInterpreter
 import lexer.Lexer
 import sca.ExecuteSca
 
