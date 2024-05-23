@@ -1,9 +1,9 @@
-package interpreters
+package interpreter.interpreters
 
 import Interpreter
-import InterpreterUtils
 import ast.ASTNode
 import ast.Conditional
+import interpreter.InterpreterUtils
 
 class ConditionalInterpreter : Interpreter {
     override fun interpret(

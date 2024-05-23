@@ -1,12 +1,12 @@
-package interpreters
+package interpreter.interpreters
 
 import Interpreter
-import InterpreterUtils
 import Variable
 import ast.ASTNode
 import ast.Assignation
 import ast.DeclarationAssignation
 import ast.SimpleAssignation
+import interpreter.InterpreterUtils
 
 class AssignationInterpreter : Interpreter {
     override fun interpret(

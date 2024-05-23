@@ -1,3 +1,6 @@
+package interpreter
+
+import Variable
 import ast.BinaryOperation
 import ast.BooleanOperator
 import ast.IdentifierOperator

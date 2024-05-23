@@ -1,3 +1,5 @@
+import cli.CommandFactory
+import cli.Operation
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
