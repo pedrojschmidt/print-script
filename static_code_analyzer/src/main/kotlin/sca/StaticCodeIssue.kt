@@ -1,6 +1,6 @@
 package sca
 
-import Position
+import token.Position
 
 data class StaticCodeIssue(
     val message: String,

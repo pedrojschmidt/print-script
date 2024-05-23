@@ -1,9 +1,12 @@
 package builder
 
-import ASTNode
-import Conditional
 import Parser
-import Token
+import ast.ASTNode
+import ast.Conditional
+import parser.builder.ASTBuilder
+import parser.builder.ValueASTBuilder
+import token.Token
+import token.TokenType
 import java.util.Stack
 
 class ConditionalASTBuilder(private val version: String) : ASTBuilder<Conditional> {

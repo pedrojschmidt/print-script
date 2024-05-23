@@ -1,15 +1,15 @@
 package sca.analyzers
 
-import ASTNode
-import BinaryOperation
-import IdentifierOperator
-import Method
-import NumberOperator
-import Position
-import StringOperator
-import ValueNode
+import ast.ASTNode
+import ast.BinaryOperation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
+import ast.ValueNode
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
+import token.Position
 import kotlin.reflect.KClass
 
 class MethodAnalyzer : StaticCodeAnalyzer {

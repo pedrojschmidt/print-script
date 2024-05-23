@@ -1,9 +1,9 @@
 package interpreters
 
-import ASTNode
 import Interpreter
 import InterpreterUtils
-import Method
+import ast.ASTNode
+import ast.Method
 
 class MethodInterpreter : Interpreter {
     override fun interpret(

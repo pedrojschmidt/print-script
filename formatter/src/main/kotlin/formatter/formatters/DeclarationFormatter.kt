@@ -1,7 +1,7 @@
 package formatter.formatters
 
-import ASTNode
-import Declaration
+import ast.ASTNode
+import ast.Declaration
 import formatter.FormatRules
 import kotlin.reflect.KClass
 

@@ -1,8 +1,10 @@
-import builder.ASTBuilder
-import builder.AssignationASTBuilder
+import ast.ASTNode
 import builder.ConditionalASTBuilder
-import builder.DeclarationASTBuilder
-import builder.MethodASTBuilder
+import parser.builder.ASTBuilder
+import parser.builder.AssignationASTBuilder
+import parser.builder.DeclarationASTBuilder
+import parser.builder.MethodASTBuilder
+import token.Token
 
 class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
     fun generateAST(tokens: List<Token>): ASTNode? {

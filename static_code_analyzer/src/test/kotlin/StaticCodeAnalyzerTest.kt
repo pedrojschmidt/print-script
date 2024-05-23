@@ -1,3 +1,10 @@
+import ast.BinaryOperation
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

@@ -1,12 +1,12 @@
 package formatter
 
-import ASTNode
-import BinaryOperation
-import Conditional
-import Declaration
-import DeclarationAssignation
-import Method
-import SimpleAssignation
+import ast.ASTNode
+import ast.BinaryOperation
+import ast.Conditional
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.Method
+import ast.SimpleAssignation
 import formatter.formatters.BinaryOperationFormatter
 import formatter.formatters.ConditionalFormatter
 import formatter.formatters.DeclarationAssignationFormatter

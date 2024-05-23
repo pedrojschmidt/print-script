@@ -1,4 +1,5 @@
 import formatter.ExecuteFormatter
+import lexer.Lexer
 import sca.ExecuteSca
 
 fun main(args: Array<String>) {

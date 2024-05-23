@@ -1,3 +1,11 @@
+import ast.BinaryOperation
+import ast.BooleanOperator
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
+import ast.ValueNode
+
 class InterpreterUtils {
     private val variablesStack = mutableListOf(mutableMapOf<Variable, String?>())
     private val stringBuffer = StringBuffer()

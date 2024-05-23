@@ -1,3 +1,9 @@
+package lexer
+
+import token.Position
+import token.Token
+import token.TokenType
+
 class NewLineTokenMaker : TokenMaker {
     override fun makeToken(
         input: String,

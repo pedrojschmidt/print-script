@@ -1,8 +1,8 @@
 package sca
 
-import ASTNode
-import DeclarationAssignation
-import Method
+import ast.ASTNode
+import ast.DeclarationAssignation
+import ast.Method
 import sca.analyzers.DeclarationAssignationAnalyzer
 import sca.analyzers.MethodAnalyzer
 import sca.analyzers.StaticCodeAnalyzer

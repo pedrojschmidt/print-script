@@ -1,3 +1,7 @@
+package lexer
+
+import token.Token
+
 interface TokenMaker {
     fun makeToken(
         input: String,

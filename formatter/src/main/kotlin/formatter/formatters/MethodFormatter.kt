@@ -1,11 +1,11 @@
 package formatter.formatters
 
-import ASTNode
-import BinaryOperation
-import IdentifierOperator
-import Method
-import NumberOperator
-import StringOperator
+import ast.ASTNode
+import ast.BinaryOperation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.StringOperator
 import formatter.FormatRules
 import kotlin.reflect.KClass
 

@@ -1,3 +1,13 @@
+import ast.BinaryOperation
+import ast.BooleanOperator
+import ast.Conditional
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.SimpleAssignation
+import ast.StringOperator
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
@@ -419,7 +429,7 @@ class InterpreterTest {
 //            Declaration("x", "number"),
 //            Declaration("x", "number") // "x" is redeclared
 //        )
-//        val interpreter = Interpreter()
+//        val interpreter = interpreter.Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }
@@ -475,7 +485,7 @@ class InterpreterTest {
 //        val ast = listOf(
 //            object : ASTNode {} // An unexpected ASTNode type
 //        )
-//        val interpreter = Interpreter()
+//        val interpreter = interpreter.Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }
@@ -518,7 +528,7 @@ class InterpreterTest {
 //                object : BinaryNode {} // An unexpected operation
 //            )
 //        )
-//        val interpreter = Interpreter()
+//        val interpreter = interpreter.Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }
@@ -820,7 +830,7 @@ class InterpreterTest {
 //                object : BinaryNode {} // An unexpected binary operation node
 //            )
 //        )
-//        val interpreter = Interpreter()
+//        val interpreter = interpreter.Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }

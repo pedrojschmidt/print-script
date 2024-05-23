@@ -1,3 +1,14 @@
+import ast.ASTNode
+import ast.BinaryOperation
+import ast.BooleanOperator
+import ast.Conditional
+import ast.Declaration
+import ast.DeclarationAssignation
+import ast.IdentifierOperator
+import ast.Method
+import ast.NumberOperator
+import ast.SimpleAssignation
+import ast.StringOperator
 import formatter.ExecuteFormatter
 import formatter.FormatRules
 import formatter.FormatterFactory

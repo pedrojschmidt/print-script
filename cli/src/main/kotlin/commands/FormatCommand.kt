@@ -1,11 +1,11 @@
 package commands
 
-import Lexer
 import Parser
-import TokenProvider
 import formatter.ExecuteFormatter
 import formatter.FormatRules
 import formatter.FormatterFactory
+import lexer.Lexer
+import lexer.TokenProvider
 import java.io.File
 import java.io.FileInputStream
 
