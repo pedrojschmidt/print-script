@@ -4,12 +4,14 @@ import ast.Declaration
 import token.Token
 import token.TokenType
 
-class DeclarationASTBuilder : ASTBuilder<Declaration> {
+class DeclarationASTBuilder(private val version: String) : ASTBuilder<Declaration> {
     override fun verify(statement: List<Token>): Boolean {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE))
         if (filteredStatement.isEmpty()) {
             return false
-        } else if (filteredStatement[0].type != TokenType.LET_KEYWORD) {
+        } else if (version == "1.0" && filteredStatement[0].type != TokenType.LET_KEYWORD) {
+            return false
+        } else if (version == "1.1" && filteredStatement[0].type != TokenType.LET_KEYWORD && filteredStatement[0].type != TokenType.CONST_KEYWORD) {
             return false
         } else if (filteredStatement[1].type != TokenType.IDENTIFIER) {
             return false

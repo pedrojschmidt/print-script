@@ -1,6 +1,5 @@
-package parser
-
 import ast.ASTNode
+import builder.ConditionalASTBuilder
 import parser.builder.ASTBuilder
 import parser.builder.AssignationASTBuilder
 import parser.builder.DeclarationASTBuilder
@@ -21,11 +20,16 @@ class Parser(private val astBuilders: List<ASTBuilder<ASTNode>>) {
 
     companion object {
         fun getDefaultParser(): Parser {
+            return getParserByVersion("1.1")
+        }
+
+        fun getParserByVersion(version: String): Parser {
             return Parser(
                 listOf(
-                    DeclarationASTBuilder(),
-                    AssignationASTBuilder(),
-                    MethodASTBuilder(),
+                    DeclarationASTBuilder(version),
+                    AssignationASTBuilder(version),
+                    MethodASTBuilder(version),
+                    ConditionalASTBuilder(version),
                 ),
             )
         }

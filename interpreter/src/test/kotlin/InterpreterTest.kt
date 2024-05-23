@@ -1,4 +1,6 @@
 import ast.BinaryOperation
+import ast.BooleanOperator
+import ast.Conditional
 import ast.Declaration
 import ast.DeclarationAssignation
 import ast.IdentifierOperator
@@ -6,9 +8,9 @@ import ast.Method
 import ast.NumberOperator
 import ast.SimpleAssignation
 import ast.StringOperator
-import interpreter.Interpreter
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import java.io.ByteArrayInputStream
 import kotlin.test.assertEquals
 
 class InterpreterTest {
@@ -25,10 +27,11 @@ class InterpreterTest {
                         "+",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
                 Method("println", BinaryOperation(IdentifierOperator("a"), "+", StringOperator(""))),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("Hello5\n", result)
     }
@@ -43,6 +46,7 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(1),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("x", "string"),
@@ -51,10 +55,11 @@ class InterpreterTest {
                         "+",
                         StringOperator("Hello"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("x")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("1Hello\n", result)
     }
@@ -72,10 +77,11 @@ class InterpreterTest {
                         "*",
                         NumberOperator(5),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("a")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("25\n", result)
     }
@@ -91,10 +97,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -103,10 +111,11 @@ class InterpreterTest {
                         "+",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("10\n", result)
     }
@@ -122,10 +131,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(10),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -134,10 +145,11 @@ class InterpreterTest {
                         "-",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("5\n", result)
     }
@@ -153,10 +165,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "number"),
                     NumberOperator(10),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "number"),
                     NumberOperator(5),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "number"),
@@ -165,10 +179,11 @@ class InterpreterTest {
                         "/",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("2\n", result)
     }
@@ -184,10 +199,12 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("a", "string"),
                     StringOperator("Hello"),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("b", "string"),
                     StringOperator(" World"),
+                    false,
                 ),
                 DeclarationAssignation(
                     Declaration("c", "string"),
@@ -196,10 +213,11 @@ class InterpreterTest {
                         "+",
                         IdentifierOperator("b"),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("c")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("Hello World\n", result)
     }
@@ -211,7 +229,7 @@ class InterpreterTest {
             listOf(
                 Declaration("a", "string"),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result)
     }
@@ -225,7 +243,7 @@ class InterpreterTest {
                 Declaration("a", "string"),
                 SimpleAssignation("a", StringOperator("Hello")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         println(result)
         assertEquals(null, result)
@@ -256,10 +274,11 @@ class InterpreterTest {
                             NumberOperator(2),
                         ),
                     ),
+                    false,
                 ),
                 Method("println", IdentifierOperator("result")),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals("54\n", result)
     }
@@ -272,9 +291,10 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     NumberOperator(5.5),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -291,9 +311,10 @@ class InterpreterTest {
                         "+",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -310,9 +331,10 @@ class InterpreterTest {
                         "-",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -329,9 +351,10 @@ class InterpreterTest {
                         "*",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -348,9 +371,10 @@ class InterpreterTest {
                         "/",
                         NumberOperator(5.5),
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -379,9 +403,10 @@ class InterpreterTest {
                             NumberOperator(2.5),
                         ),
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         val result = interpreter.interpretAST(ast)
         assertEquals(null, result) // No output expected
     }
@@ -392,7 +417,7 @@ class InterpreterTest {
             listOf(
                 SimpleAssignation("x", NumberOperator(5.5)), // "x" is not declared
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -404,7 +429,7 @@ class InterpreterTest {
 //            Declaration("x", "number"),
 //            Declaration("x", "number") // "x" is redeclared
 //        )
-//        val interpreter = interpreter.Interpreter()
+//        val interpreter = Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }
@@ -417,7 +442,7 @@ class InterpreterTest {
                 Declaration("x", "number"),
                 SimpleAssignation("x", StringOperator("Hello")), // "x" is a number, but we try to assign a string
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -434,9 +459,10 @@ class InterpreterTest {
                         "-",
                         StringOperator("World"), // "-" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -448,7 +474,7 @@ class InterpreterTest {
             listOf(
                 Method("unknownMethod", NumberOperator(5)), // "unknownMethod" is not a supported method
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -459,7 +485,7 @@ class InterpreterTest {
 //        val ast = listOf(
 //            object : ASTNode {} // An unexpected ASTNode type
 //        )
-//        val interpreter = interpreter.Interpreter()
+//        val interpreter = Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }
@@ -473,9 +499,10 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"), // "x" is already declared
                     NumberOperator(5),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -487,7 +514,7 @@ class InterpreterTest {
             listOf(
                 SimpleAssignation("x", NumberOperator(5)), // "x" is not declared
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -501,7 +528,7 @@ class InterpreterTest {
 //                object : BinaryNode {} // An unexpected operation
 //            )
 //        )
-//        val interpreter = interpreter.Interpreter()
+//        val interpreter = Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }
@@ -514,9 +541,10 @@ class InterpreterTest {
                 DeclarationAssignation(
                     Declaration("x", "number"),
                     IdentifierOperator("y"), // "y" is not declared
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -533,9 +561,10 @@ class InterpreterTest {
                         "*",
                         StringOperator("World"), // "*" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -552,9 +581,10 @@ class InterpreterTest {
                         "/",
                         StringOperator("World"), // "/" operation is not supported for strings
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
@@ -571,12 +601,225 @@ class InterpreterTest {
                         "%", // "%" is not a valid operation
                         NumberOperator(5),
                     ),
+                    false,
                 ),
             )
-        val interpreter = Interpreter()
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
         assertThrows(Exception::class.java) {
             interpreter.interpretAST(ast)
         }
+    }
+
+    @Test
+    fun `test 032 - const assignation shouldn't be able to override`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    NumberOperator(1),
+                    true,
+                ),
+                SimpleAssignation(
+                    "x",
+                    NumberOperator(10),
+                ),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable x is constant", exception.message)
+    }
+
+    @Test
+    fun `test 033 - Conditional statement true`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("true\n", result)
+    }
+
+    @Test
+    fun `test 033 - Conditional statement false`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("false"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("false\n", result)
+    }
+
+    @Test
+    fun `test 034 - when define variable in if statement to not appear out of scope`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        DeclarationAssignation(
+                            Declaration("y", "number"),
+                            NumberOperator(5),
+                            false,
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("y")),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable y not declared", exception.message)
+    }
+
+    @Test
+    fun `test 034 - change in if statement a variable declare out of the scope`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "number"),
+                    NumberOperator(5),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("y", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("y"),
+                    listOf(
+                        SimpleAssignation(
+                            "x",
+                            NumberOperator(10),
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("x")),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("10\n", result)
+    }
+
+    @Test
+    fun `test 035 - when variable define in outer if statement shouldn't be able to define in inner if statement`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        DeclarationAssignation(
+                            Declaration("y", "number"),
+                            NumberOperator(5),
+                            false,
+                        ),
+                        Conditional(
+                            BooleanOperator("true"),
+                            listOf(
+                                DeclarationAssignation(
+                                    Declaration("y", "number"),
+                                    NumberOperator(5),
+                                    false,
+                                ),
+                            ),
+                            null,
+                        ),
+                    ),
+                    null,
+                ),
+                Method("println", IdentifierOperator("y")),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val exception =
+            assertThrows(Exception::class.java) {
+                interpreter.interpretAST(ast)
+            }
+        assertEquals("Variable y already declared", exception.message)
+    }
+
+    @Test
+    fun `test 035 - when variable define in outer if statement should be able to use in inner if statement`() {
+        val ast =
+            listOf(
+                DeclarationAssignation(
+                    Declaration("x", "boolean"),
+                    BooleanOperator("true"),
+                    false,
+                ),
+                DeclarationAssignation(
+                    Declaration("y", "number"),
+                    NumberOperator(5),
+                    false,
+                ),
+                Conditional(
+                    IdentifierOperator("x"),
+                    listOf(
+                        Method("println", IdentifierOperator("y")),
+                    ),
+                    null,
+                ),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val result = interpreter.interpretAST(ast)
+        assertEquals("5\n", result)
+    }
+
+    @Test
+    fun `test readInput function`() {
+        val ast =
+            listOf(
+                Method("println", Method("readInput", StringOperator("Enter a value:"))),
+            )
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter()
+        val input = "Test input"
+        System.setIn(ByteArrayInputStream(input.toByteArray()))
+        val result = interpreter.interpretAST(ast)
+        assertEquals(input, result?.trim())
     }
 
 //    @Test
@@ -587,7 +830,7 @@ class InterpreterTest {
 //                object : BinaryNode {} // An unexpected binary operation node
 //            )
 //        )
-//        val interpreter = interpreter.Interpreter()
+//        val interpreter = Interpreter()
 //        assertThrows(Exception::class.java) {
 //            interpreter.consume(ast)
 //        }

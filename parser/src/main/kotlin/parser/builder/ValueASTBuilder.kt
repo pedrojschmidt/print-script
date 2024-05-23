@@ -1,92 +1,124 @@
 package parser.builder
 
-import ast.BinaryNode
 import ast.BinaryOperation
+import ast.BooleanOperator
 import ast.IdentifierOperator
+import ast.Method
 import ast.NumberOperator
 import ast.StringOperator
+import ast.ValueNode
 import token.Token
 import token.TokenType
 
-class ValueASTBuilder : ASTBuilder<BinaryNode> {
+class ValueASTBuilder : ASTBuilder<ValueNode> {
     override fun verify(statement: List<Token>): Boolean {
         return statement.isNotEmpty()
     }
 
-    override fun build(statement: List<Token>): BinaryNode {
+    override fun build(statement: List<Token>): ValueNode {
         val filteredStatement = filterTokens(statement, listOf(TokenType.NEW_LINE, TokenType.SEMICOLON))
-        val (node, remainingTokens) = buildTerm(filteredStatement)
-        if (remainingTokens.isNotEmpty()) {
-            throw RuntimeException("Unexpected tokens remaining after building expression: " + remainingTokens.joinToString(", ") { it.toString() })
-        }
-        return node
-    }
+        val rpnTokens = shuntingYard(filteredStatement)
+        val nodeStack = ArrayDeque<ValueNode>()
 
-    private fun buildTerm(tokens: List<Token>): Pair<BinaryNode, List<Token>> {
-        var (node, remainingTokens) = buildFactor(tokens)
-        while (verifyRemainingTokens(remainingTokens)) {
-            val operatorToken = remainingTokens[0]
-            val (rightNode, newRemainingTokens) = buildFactor(remainingTokens.subList(1, remainingTokens.size))
-            node = BinaryOperation(node, operatorToken.value, rightNode)
-            remainingTokens = newRemainingTokens
-        }
-        return Pair(node, remainingTokens)
-    }
-
-    private fun buildFactor(tokens: List<Token>): Pair<BinaryNode, List<Token>> {
-        val firstToken = tokens[0]
-        return when (firstToken.type) {
-            TokenType.LPAREN -> {
-                val correspondingRParenIndex = findCorrespondingRParenIndex(tokens)
-                val innerExpression = tokens.subList(1, correspondingRParenIndex)
-                val innerNode = build(innerExpression)
-                Pair(innerNode, tokens.subList(correspondingRParenIndex + 1, tokens.size))
-            }
-            TokenType.NUMBER -> {
-                val numberValue = firstToken.value.toDouble()
-                // Diferenciar entre enteros y decimales
-                if (numberValue % 1 == 0.0) {
-                    Pair(NumberOperator(numberValue.toInt()), tokens.subList(1, tokens.size))
-                } else {
-                    Pair(NumberOperator(numberValue), tokens.subList(1, tokens.size))
+        var i = 0
+        while (i < rpnTokens.size) {
+            val token = rpnTokens[i]
+            when (token.type) {
+                TokenType.NUMBER -> {
+                    nodeStack.addLast(NumberOperator(if (token.value.toDouble() % 1 == 0.0) token.value.toInt() else token.value.toDouble()))
                 }
-            }
-            TokenType.STRING -> {
-                if (tokens.size > 2 && tokens[1].type == TokenType.PLUS && tokens[2].type == TokenType.NUMBER) {
-                    Pair(BinaryOperation(StringOperator(firstToken.value), tokens[1].value, StringOperator(tokens[2].value)), tokens.subList(3, tokens.size))
-                } else {
-                    Pair(StringOperator(firstToken.value), tokens.subList(1, tokens.size))
-                }
-            }
-            TokenType.IDENTIFIER -> Pair(IdentifierOperator(firstToken.value), tokens.subList(1, tokens.size))
-            else -> throw RuntimeException("Unexpected token type: ${firstToken.type} at ${firstToken.positionStart.y}:${firstToken.positionStart.x}")
-        }
-    }
-
-    private fun findCorrespondingRParenIndex(tokenList: List<Token>): Int {
-        var openParenthesesCount = 1
-        for (i in 1 until tokenList.size) {
-            when (tokenList[i].type) {
-                TokenType.LPAREN -> openParenthesesCount++
-                TokenType.RPAREN -> {
-                    openParenthesesCount--
-                    if (openParenthesesCount == 0) {
-                        return i
+                TokenType.STRING -> nodeStack.addLast(StringOperator(token.value))
+                TokenType.BOOLEAN_TYPE -> nodeStack.addLast(BooleanOperator(token.value))
+                TokenType.IDENTIFIER -> nodeStack.addLast(IdentifierOperator(token.value))
+                TokenType.PLUS -> {
+                    val rightNode = nodeStack.removeLast()
+                    val leftNode = nodeStack.removeLast()
+                    if (leftNode is StringOperator && rightNode is NumberOperator) {
+                        nodeStack.addLast(BinaryOperation(leftNode, token.value, StringOperator(rightNode.value.toString())))
+                    } else if (leftNode is NumberOperator && rightNode is StringOperator) {
+                        nodeStack.addLast(BinaryOperation(StringOperator(leftNode.value.toString()), token.value, rightNode))
+                    } else {
+                        nodeStack.addLast(BinaryOperation(leftNode, token.value, rightNode))
                     }
                 }
+                TokenType.MINUS, TokenType.TIMES, TokenType.DIV -> {
+                    val rightNode = nodeStack.removeLast()
+                    val leftNode = nodeStack.removeLast()
+                    nodeStack.addLast(BinaryOperation(leftNode, token.value, rightNode))
+                }
+                TokenType.READENV_FUNCTION, TokenType.READINPUT_FUNCTION -> {
+                    val functionName = token.value
+                    i += 2 // Skip the opening parenthesis
+                    val argumentValue = rpnTokens[i].value
+                    nodeStack.addLast(Method(functionName, StringOperator(argumentValue)))
+                    i += 2 // Skip the closing parenthesis
+                }
+                else -> throw RuntimeException("Unexpected token type: ${token.type} at ${token.positionStart.y}:${token.positionStart.x}")
             }
+            i++
         }
-        throw RuntimeException("Mismatched parentheses in expression")
+
+        if (nodeStack.size != 1) {
+            throw RuntimeException("Invalid expression: more than one node remaining in stack after parsing")
+        }
+
+        return nodeStack.first()
     }
 
-    private fun verifyRemainingTokens(remainingTokens: List<Token>): Boolean {
-        return if (remainingTokens.size > 1) {
-            remainingTokens[0].type in listOf(TokenType.PLUS, TokenType.MINUS, TokenType.TIMES, TokenType.DIV)
-        } else {
-            if (remainingTokens.isNotEmpty()) {
-                remainingTokens[0].type in listOf(TokenType.NUMBER, TokenType.STRING, TokenType.IDENTIFIER)
+    private fun shuntingYard(tokens: List<Token>): List<Token> {
+        val outputQueue = ArrayDeque<Token>()
+        val operatorStack = ArrayDeque<Token>()
+
+        var i = 0
+        while (i < tokens.size) {
+            val token = tokens[i]
+            when (token.type) {
+                TokenType.NUMBER, TokenType.STRING, TokenType.BOOLEAN_TYPE, TokenType.IDENTIFIER -> outputQueue.addLast(token)
+                TokenType.PLUS, TokenType.MINUS, TokenType.TIMES, TokenType.DIV -> {
+                    while (operatorStack.isNotEmpty() && operatorStack.last().type != TokenType.LPAREN && precedence[operatorStack.last().value]!! >= precedence[token.value]!!) {
+                        outputQueue.addLast(operatorStack.removeLast())
+                    }
+                    operatorStack.addLast(token)
+                }
+                TokenType.LPAREN -> operatorStack.addLast(token)
+                TokenType.RPAREN -> {
+                    while (operatorStack.isNotEmpty() && operatorStack.last().type != TokenType.LPAREN) {
+                        outputQueue.addLast(operatorStack.removeLast())
+                    }
+                    if (operatorStack.isEmpty() || operatorStack.removeLast().type != TokenType.LPAREN) {
+                        throw RuntimeException("Mismatched parentheses in expression")
+                    }
+                }
+                TokenType.READENV_FUNCTION, TokenType.READINPUT_FUNCTION -> {
+                    outputQueue.addLast(token)
+                    i++
+                    while (tokens[i].type != TokenType.RPAREN) {
+                        outputQueue.addLast(tokens[i])
+                        i++
+                    }
+                    outputQueue.addLast(tokens[i]) // Add the closing parenthesis
+                }
+                else -> throw RuntimeException("Unexpected token type: ${token.type} at ${token.positionStart.y}:${token.positionStart.x}")
             }
-            false
+            i++
         }
+
+        while (operatorStack.isNotEmpty()) {
+            val operator = operatorStack.removeLast()
+            if (operator.type == TokenType.LPAREN || operator.type == TokenType.RPAREN) {
+                throw RuntimeException("Mismatched parentheses in expression")
+            }
+            outputQueue.addLast(operator)
+        }
+
+        return outputQueue.toList()
     }
+
+    private val precedence =
+        mapOf(
+            "+" to 1,
+            "-" to 1,
+            "*" to 2,
+            "/" to 2,
+        )
 }
