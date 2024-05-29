@@ -1,26 +1,28 @@
 package interpreter.interpreters
 
-import Interpreter
-import ast.ASTNode
 import ast.Method
-import interpreter.InterpreterUtils
+import interpreter.VariableManager
+import interpreter.response.ErrorResponse
+import interpreter.response.InterpreterResponse
+import interpreter.response.SuccessResponse
 
-class MethodInterpreter : Interpreter {
+class MethodInterpreter : Interpreter<Method> {
+    private val valueInterpreter = ValueInterpreter()
+
     override fun interpret(
-        node: ASTNode,
-        utils: InterpreterUtils,
-        interpreters: Map<Class<out ASTNode>, Interpreter>,
-    ) {
-        if (node is Method) {
-            when (node.identifier.lowercase()) {
-                "println" -> {
-                    utils.getStringBuffer().append(utils.interpretOperation(node.value))
-                    utils.getStringBuffer().append("\n")
+        astNode: Method,
+        variableManager: VariableManager,
+    ): InterpreterResponse {
+        return when (astNode.identifier.lowercase()) {
+            "println" -> {
+                try {
+                    val value = valueInterpreter.interpret(astNode.value, variableManager).value
+                    SuccessResponse("$value\n")
+                } catch (e: Exception) {
+                    ErrorResponse(e.message ?: "Error while printing")
                 }
-                else -> throw Exception("Unexpected method")
             }
-        } else {
-            throw Exception("Unexpected ASTNode type")
+            else -> ErrorResponse("Unsupported method: ${astNode.identifier}")
         }
     }
 }
