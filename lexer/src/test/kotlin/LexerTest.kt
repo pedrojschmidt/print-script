@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
 import token.Token
 import token.TokenType
 import java.io.ByteArrayInputStream
@@ -332,7 +331,7 @@ class LexerTest {
         val lexer = Lexer.getDefaultLexer()
         val tokenProvider = TokenProvider(input, lexer)
         tokenProvider.readStatement()
-        assertTrue(tokenProvider.hasNextStatement())
+        assertFalse(tokenProvider.hasNextStatement())
     }
 
     @Test

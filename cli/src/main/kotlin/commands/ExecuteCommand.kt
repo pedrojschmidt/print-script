@@ -1,7 +1,9 @@
 package commands
 
-import ExecuteInterpreter
 import Parser
+import interpreter.ExecuteInterpreter
+import interpreter.response.ErrorResponse
+import interpreter.response.SuccessResponse
 import lexer.Lexer
 import lexer.TokenProvider
 import java.io.File
@@ -12,10 +14,18 @@ class ExecuteCommand(private val file: File, private val lexer: Lexer, private v
         println("Executing...")
 
         val tokenProvider = TokenProvider(FileInputStream(file), lexer)
-
         val astList = fillAstListWithProgress(file, parser, tokenProvider)
-        val result = interpreter.interpretAST(astList)
 
-        println(result)
+        when (val result = interpreter.interpretAST(astList)) {
+            is SuccessResponse -> {
+                println(result.message)
+            }
+            is ErrorResponse -> {
+                println("Error: " + result.message)
+            }
+            else -> {
+                println("Execution completed")
+            }
+        }
     }
 }
