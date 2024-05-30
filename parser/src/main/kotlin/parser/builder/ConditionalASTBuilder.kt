@@ -1,10 +1,8 @@
-package builder
+package parser.builder
 
-import Parser
 import ast.ASTNode
 import ast.Conditional
-import parser.builder.ASTBuilder
-import parser.builder.ValueASTBuilder
+import parser.Parser
 import token.Token
 import token.TokenType
 import java.util.Stack

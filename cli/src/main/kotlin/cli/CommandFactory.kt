@@ -1,6 +1,5 @@
 package cli
 
-import Parser
 import ValidateCommand
 import cli.commands.AnalyzeCommand
 import cli.commands.Command
@@ -9,6 +8,7 @@ import cli.commands.FormatCommand
 import formatter.ExecuteFormatter
 import interpreter.ExecuteInterpreter
 import lexer.Lexer
+import parser.Parser
 import sca.ExecuteSca
 import java.io.File
 

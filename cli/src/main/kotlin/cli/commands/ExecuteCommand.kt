@@ -1,11 +1,11 @@
 package cli.commands
 
-import Parser
 import interpreter.ExecuteInterpreter
 import interpreter.response.ErrorResponse
 import interpreter.response.SuccessResponse
 import lexer.Lexer
 import lexer.TokenProvider
+import parser.Parser
 import java.io.File
 import java.io.FileInputStream
 

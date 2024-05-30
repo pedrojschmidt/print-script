@@ -1,8 +1,8 @@
 package cli.commands
 
-import Parser
 import lexer.Lexer
 import lexer.TokenProvider
+import parser.Parser
 import sca.ExecuteSca
 import sca.ScaFactory
 import sca.StaticCodeAnalyzerRules
