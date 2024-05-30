@@ -1,6 +1,5 @@
 package cli.commands
 
-import Parser
 import ast.ASTNode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -8,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import lexer.TokenProvider
+import parser.Parser
 import java.io.File
 import kotlin.math.ceil
 

@@ -1,7 +1,9 @@
+package parser
+
 import ast.ASTNode
-import builder.ConditionalASTBuilder
 import parser.builder.ASTBuilder
 import parser.builder.AssignationASTBuilder
+import parser.builder.ConditionalASTBuilder
 import parser.builder.DeclarationASTBuilder
 import parser.builder.MethodASTBuilder
 import token.Token
