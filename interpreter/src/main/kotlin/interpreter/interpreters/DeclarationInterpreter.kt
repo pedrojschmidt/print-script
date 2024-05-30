@@ -1,26 +1,21 @@
 package interpreter.interpreters
 
-import Interpreter
-import Variable
-import ast.ASTNode
 import ast.Declaration
-import interpreter.InterpreterUtils
+import interpreter.VariableManager
+import interpreter.response.ErrorResponse
+import interpreter.response.InterpreterResponse
+import interpreter.response.SuccessResponse
 
-class DeclarationInterpreter : Interpreter {
+class DeclarationInterpreter : Interpreter<Declaration> {
     override fun interpret(
-        node: ASTNode,
-        utils: InterpreterUtils,
-        interpreters: Map<Class<out ASTNode>, Interpreter>,
-    ) {
-        if (node is Declaration) {
-            // Check if the variable is already declared
-            if (utils.getVariablesStack().any { stack -> stack.keys.any { it.identifier == node.identifier } }) {
-                throw Exception("Variable ${node.identifier} already declared")
-            }
-            // Creates a new variable with the identifier and type of the declaration, and initializes it with null value (is a map)
-            utils.getVariablesStack().last()[Variable(node.identifier, node.type, false)] = null
-        } else {
-            throw Exception("Unexpected ASTNode type")
+        astNode: Declaration,
+        variableManager: VariableManager,
+    ): InterpreterResponse {
+        return try {
+            variableManager.declareVariable(astNode.identifier, astNode.type)
+            SuccessResponse(null)
+        } catch (e: Exception) {
+            ErrorResponse(e.message ?: "Error while declaring variable ${astNode.identifier}")
         }
     }
 }

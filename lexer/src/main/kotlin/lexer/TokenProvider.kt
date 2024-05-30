@@ -7,29 +7,22 @@ import java.io.InputStreamReader
 
 class TokenProvider(input: InputStream, private val lexer: Lexer) {
     private var reader = BufferedReader(InputStreamReader(input))
-    private var hasNextStatement = true
+    private var nextLine: String? = reader.readLine()
 
     fun readStatement(): List<Token> {
-        val statement = StringBuilder()
-        var char = reader.read()
-
-        // Read characters until a semicolon is found
-        while (char != -1 && char.toChar() != ';') {
-            statement.append(char.toChar())
-            char = reader.read()
+        val tokens = mutableListOf<Token>()
+        while (nextLine != null) {
+            tokens.addAll(lexer.makeTokens(nextLine!!))
+            if (nextLine!!.endsWith(";")) {
+                nextLine = reader.readLine()
+                break
+            }
+            nextLine = reader.readLine()
         }
-
-        // If a semicolon is found, append it to the statement
-        if (char != -1) {
-            statement.append(';')
-        } else {
-            hasNextStatement = false
-        }
-
-        return lexer.makeTokens(statement.toString())
+        return tokens
     }
 
     fun hasNextStatement(): Boolean {
-        return hasNextStatement
+        return nextLine != null
     }
 }

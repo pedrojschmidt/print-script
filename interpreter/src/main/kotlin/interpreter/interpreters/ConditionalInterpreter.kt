@@ -1,41 +1,45 @@
 package interpreter.interpreters
 
-import Interpreter
 import ast.ASTNode
 import ast.Conditional
-import interpreter.InterpreterUtils
+import interpreter.ExecuteInterpreter
+import interpreter.VariableManager
+import interpreter.response.ErrorResponse
+import interpreter.response.InterpreterResponse
 
-class ConditionalInterpreter : Interpreter {
+class ConditionalInterpreter : Interpreter<Conditional> {
+    private val valueInterpreter = ValueInterpreter()
+
     override fun interpret(
-        node: ASTNode,
-        utils: InterpreterUtils,
-        interpreters: Map<Class<out ASTNode>, Interpreter>,
-    ) {
-        if (node is Conditional) {
-            val condition = utils.interpretOperation(node.condition)
-            if (condition.toBoolean()) {
-                utils.getVariablesStack().add(mutableMapOf())
-                interpretAST(node.then, utils, interpreters)
-                utils.getVariablesStack().removeLast()
+        astNode: Conditional,
+        variableManager: VariableManager,
+    ): InterpreterResponse {
+        try {
+            val condition = valueInterpreter.interpret(astNode.condition, variableManager)
+            if (condition.value.toBoolean()) {
+                variableManager.addScope()
+                val response = interpretAST(astNode.then, variableManager)
+                variableManager.removeScope()
+                return response
             } else {
-                node.otherwise?.let {
-                    utils.getVariablesStack().add(mutableMapOf())
-                    interpretAST(it, utils, interpreters)
-                    utils.getVariablesStack().removeLast()
+                astNode.otherwise?.let {
+                    variableManager.addScope()
+                    val response = interpretAST(it, variableManager)
+                    variableManager.removeScope()
+                    return response
                 }
+                return ErrorResponse("Missing otherwise block")
             }
-        } else {
-            throw Exception("Unexpected ASTNode type")
+        } catch (e: Exception) {
+            return ErrorResponse(e.message ?: "Error while interpreting condition")
         }
     }
 
     private fun interpretAST(
         astList: List<ASTNode>,
-        utils: InterpreterUtils,
-        interpreters: Map<Class<out ASTNode>, Interpreter>,
-    ) {
-        for (ast in astList) {
-            interpreters[ast::class.java]?.interpret(ast, utils, interpreters) ?: throw Exception("No interpreter for ${ast::class.java}")
-        }
+        variableManager: VariableManager,
+    ): InterpreterResponse {
+        val interpreter = ExecuteInterpreter.getDefaultInterpreter(variableManager)
+        return interpreter.interpretAST(astList)
     }
 }

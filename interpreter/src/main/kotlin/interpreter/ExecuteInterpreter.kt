@@ -1,6 +1,5 @@
 package interpreter
 
-import Interpreter
 import ast.ASTNode
 import ast.Assignation
 import ast.Conditional
@@ -11,28 +10,54 @@ import ast.SimpleAssignation
 import interpreter.interpreters.AssignationInterpreter
 import interpreter.interpreters.ConditionalInterpreter
 import interpreter.interpreters.DeclarationInterpreter
+import interpreter.interpreters.Interpreter
 import interpreter.interpreters.MethodInterpreter
+import interpreter.response.ErrorResponse
+import interpreter.response.InterpreterResponse
+import interpreter.response.SuccessResponse
 
-class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Interpreter>, private val utils: InterpreterUtils) {
-    fun interpretAST(astList: List<ASTNode>): String? {
+class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Interpreter<out ASTNode>>, private val variableManager: VariableManager) {
+    constructor(interpreters: Map<Class<out ASTNode>, Interpreter<out ASTNode>>) : this(interpreters, VariableManager())
+
+    @Suppress("UNCHECKED_CAST")
+    fun interpretAST(astList: List<ASTNode>): InterpreterResponse {
+        val stringBuffer = StringBuffer()
         for (ast in astList) {
-            interpreters[ast::class.java]?.interpret(ast, utils, interpreters) ?: throw Exception("No interpreter for ${ast::class.java}")
+            val interpreter = interpreters[ast::class.java] as Interpreter<ASTNode>
+
+            when (val response = interpreter.interpret(ast, variableManager)) {
+                is SuccessResponse -> {
+                    response.message?.let { stringBuffer.append(it) }
+                    continue
+                }
+                is ErrorResponse -> {
+                    return response
+                }
+            }
         }
-        return if (utils.getStringBuffer().isEmpty()) {
-            null
-        } else {
-            utils.getStringBuffer().toString()
-        }
+        return SuccessResponse(stringBuffer.takeIf { it.isNotEmpty() }?.toString())
+    }
+
+    fun getVariableManager(): VariableManager {
+        return variableManager
     }
 
     companion object {
-        fun getDefaultInterpreter(): ExecuteInterpreter {
-            return getInterpreterByVersion("1.1")
+        fun getDefaultInterpreter(variableManager: VariableManager): ExecuteInterpreter {
+            val visitors =
+                mapOf(
+                    Declaration::class.java to DeclarationInterpreter(),
+                    Assignation::class.java to AssignationInterpreter(),
+                    DeclarationAssignation::class.java to AssignationInterpreter(),
+                    SimpleAssignation::class.java to AssignationInterpreter(),
+                    Method::class.java to MethodInterpreter(),
+                    Conditional::class.java to ConditionalInterpreter(),
+                )
+            return ExecuteInterpreter(visitors, variableManager)
         }
 
         fun getInterpreterByVersion(version: String): ExecuteInterpreter {
-            val utils = InterpreterUtils()
-            var visitors: Map<Class<out ASTNode>, Interpreter> = emptyMap()
+            var visitors: Map<Class<out ASTNode>, Interpreter<out ASTNode>> = mapOf()
             when (version) {
                 "1.0" -> {
                     visitors =
@@ -42,6 +67,7 @@ class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Inter
                             DeclarationAssignation::class.java to AssignationInterpreter(),
                             SimpleAssignation::class.java to AssignationInterpreter(),
                             Method::class.java to MethodInterpreter(),
+                            Conditional::class.java to ConditionalInterpreter(),
                         )
                 }
                 "1.1" -> {
@@ -56,7 +82,7 @@ class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Inter
                         )
                 }
             }
-            return ExecuteInterpreter(visitors, utils)
+            return ExecuteInterpreter(visitors)
         }
     }
 }
