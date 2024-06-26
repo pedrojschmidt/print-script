@@ -1,5 +1,6 @@
 import ast.ASTNode
 import ast.BinaryOperation
+import ast.BooleanOperator
 import ast.Conditional
 import ast.Declaration
 import ast.DeclarationAssignation
@@ -681,7 +682,30 @@ class ParserTest {
     }
 
     @Test
-    fun `test 035 - declaration statement with readEnv function`() {
+    fun `test 035 - const boolean statement`() {
+        val tokens =
+            listOf(
+                Token(TokenType.CONST_KEYWORD, "const", Position(0, 0), Position(0, 5)),
+                Token(TokenType.IDENTIFIER, "booleanValue", Position(0, 6), Position(0, 7)),
+                Token(TokenType.COLON, ":", Position(0, 8), Position(0, 9)),
+                Token(TokenType.BOOLEAN_TYPE, "boolean", Position(0, 10), Position(0, 16)),
+                Token(TokenType.EQ, "=", Position(0, 17), Position(0, 18)),
+                Token(TokenType.BOOLEAN, "true", Position(0, 19), Position(0, 20)),
+                Token(TokenType.SEMICOLON, ";", Position(0, 21), Position(0, 22)),
+            )
+        val parser = Parser.getDefaultParser()
+        val actualAst = parser.generateAST(tokens)
+        val expectedAst =
+            DeclarationAssignation(
+                Declaration("booleanValue", "boolean"),
+                BooleanOperator("true"),
+                true,
+            )
+        assertEquals(expectedAst, actualAst)
+    }
+
+    @Test
+    fun `test 036 - declaration statement with readEnv function`() {
         val tokens =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 3)),
@@ -702,7 +726,7 @@ class ParserTest {
     }
 
     @Test
-    fun `test 036 - declaration statement with readInput function`() {
+    fun `test 037 - declaration statement with readInput function`() {
         val tokens =
             listOf(
                 Token(TokenType.LET_KEYWORD, "let", Position(0, 0), Position(0, 3)),
