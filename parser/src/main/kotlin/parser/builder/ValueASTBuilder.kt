@@ -28,7 +28,7 @@ class ValueASTBuilder : ASTBuilder<ValueNode> {
                     nodeStack.addLast(NumberOperator(if (token.value.toDouble() % 1 == 0.0) token.value.toInt() else token.value.toDouble()))
                 }
                 TokenType.STRING -> nodeStack.addLast(StringOperator(token.value))
-                TokenType.BOOLEAN_TYPE -> nodeStack.addLast(BooleanOperator(token.value))
+                TokenType.BOOLEAN -> nodeStack.addLast(BooleanOperator(token.value))
                 TokenType.IDENTIFIER -> nodeStack.addLast(IdentifierOperator(token.value))
                 TokenType.PLUS -> {
                     val rightNode = nodeStack.removeLast()
@@ -73,7 +73,7 @@ class ValueASTBuilder : ASTBuilder<ValueNode> {
         while (i < tokens.size) {
             val token = tokens[i]
             when (token.type) {
-                TokenType.NUMBER, TokenType.STRING, TokenType.BOOLEAN_TYPE, TokenType.IDENTIFIER -> outputQueue.addLast(token)
+                TokenType.NUMBER, TokenType.STRING, TokenType.BOOLEAN, TokenType.IDENTIFIER -> outputQueue.addLast(token)
                 TokenType.PLUS, TokenType.MINUS, TokenType.TIMES, TokenType.DIV -> {
                     while (operatorStack.isNotEmpty() && operatorStack.last().type != TokenType.LPAREN && precedence[operatorStack.last().value]!! >= precedence[token.value]!!) {
                         outputQueue.addLast(operatorStack.removeLast())
