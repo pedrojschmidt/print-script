@@ -17,7 +17,7 @@ class DeclarationASTBuilder(private val version: String) : ASTBuilder<Declaratio
             return false
         } else if (filteredStatement[2].type != TokenType.COLON) {
             return false
-        } else if (filteredStatement[3].type != TokenType.STRING_TYPE && filteredStatement[3].type != TokenType.NUMBER_TYPE) {
+        } else if (filteredStatement[3].type != TokenType.STRING_TYPE && filteredStatement[3].type != TokenType.NUMBER_TYPE && filteredStatement[3].type != TokenType.BOOLEAN_TYPE) {
             return false
         } else if (filteredStatement.size > 4 && filteredStatement[4].type == TokenType.EQ) {
             // Check if the declaration is a simple declaration by checking the 5 token is not a = (if it is, it is an assignation, not a declaration

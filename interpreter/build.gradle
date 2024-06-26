@@ -27,7 +27,7 @@ publishing {
 
             groupId = 'printscript'
             artifactId = 'interpreter'
-            version = '1.0.5'
+            version = '1.0.6'
         }
     }
 }
