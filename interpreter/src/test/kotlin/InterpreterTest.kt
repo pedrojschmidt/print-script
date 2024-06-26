@@ -862,7 +862,7 @@ class InterpreterTest {
                     listOf(
                         Method("println", StringOperator("false")),
                     ),
-                )
+                ),
             )
         val result = interpreter.interpretAST(ast)
         assertTrue(result is ErrorResponse)

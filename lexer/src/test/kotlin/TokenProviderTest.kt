@@ -1,15 +1,14 @@
-import java.io.File
-import java.io.FileInputStream
 import lexer.Lexer
 import lexer.TokenProvider
 import org.junit.jupiter.api.Test
 import token.Token
 import token.TokenType
+import java.io.File
+import java.io.FileInputStream
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class TokenProviderTest {
-
     @Test
     fun `test 001 - simple statement`() {
         val tokenProvider = TokenProvider(FileInputStream(File("src/test/resources/test_01.txt")), Lexer.getDefaultLexer())
@@ -40,11 +39,12 @@ class TokenProviderTest {
     @Test
     fun `test 004 - separate correctly each statement`() {
         val tokenProvider = TokenProvider(FileInputStream(File("src/test/resources/test_04.txt")), Lexer.getDefaultLexer())
-        val expectedTokens = listOf(
-            "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, STRING(hello), SEMICOLON, NEW_LINE]",
-            "[IF_KEYWORD, LPAREN, BOOLEAN(true), RPAREN, LBRACE, NEW_LINE, PRINTLN_FUNCTION, LPAREN, STRING(true), RPAREN, SEMICOLON, NEW_LINE, RBRACE, NEW_LINE]",
-            "[PRINTLN_FUNCTION, LPAREN, IDENTIFIER(a), RPAREN, SEMICOLON, NEW_LINE]"
-        )
+        val expectedTokens =
+            listOf(
+                "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, STRING(hello), SEMICOLON, NEW_LINE]",
+                "[IF_KEYWORD, LPAREN, BOOLEAN(true), RPAREN, LBRACE, NEW_LINE, PRINTLN_FUNCTION, LPAREN, STRING(true), RPAREN, SEMICOLON, NEW_LINE, RBRACE, NEW_LINE]",
+                "[PRINTLN_FUNCTION, LPAREN, IDENTIFIER(a), RPAREN, SEMICOLON, NEW_LINE]",
+            )
         val actualTokens: MutableList<String> = mutableListOf()
         while (tokenProvider.hasNextStatement()) {
             actualTokens.add(listToString(tokenProvider.readStatement()))
