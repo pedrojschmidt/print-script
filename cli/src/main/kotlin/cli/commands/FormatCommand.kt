@@ -1,15 +1,16 @@
-package commands
+package cli.commands
 
-import Parser
 import formatter.ExecuteFormatter
 import formatter.FormatRules
 import formatter.FormatterFactory
 import lexer.Lexer
 import lexer.TokenProvider
+import parser.Parser
 import java.io.File
 import java.io.FileInputStream
 
-class FormatCommand(private val file: File, private val configFilePath: String, private val lexer: Lexer, private val parser: Parser, private val formatter: ExecuteFormatter) : Command {
+class FormatCommand(private val file: File, private val configFilePath: String, private val lexer: Lexer, private val parser: Parser, private val formatter: ExecuteFormatter) :
+    Command {
     override fun execute() {
         println("Formatting...")
 

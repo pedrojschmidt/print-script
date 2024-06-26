@@ -1,0 +1,5 @@
+let a:string = "hello";
+if(true) {
+    println("true");
+}
+println(a);

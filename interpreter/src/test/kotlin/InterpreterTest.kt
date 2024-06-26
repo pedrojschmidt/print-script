@@ -640,7 +640,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 032 - const assignation shouldn't be able to override`() {
+    fun `test 033 - const assignation shouldn't be able to override`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -660,7 +660,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 033 - Conditional statement true`() {
+    fun `test 034 - Conditional statement true`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -685,7 +685,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 033 - Conditional statement false`() {
+    fun `test 035 - Conditional statement false`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -710,7 +710,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 034 - when define variable in if statement to not appear out of scope`() {
+    fun `test 036 - when define variable in if statement to not appear out of scope`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -738,7 +738,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 034 - change in if statement a variable declare out of the scope`() {
+    fun `test 037 - change in if statement a variable declare out of the scope`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -770,7 +770,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 035 - when variable define in outer if statement shouldn't be able to define in inner if statement`() {
+    fun `test 038 - when variable define in outer if statement shouldn't be able to define in inner if statement`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -809,7 +809,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test 035 - when variable define in outer if statement should be able to use in inner if statement`() {
+    fun `test 039 - when variable define in outer if statement should be able to use in inner if statement`() {
         val ast =
             listOf(
                 DeclarationAssignation(
@@ -837,7 +837,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun `test readInput function`() {
+    fun `test 040 - readInput function`() {
         val ast =
             listOf(
                 Method("println", Method("readInput", StringOperator("Enter a value:"))),
@@ -850,6 +850,24 @@ class InterpreterTest {
         assertEquals("${input}\n", result.message)
     }
 
+    @Test
+    fun `test 041 - condition statement without boolean operator`() {
+        val ast =
+            listOf(
+                Conditional(
+                    NumberOperator(5),
+                    listOf(
+                        Method("println", StringOperator("true")),
+                    ),
+                    listOf(
+                        Method("println", StringOperator("false")),
+                    ),
+                ),
+            )
+        val result = interpreter.interpretAST(ast)
+        assertTrue(result is ErrorResponse)
+        result as ErrorResponse
+    }
 //    @Test
 //    fun `test 033 - should throw exception for unexpected binary operation node`() {
 //        val ast = listOf(

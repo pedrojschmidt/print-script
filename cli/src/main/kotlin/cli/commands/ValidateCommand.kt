@@ -1,6 +1,7 @@
-import commands.Command
+import cli.commands.Command
 import lexer.Lexer
 import lexer.TokenProvider
+import parser.Parser
 import java.io.File
 import java.io.FileInputStream
 
