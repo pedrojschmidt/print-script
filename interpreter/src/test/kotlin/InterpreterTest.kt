@@ -723,8 +723,8 @@ class InterpreterTest {
                     listOf(
                         Method("println", StringOperator("true")),
                     ),
-                    null
-                )
+                    null,
+                ),
             )
         val result = interpreter.interpretAST(ast)
         assertTrue(result is SuccessResponse)
