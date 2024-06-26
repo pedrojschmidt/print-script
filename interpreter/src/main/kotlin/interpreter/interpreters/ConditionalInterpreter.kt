@@ -16,7 +16,7 @@ class ConditionalInterpreter : Interpreter<Conditional> {
     ): InterpreterResponse {
         try {
             val condition = valueInterpreter.interpret(astNode.condition, variableManager)
-            if (condition.value.toBoolean()) {
+            if (condition.value.toBooleanStrict()) {
                 variableManager.addScope()
                 val response = interpretAST(astNode.then, variableManager)
                 variableManager.removeScope()

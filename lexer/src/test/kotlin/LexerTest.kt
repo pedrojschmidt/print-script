@@ -310,7 +310,7 @@ class LexerTest {
         val tokenProvider = TokenProvider(example.byteInputStream(), lexer)
         val actualTokens = tokenProvider.readStatement()
 
-        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON]"
+        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, NUMBER_TYPE, EQ, NUMBER(5), TIMES, NUMBER(5), SEMICOLON, NEW_LINE]"
         val actualTokensString = listToString(actualTokens)
 
         assertEquals(expectedTokensString, actualTokensString)
