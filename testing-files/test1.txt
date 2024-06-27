@@ -1,3 +1,9 @@
 let a: string;
-a = "Hello World";
+let b: boolean = true;
+if (a) {
+    a = "Hello";
+} else {
+    a = "World";
+}
+let c: number = 1;
 println(a);

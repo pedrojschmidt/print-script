@@ -1,6 +1,6 @@
 import lexer.Lexer
-import lexer.NewLineTokenMaker
 import lexer.TokenProvider
+import lexer.tokenMakers.NewLineTokenMaker
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -425,6 +425,18 @@ class LexerTest {
         val actualTokens = lexer.makeTokens(example)
 
         val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, READENV_FUNCTION, LPAREN, STRING(HOME), RPAREN, SEMICOLON]"
+        val actualTokensString = listToString(actualTokens)
+
+        assertEquals(expectedTokensString, actualTokensString)
+    }
+
+    @Test
+    fun `test 036re64 - should fail`() {
+        val example = "lets a: string = 1;"
+        val lexer = Lexer.getDefaultLexer()
+        val actualTokens = lexer.makeTokens(example)
+
+        val expectedTokensString = "[LET_KEYWORD, IDENTIFIER(a), COLON, STRING_TYPE, EQ, NUMBER, SEMICOLON]"
         val actualTokensString = listToString(actualTokens)
 
         assertEquals(expectedTokensString, actualTokensString)
