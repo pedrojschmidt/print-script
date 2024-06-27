@@ -5,7 +5,9 @@ import ast.IdentifierOperator
 import ast.Method
 import ast.NumberOperator
 import ast.StringOperator
+import ast.UnhandledNode
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import sca.ExecuteSca
@@ -260,5 +262,24 @@ class StaticCodeAnalyzerTest {
     fun `test 016 - should test config file path`() {
         val scaRules = StaticCodeAnalyzerRules("src/main/resources/sca_rules.yaml")
         assertEquals("src/main/resources/sca_rules.yaml", scaRules.configFilePath)
+    }
+
+    @Test
+    fun `test 017 - should throw IllegalArgumentException for unhandled node`() {
+        val executeSca = ExecuteSca.getDefaultSCA()
+        val unhandledNode = UnhandledNode(true)
+
+        assertThrows(IllegalArgumentException::class.java) {
+            executeSca.analyzeNode(unhandledNode, StaticCodeAnalyzerRules("src/main/resources/sca_rules.yaml"))
+        }
+    }
+
+    @Test
+    fun `test 018 - should throw IllegalArgumentException for invalid rule name`() {
+        val rule = FunctionArgumentCheck()
+
+        assertThrows(IllegalArgumentException::class.java) {
+            rule.getConfigFileValue("src/main/resources/sca_rules.yaml", "invalidRuleName") { it.toBoolean() }
+        }
     }
 }
