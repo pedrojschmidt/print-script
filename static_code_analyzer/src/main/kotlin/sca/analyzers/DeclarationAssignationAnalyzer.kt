@@ -8,13 +8,11 @@ import ast.StringOperator
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 import token.Position
-import kotlin.reflect.KClass
 
 class DeclarationAssignationAnalyzer : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: ASTNode,
         rules: StaticCodeAnalyzerRules,
-        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzer>,
     ): List<StaticCodeIssue> {
         val declarationAssignation = astNode as DeclarationAssignation
         val issues = mutableListOf<StaticCodeIssue>()

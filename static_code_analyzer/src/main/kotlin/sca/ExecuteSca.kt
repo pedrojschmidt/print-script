@@ -8,34 +8,37 @@ import sca.analyzers.MethodAnalyzer
 import sca.analyzers.StaticCodeAnalyzer
 import kotlin.reflect.KClass
 
-class ExecuteSca : StaticCodeAnalyzer {
+class ExecuteSca(private val scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzer>) : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: ASTNode,
         rules: StaticCodeAnalyzerRules,
-        scaList: Map<KClass<out ASTNode>, StaticCodeAnalyzer>,
     ): List<StaticCodeIssue> {
         val issues = mutableListOf<StaticCodeIssue>()
-        when (astNode) {
-            is DeclarationAssignation ->
-                DeclarationAssignationAnalyzer().analyzeNode(astNode, rules, scaList).forEach {
-                    issues.add(it)
-                }
-            is Method ->
-                MethodAnalyzer().analyzeNode(astNode, rules, scaList).forEach {
-                    issues.add(it)
-                }
-            else -> println("No analyzer for this node")
+        val analyzer = scaList[astNode::class]
+
+        if (analyzer != null) {
+            analyzer.analyzeNode(astNode, rules).forEach {
+                issues.add(it)
+            }
+        } else {
+            throw IllegalArgumentException("No analyzer for this node")
         }
+
         return issues
     }
 
     companion object {
         fun getDefaultSCA(): ExecuteSca {
-            return ExecuteSca()
+            return getSCAByVersion("1.1")
         }
 
         fun getSCAByVersion(version: String): ExecuteSca {
-            return ExecuteSca()
+            return ExecuteSca(
+                mapOf(
+                    DeclarationAssignation::class to DeclarationAssignationAnalyzer(),
+                    Method::class to MethodAnalyzer(),
+                ),
+            )
         }
     }
 }
