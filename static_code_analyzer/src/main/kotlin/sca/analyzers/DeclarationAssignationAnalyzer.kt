@@ -2,8 +2,10 @@ package sca.analyzers
 
 import ast.ASTNode
 import ast.BinaryOperation
+import ast.BooleanOperator
 import ast.DeclarationAssignation
 import ast.NumberOperator
+import ast.SimpleAssignation
 import ast.StringOperator
 import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
@@ -39,10 +41,10 @@ class DeclarationAssignationAnalyzer : StaticCodeAnalyzer {
                 when (node.declaration.type) {
                     "string" -> node.value is StringOperator
                     "number" -> node.value is NumberOperator || node.value is BinaryOperation
+                    "boolean" -> node.value is BooleanOperator
                     else -> false
                 }
             }
-
             else -> false
         }
     }

@@ -1,10 +1,15 @@
 package sca
 
 import ast.ASTNode
+import ast.Conditional
+import ast.Declaration
 import ast.DeclarationAssignation
 import ast.Method
+import ast.SimpleAssignation
+import sca.analyzers.ConditionalAnalyzer
 import sca.analyzers.DeclarationAssignationAnalyzer
 import sca.analyzers.MethodAnalyzer
+import sca.analyzers.SimpleAssignationAnalyzer
 import sca.analyzers.StaticCodeAnalyzer
 import kotlin.reflect.KClass
 
@@ -36,7 +41,10 @@ class ExecuteSca(private val scaList: Map<KClass<out ASTNode>, StaticCodeAnalyze
             return ExecuteSca(
                 mapOf(
                     DeclarationAssignation::class to DeclarationAssignationAnalyzer(),
+                    Declaration::class to SimpleAssignationAnalyzer(),
+                    SimpleAssignation::class to SimpleAssignationAnalyzer(),
                     Method::class to MethodAnalyzer(),
+                    Conditional::class to ConditionalAnalyzer()
                 ),
             )
         }
