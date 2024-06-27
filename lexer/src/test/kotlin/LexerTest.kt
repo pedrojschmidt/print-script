@@ -430,7 +430,6 @@ class LexerTest {
         assertEquals(expectedTokensString, actualTokensString)
     }
 
-
     @Test
     fun `test 036re64 - should fail`() {
         val example = "lets a: string = 1;"
