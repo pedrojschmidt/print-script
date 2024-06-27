@@ -21,22 +21,6 @@ class ExecuteFormatter(val version: String, val formatterList: Map<KClass<out AS
         astNode: ASTNode,
         rules: FormatRules,
     ): String {
-//        return when (astNode) {
-//            is Declaration -> DeclarationFormatter().formatNode(astNode, rules, formatterList)
-//            is DeclarationAssignation -> DeclarationAssignationFormatter().formatNode(astNode, rules, formatterList)
-//            is SimpleAssignation -> SimpleAssignationFormatter().formatNode(astNode, rules, formatterList)
-//            is Method -> MethodFormatter().formatNode(astNode, rules, formatterList)
-//            is Conditional -> { // Creo que es inneceario porque si se usó el Parser 1.0 nunca llegaría a haber un nodo Conditional acá
-//                if (version == "1.1") {
-//                    ConditionalFormatter().formatNode(astNode, rules, formatterList)
-//                } else {
-//                    ""
-//                }
-//            }
-//            is BinaryOperation -> BinaryOperationFormatter().formatNode(astNode, rules, formatterList)
-//            is Assignation -> AssignationValueFormatter().formatNode(astNode, rules, formatterList)
-//            else -> ""
-//        }
         val formatter = formatterList[astNode::class]
         return if (astNode is Conditional && version != "1.1") {
             ""
