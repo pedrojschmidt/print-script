@@ -67,7 +67,6 @@ class ExecuteInterpreter(private val interpreters: Map<Class<out ASTNode>, Inter
                             DeclarationAssignation::class.java to AssignationInterpreter(),
                             SimpleAssignation::class.java to AssignationInterpreter(),
                             Method::class.java to MethodInterpreter(),
-                            Conditional::class.java to ConditionalInterpreter(),
                         )
                 }
                 "1.1" -> {
