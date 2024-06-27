@@ -11,7 +11,6 @@ import ast.SimpleAssignation
 import ast.StringOperator
 import formatter.ExecuteFormatter
 import formatter.FormatRules
-import formatter.FormatterFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.Test
 
@@ -261,7 +260,7 @@ class FormatterTests {
         val executeFormatter = ExecuteFormatter.getDefaultFormatter()
         var formattedAst = ""
         for (ast in astList) {
-            formattedAst += executeFormatter.formatNode(ast, FormatRules("src/main/resources/format_rules.yaml"), FormatterFactory().assignFormatters())
+            formattedAst += executeFormatter.formatNode(ast, FormatRules("src/main/resources/format_rules.yaml"))
         }
         return formattedAst
     }
